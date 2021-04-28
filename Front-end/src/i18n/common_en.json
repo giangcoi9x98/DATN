@@ -1,0 +1,32 @@
+{
+  "welcome":{
+    "title":"Welcome to Codese"
+  },
+  "email":"Email Address",
+  "password":"Password",
+  "login":{
+    "title":"Sign in",
+    "remember_me":"Remember me",
+    "forgot_password":"Forgot password ?",
+    "has_account":"Don't have an acount ? ",
+    "sign_up":"Sign up"
+  },
+  "signup":{
+    "title":"Sign up",
+    "name":"Name",
+    "birthday":"Birthday",
+    "has_account":" Already have an account ? Sign in " 
+  },
+  "navBar":{
+    "profile":"Profile",
+    "setting":"Setting",
+    "message":"Messages",
+    "notification":"Notifications",
+    "search":"Search",
+    "logout":"Logout",
+    "home":"Home"
+  },
+  "home":{
+    "newPost":"What's on the mind,"
+  }
+}

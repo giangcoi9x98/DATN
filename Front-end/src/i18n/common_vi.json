@@ -1,0 +1,29 @@
+{
+  "welcome":{
+      "title":"Chào mừng bạn đến với Codese"
+  },
+
+  "email":"Email",
+  "password":"Mật khẩu",
+
+  "login":{
+    "title":"Đăng ký",
+    "remember_me":"Lưu mật khẩu",
+    "forgot_password":"Quên mật khẩu ?",
+    "has_account":"Bạn chưa có tài khoản ? ",
+    "sign_up":"Đăng ký ngay"
+  },
+
+  "signup":{
+    "title":"Đăng ký",
+    "name":"Họ Tên",
+    "birthday":"Ngày sinh ",
+    "has_account":" Bạn đã có tài khoản ? Đăng nhập ngay " 
+  },
+  "navBar":{
+    "profile":"Trang cá nhân",
+    "setting":"Cài đặt",
+    "message":"Tin nhắn",
+    "notification":"Thông báo"
+  }
+}
