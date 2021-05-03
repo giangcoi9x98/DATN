@@ -13,8 +13,7 @@ const axiosInstance = axios.create({
   baseURL: API_BASE,
   // timeout: 10000, //time in miliseconds
   headers: {
-    "Content-Type": "application/json",
-    
+    "Content-Type": "application/json;",
   },
 });
 
@@ -22,13 +21,13 @@ const axiosInstance = axios.create({
 const refreshAccessToken = () =>
   axiosInstance
     .post("/users/refresh_token", {
-      refresh_token: localStorage.getItem("refresh-token"),
+      refresh_token: localStorage.getItem("refresh_token"),
     })
     .then((tokenRefreshResponse) => {
       console.log("refresh",tokenRefreshResponse)
       localStorage.setItem("token", tokenRefreshResponse.data.data.token);
       localStorage.setItem(
-        "refresh-token",
+        "refresh_token",
         tokenRefreshResponse.data.data.refresh_token
       );
       return tokenRefreshResponse.data.data.token;
@@ -39,10 +38,10 @@ const refreshAccessToken = () =>
       if (
         errType === "TOKEN_EXPIRED" ||
         errType === "TOKEN_INVALID" ||
-        !localStorage.getItem("refresh-token")
+        !localStorage.getItem("refresh_token")
       ) {
         localStorage.removeItem("token");
-        localStorage.removeItem("refresh-token");
+        localStorage.removeItem("refresh_token");
         //redirect to login page
         // window.location.replace(
         //   "/login?return=" + router.history.current.fullPath
@@ -62,13 +61,13 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 )
-
-if(jwt.decode(token)){
+if (jwt.decode(token)) {
+  let timeRef = jwt.decode(token).exp - Date.now()/1000
   console.log("isLogin");
   setInterval( () => {
     console.log("refresh", Date.now());
     return refreshAccessToken()
-  },60 * 1000)
+  },timeRef * 999)
 }
 
 

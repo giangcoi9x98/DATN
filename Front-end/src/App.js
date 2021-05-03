@@ -1,7 +1,8 @@
 import React from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import routes from '../src/pages/routes';
+import NotFound from './pages/NotFound/NotFound';
 function App() {
   const test = () => {
     console.log(routes);
@@ -17,7 +18,7 @@ function App() {
                 render={(props) => (
                   <React.Suspense fallback={null}>
                     <Layout>
-                      <Component {...props} />
+                      <Component {...props} /> 
                     </Layout>
                   </React.Suspense>
                 )}
@@ -29,6 +30,12 @@ function App() {
             );
           }
         )}
+        <Route >
+            {NotFound}
+        </Route>
+        <Redirect from='/' to='/not-found'>
+          {` `}
+        </Redirect>
       </Switch>
     </BrowserRouter>
   );

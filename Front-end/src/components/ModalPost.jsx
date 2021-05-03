@@ -2,8 +2,7 @@ import {Modal, Button} from 'react-bootstrap'
 import React,{useState} from 'react'
 
 function ModalPost(props) {
-  const [show, setShow] = useState(false);
-
+  const [show, setShow] = useState(true);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 

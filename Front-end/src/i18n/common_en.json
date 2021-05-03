@@ -4,6 +4,7 @@
   },
   "email":"Email Address",
   "password":"Password",
+  "close":"Close",
   "login":{
     "title":"Sign in",
     "remember_me":"Remember me",
@@ -27,6 +28,18 @@
     "home":"Home"
   },
   "home":{
-    "newPost":"What's on the mind,"
+    "newPost":"What's on the mind, "
+  },
+  "modalUpload":{
+    "upload":"Upload Image",
+    "title":"Upload Image"
+  },
+  "profile":{
+    "post":"POSTS",
+    "image":"IMAGES",
+    "friend":"FRIENDS",
+    "edit_cover":"Edit Cover Photo",
+    "edit_prodile":"Edit Profile"
   }
+  
 }

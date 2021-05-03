@@ -1,7 +1,7 @@
 import { LANGUAGE_CHANGE } from '../actions/changeLanguageAction';
 
 const initialState = {
-  lang : "en"
+  lang : localStorage.getItem('i18nextLng') || 'en'
 }
 function langReducer(state = initialState, action) {
   switch (action.type) {

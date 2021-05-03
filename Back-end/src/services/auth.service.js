@@ -14,7 +14,7 @@ const refreshTokenPrefix = "RF_TOKEN_";
 const accessTokenPrefix = "ACCESS_TOKEN_";
 const bannedTokenPrefix = "BANNED_TOKEN_";
 const newDeviceTokenPrefix = "NEW_DEVICE_TOKEN_";
-const accessTokenExp = "15h"; //15m
+const accessTokenExp = "15m"; //15m
 const refreshTokenExp = "1h";
 const uuidv1 = require("uuid").v1();
 const uuidv4 = require("uuid").v4();
@@ -554,7 +554,6 @@ const schema = {
 					"SELECT * FROM account where email = ? ",
 					[ctx.params.email.toLowerCase().trim()]
 				);
-				console.log(findUserByEmail.accountId);
 				if (!findUserByEmail) {
 					throw new MoleculerError(
 						"The 'email' field is not exist",
@@ -835,7 +834,7 @@ const schema = {
 						if (redisToken !== refreshToken) {
 							throw new MoleculerError(
 								"Token expired",
-								401,
+								403,
 								LANGs.TOKEN_EXPIRED,
 								[]
 							);

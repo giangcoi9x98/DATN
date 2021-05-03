@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
   icon_ins: {
     maxHeight: SIZETYPE.icon,
-    maxWidth:SIZETYPE.icon,
+    maxWidth: SIZETYPE.icon,
     marginLeft: SIZETYPE.large,
     color: '#f64f59',
   },
@@ -101,7 +101,7 @@ function SignIn(props) {
     if (res.status) {
       localStorage.setItem('token', res.data.data.token);
       localStorage.setItem('refresh_token', res.data.data.refresh_token);
-      window.location = "/"
+      window.location = '/';
     }
   };
   const classes = useStyles();
@@ -163,8 +163,8 @@ function SignIn(props) {
             </Button>
             <Box className={classes.box}>
               <FacebookIcon className={classes.icon_fb} />
-              <div >
-                <img style={{ height:"34px"}} src='/img/instagram.png' />
+              <div>
+                <img style={{ height: '34px' }} src='/img/instagram.png' />
               </div>
             </Box>
             <Grid container>

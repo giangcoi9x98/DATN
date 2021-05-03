@@ -1,5 +1,6 @@
 const APIGateway = require("moleculer-web");
 const cors = require("cors");
+const path = require("path");
 const http = require("http");
 const uaParser = require("ua-parser-js");
 const Redis = require("ioredis");
@@ -9,6 +10,7 @@ const requestIp = require("request-ip");
 const Fingerprint = require("express-fingerprint");
 const tokenHelper = require("../lib/token");
 const socketMixin = require("../mixins/socket.mixin");
+const multer = require("../lib/ multer");
 
 //const FingerprintJS = require('@fingerprintjs/fingerprintjs');
 
@@ -34,6 +36,7 @@ const schema = {
 					Fingerprint.geoip,
 				],
 			}),
+
 		],
 		cors: {
 			origin: "*", //Moleculer-io only pick up this option and set it to io.origins()
@@ -65,7 +68,9 @@ const schema = {
 					json: false,
 					urlencoded: false,
 				},
+
 				aliases: {
+					"PUT /api/media/upload": "media.upload",
 					// File upload from HTML multipart form
 					"POST /": "multipart:id-verification.submit",
 					// File upload from AJAX or cURL
@@ -137,7 +142,12 @@ const schema = {
 					},
 				},
 				path: "/api",
-				use: [],
+				use: [
+					multer.single("file"),
+					cors({
+						origin: "*",
+					}),
+				],
 				mappingPolicy: "restrict",
 				aliases: {
 					health: "$node.health",
@@ -154,15 +164,16 @@ const schema = {
 					"POST users/refresh_token": "auth.refreshJwtToken",
 					"PUT user/update": "user.updateProfile",
 					"GET user/profile": "user.getProfile",
-					"POST user/logout":"auth.logout",
-					
+					"POST user/logout": "auth.logout",
+					"GET user/email/:email":"user.getByEmail",	
 					//Post apis
 					"POST post": "post.newPost",
 					"GET post": "post.getPost",
 					"GET post:id": "post.getPostById",
 					"PUT post:id": "post.updatePost",
-					"DELETE post:id":"post.deletePost"
-
+					"DELETE post:id": "post.deletePost",
+					//media
+					"PUT media/upload": "media.upload",
 				},
 				onBeforeCall(ctx, route, req) {
 					// console.log("req_params")
@@ -188,6 +199,9 @@ const schema = {
 						"localhost";
 					const bearerToken = req.headers.authorization || "";
 					//const bearerToken = req.body.token
+					if (req.file) {
+						ctx.meta.file = req.file;
+					}
 					if (bearerToken) {
 						ctx.meta.token = bearerToken
 							.replace("Bearer", "")
@@ -208,14 +222,13 @@ const schema = {
 		],
 		assets: {
 			// Root folder of assets
-			folder: "uploads/images",
+			folder: "uploads",
 
 			// Options to `server-static` module
 			options: {},
 		},
 		onError(req, res, err) {
 			const { message, data, type, code } = err;
-
 			res.setHeader("Content-type", "application/json; charset=utf-8");
 			const httpCodes = Object.keys(http.STATUS_CODES);
 			if (httpCodes.includes(String(code))) {

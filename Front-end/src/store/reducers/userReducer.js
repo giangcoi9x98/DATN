@@ -1,16 +1,17 @@
-import { GET_PROFILE } from '../actions/userAction';
+import { GET_PROFILE,SET_PROFILE } from '../actions/userAction';
 
 const initialState = {
-  user: {},
+  userData: {},
   isOnline: false,
 };
 
 function userReducer(state = initialState, action) {
   switch (action.type) {
     case GET_PROFILE:
+      console.log("action",action)
       return {
         ...state,
-        user: action.payload,
+        userData: action.payload,
       };
     default:
       return state;

@@ -12,7 +12,10 @@ import store from './store';
 import { Notificator } from './components/Notification';
 import CloseIcon from '@material-ui/icons/Close';
 import { IconButton } from '@material-ui/core';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
 
+let persistor = persistStore(store)
 const notistackRef = React.createRef();
 const onClickDismiss = (key) => () => {
   notistackRef.current.closeSnackbar(key);
@@ -21,18 +24,21 @@ ReactDOM.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
-        <SnackbarProvider
-          maxSnack={5}
-          ref={notistackRef}
-          action={(key) => (
-            <IconButton onClick={onClickDismiss(key)}>
-              <CloseIcon />
-            </IconButton>
-          )}
-        >
-          <Notificator />
-          <App />
-        </SnackbarProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          {' '}
+          <SnackbarProvider
+            maxSnack={5}
+            ref={notistackRef}
+            action={(key) => (
+              <IconButton onClick={onClickDismiss(key)}>
+                <CloseIcon />
+              </IconButton>
+            )}
+          >
+            <Notificator />
+            <App />
+          </SnackbarProvider>
+        </PersistGate>
       </Provider>
     </I18nextProvider>
   </React.StrictMode>,

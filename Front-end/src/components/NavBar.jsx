@@ -18,27 +18,30 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { COLORS, SIZETYPE } from '../constants';
 import { Container } from '@material-ui/core';
-import api from '../api'
+import api from '../api';
+import { withRouter } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
-    width:'100%'
+    width: '100%',
+    position: 'fixed',
+    zIndex: 10,
   },
   navBar: {
     background: COLORS.background_gradiant,
   },
   leftNav: {
     display: 'flex',
-    marginRight:'10%'
+    marginRight: '10%',
   },
   rightNav: {
     display: 'flex',
-    justifyContent:'flex-end'
+    justifyContent: 'flex-end',
   },
   toolBar: {
     display: 'flex',
     width: '100%',
-    justifyContent:'space-around'
+    justifyContent: 'space-around',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -75,11 +78,11 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     width: SIZETYPE.icon,
-    height: SIZETYPE.icon
+    height: SIZETYPE.icon,
   },
   homeIcon: {
     width: SIZETYPE.homeIcon,
-    height: SIZETYPE.homeIcon
+    height: SIZETYPE.homeIcon,
   },
   inputRoot: {
     color: 'inherit',
@@ -95,7 +98,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   sectionDesktop: {
-    
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
@@ -109,23 +111,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const { t, i18n } = useTranslation('common');
   const lang = useSelector((state) => state.lang);
+  const { user } = useSelector((state) => state);
+  let email = user.userData.email
+
   useEffect(() => {
     return i18n.changeLanguage(lang.lang);
   }, [lang]);
-  const handleLogout = async() => {
-    const res = await api.auth.logOut()
+  const handleLogout = async () => {
+    const res = await api.auth.logOut();
     if (res.status) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('refresh_token')
-      window.location = "/" 
+      localStorage.removeItem('token');
+      localStorage.removeItem('refresh_token');
+      window.location = '/login';
     }
-  }
+  };
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -157,7 +162,13 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>{t('navBar.profile')}</MenuItem>
+      <MenuItem
+        onClick={() => {
+          props.history.push(`/profile/${email.slice(0,email.length-10)}`);
+        }}
+      >
+        {t('navBar.profile')}
+      </MenuItem>
       <MenuItem onClick={handleMenuClose}>{t('navBar.setting')}</MenuItem>
       <MenuItem onClick={handleLogout}>{t('navBar.logout')}</MenuItem>
     </Menu>
@@ -174,7 +185,7 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem onClick={() => props.history.push('/')}>
         <IconButton aria-label='show 4 new mails' color='inherit'>
           <HomeIcon></HomeIcon>
         </IconButton>
@@ -196,7 +207,11 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <p>{t('navBar.notification')}</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem
+        onClick={() => {
+          props.history.push(`/profile/1`);
+        }}
+      >
         <IconButton
           aria-label='account of current user'
           aria-controls='primary-search-account-menu'
@@ -213,73 +228,77 @@ export default function PrimarySearchAppBar() {
   return (
     <div className={classes.grow}>
       <AppBar position='static' className={classes.navBar}>
-        <Container maxWidth='lg' component = "main">
-        <Toolbar className={classes.toolBar}>
-          {/* 
+        <Container maxWidth='lg' component='main'>
+          <Toolbar className={classes.toolBar}>
+            {/* 
            logo codese
             */}
-          <div className={classes.leftNav}>
-            <Typography className={classes.title} variant='h6' noWrap>
-              Codeses
-            </Typography>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
+            <div className={classes.leftNav}>
+              <Typography className={classes.title} variant='h6' noWrap>
+                Codeses
+              </Typography>
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder={`${t('navBar.search')}...`}
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
               </div>
-              <InputBase
-                placeholder={`${t('navBar.search')}...`}
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-              />
+              <div />
             </div>
-            <div />
-          </div>
             <div className={classes.rightNav}>
-            <div className={classes.sectionDesktop}>
-              <IconButton color='inherit' >
-                <HomeIcon className={classes.homeIcon}/>
-              </IconButton>
-            <IconButton aria-label='show 4 new mails' color='inherit'>
-              <Badge badgeContent={4} color='secondary'>
-                <MailIcon  className={classes.icon}/>
-              </Badge>
-            </IconButton>
-            <IconButton aria-label='show 17 new notifications' color='inherit'>
-              <Badge badgeContent={17} color='secondary'>
-                <NotificationsIcon  className={classes.icon} />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge='end'
-              aria-label='account of current user'
-              aria-controls={menuId}
-              aria-haspopup='true'
-              onClick={handleProfileMenuOpen}
-              color='inherit'
-            >
-              <AccountCircle className={classes.icon} />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label='show more'
-              aria-controls={mobileMenuId}
-              aria-haspopup='true'
-              onClick={handleMobileMenuOpen}
-              color='inherit'
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
-         </div>
-        </Toolbar>
-      </Container>
+              <div className={classes.sectionDesktop} >
+                <IconButton color='inherit'  onClick={() => props.history.push('/')} >
+                  <HomeIcon className={classes.homeIcon} />
+                </IconButton>
+                <IconButton aria-label='show 4 new mails' color='inherit'>
+                  <Badge badgeContent={4} color='secondary'>
+                    <MailIcon className={classes.icon} />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  aria-label='show 17 new notifications'
+                  color='inherit'
+                >
+                  <Badge badgeContent={17} color='secondary'>
+                    <NotificationsIcon className={classes.icon} />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  edge='end'
+                  aria-label='account of current user'
+                  aria-controls={menuId}
+                  aria-haspopup='true'
+                  onClick={handleProfileMenuOpen}
+                  color='inherit'
+                >
+                  <AccountCircle className={classes.icon} />
+                </IconButton>
+              </div>
+              <div className={classes.sectionMobile}>
+                <IconButton
+                  aria-label='show more'
+                  aria-controls={mobileMenuId}
+                  aria-haspopup='true'
+                  onClick={handleMobileMenuOpen}
+                  color='inherit'
+                >
+                  <MoreIcon />
+                </IconButton>
+              </div>
+            </div>
+          </Toolbar>
+        </Container>
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
     </div>
   );
 }
+export default withRouter(PrimarySearchAppBar);

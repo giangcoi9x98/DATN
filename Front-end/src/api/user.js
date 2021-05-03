@@ -87,3 +87,17 @@ export const getProfile = async () => {
     };
   }
 };
+export const getByEmail = async (email) => {
+  try {
+    const res = await axiosInstance.get(`/user/email/${email}` );
+    return {
+      data: res.data,
+      status: true,
+    };
+  } catch (e) {
+    console.log(e)
+    return {
+      status: false,
+    };
+  }
+};
