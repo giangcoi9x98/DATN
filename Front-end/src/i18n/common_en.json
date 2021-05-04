@@ -40,6 +40,12 @@
     "friend":"FRIENDS",
     "edit_cover":"Edit Cover Photo",
     "edit_prodile":"Edit Profile"
+  },
+  "modal_post":{
+    "title":"Create Post",
+    "post":"Post",
+    "content":"Content",
+    "add_on":"Add to your Post"
   }
   
 }

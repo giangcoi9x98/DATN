@@ -44,8 +44,11 @@ export default function Footer(props) {
   const { t, i18n } = useTranslation('common');
   const lang = useSelector((state) => state.lang);
   const dispatch = useDispatch();
-  useEffect(async () => {
-    await i18n.changeLanguage(lang.lang);
+  useEffect(() => {
+    async function updateLanguage() {
+      await i18n.changeLanguage(lang.lang);
+    }
+    updateLanguage()
   }, [lang]);
 
   const handleToggle = () => {

@@ -4,7 +4,7 @@ import { COLORS, SIZETYPE, FONT } from '../../constants';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { CardMedia, Container, Link, Typography,  } from '@material-ui/core';
+import { CardMedia, Container, Link, Typography } from '@material-ui/core';
 
 import Footer from '../../components/Footer';
 import NavBar from '../../components/NavBar';
@@ -14,7 +14,7 @@ const useStyle = makeStyles((theme) => ({
     flexDirection: 'column',
     backgroundColor: COLORS.background_gradiant,
     width: '100%',
-    height: '1000px',
+    height: '100%',
   },
 
   small: {
@@ -38,6 +38,7 @@ const useStyle = makeStyles((theme) => ({
     fontSize: '22px',
     lineHeight: '26px',
     marginTop: SIZETYPE.medium,
+    marginTop:'68px'
   },
   subTitle: {
     textAlign: 'center',
@@ -58,22 +59,31 @@ const useStyle = makeStyles((theme) => ({
 function NotFound(props) {
   const classes = useStyle();
   const handleBackToHome = () => {
-     props.history.push('/')
-   }
+    props.history.push('/');
+  };
   return (
-  <div>  <NavBar></NavBar>
-  <Container component='main' maxWidth='md' className={classes.container}>
-    <Typography className={classes.title}>
-      Sorry, this page isn't available.
-    </Typography>
-    <div className={classes.wrapTitle}>
-      <Typography className={classes.subTitle}>
-        The link you followed may be broken, or the page may have been
-        removed. {<Link className={classes.link } onClick={handleBackToHome}> Go back to Codese</Link>}
-      </Typography>
+    <div>
+      {' '}
+      <NavBar></NavBar>
+      <Container component='main' maxWidth='md' className={classes.container}>
+        <Typography className={classes.title}>
+          Sorry, this page isn't available.
+        </Typography>
+        <div className={classes.wrapTitle}>
+          <Typography className={classes.subTitle}>
+            The link you followed may be broken, or the page may have been
+            removed.{' '}
+            {
+              <Link className={classes.link} onClick={handleBackToHome}>
+                {' '}
+                Go back to Codese
+              </Link>
+            }
+          </Typography>
+        </div>
+        <Footer className={classes.footer} props={props}></Footer>
+      </Container>
     </div>
-    <Footer className={classes.footer} props={props}></Footer>
-  </Container></div>
   );
 }
 

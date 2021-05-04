@@ -1,29 +1,29 @@
-import React, { useEffect, useState }from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ModalPost from './ModalPost'
+import ModalPost from './ModalPost';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { SIZETYPE, COLORS } from '../constants'
+import { SIZETYPE, COLORS } from '../constants';
 import { Card, Avatar, Button, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import noti from './Notification'
+import noti from './Notification';
 
 const useStyle = makeStyles((theme) => ({
   title: {
-    maxWidth:'500px',
+    maxWidth: '500px',
     padding: SIZETYPE.small,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
   },
   text_hidden: {
-    marginLeft:5,
-    display:'flex',
+    marginLeft: 5,
+    display: 'flex',
     color: COLORS.hidden_text,
     fontSize: SIZETYPE.icon,
     fontWeight: 300,
   },
-    bg_text: {
+  bg_text: {
     marginStart: SIZETYPE.medium,
     marginRight: SIZETYPE.medium,
     height: '100%',
@@ -34,20 +34,20 @@ const useStyle = makeStyles((theme) => ({
     paddingLeft: SIZETYPE.medium,
     borderRadius: SIZETYPE.homeIcon,
   },
-}))
+}));
 
 function NewPost(props) {
   const classes = useStyle();
   const { t, i18n } = useTranslation('common');
   const user = useSelector((state) => state.user);
-  const [isShowModal, setIsShowModal] = useState(false)
-  console.log(user);
-  useEffect(() => {
-   
-  }, [user.userData])
+  const [isShowModal, setIsShowModal] = useState(false);
+  const handleShowModal = () => {
+    setIsShowModal(true);
+  };
+  useEffect(() => {}, [user.userData]);
   return (
     <div>
-      <div className={classes.title}>
+      <div className={classes.title} onClick={() => handleShowModal()}>
         <div>
           <Avatar src='/img/faces/kendall.jpg' className={classes.large} />
         </div>
@@ -58,7 +58,10 @@ function NewPost(props) {
           </Typography>
         </div>
       </div>
-      <ModalPost ></ModalPost>
+      <ModalPost
+        isShowModal={isShowModal}
+        isCloseModal={() => setIsShowModal(false)}
+      ></ModalPost>
     </div>
   );
 }

@@ -6,9 +6,10 @@ const initialState = {
 function langReducer(state = initialState, action) {
   switch (action.type) {
     case LANGUAGE_CHANGE:
+      localStorage.setItem('i18nextLng',action.payload)
       return {
         ...state,
-        lang: action.payload
+        lang: action.payload,
       };
     default:
       return state
