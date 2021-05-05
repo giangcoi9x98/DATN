@@ -118,7 +118,10 @@ function PrimarySearchAppBar(props) {
   const { t, i18n } = useTranslation('common');
   const lang = useSelector((state) => state.lang);
   const { user } = useSelector((state) => state);
-  let email = user.userData.email
+  let email;
+  // if (user) {
+  //   email  = user.userData.email
+  // }
 
   useEffect(() => {
     return i18n.changeLanguage(lang.lang);

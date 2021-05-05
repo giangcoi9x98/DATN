@@ -63,17 +63,11 @@ const schema = {
 				},
 				birthday: {
 					type: "string",
-					require : true,
-				}
-
+					require: true,
+				},
 			},
 			async handler(ctx) {
-				let {
-					email,
-					password,
-					fullname,
-					birthday
-				} = ctx.params;
+				let { email, password, fullname, birthday } = ctx.params;
 				let repeatPassword = password;
 				console.log(ctx.params);
 				if (password == "") {
@@ -113,23 +107,17 @@ const schema = {
 				try {
 					await this.mysql.query(
 						"INSERT INTO account (email,password) VALUES (?,?)  ",
-						[
-							regex.getEmail(email.toLowerCase()),
-							hash,
-						]
+						[regex.getEmail(email.toLowerCase()), hash]
 					);
 					const newUserData = await this.mysql.queryOne(
-						"SELECT * FROM account WHERE email = ?",[email]
+						"SELECT * FROM account WHERE email = ?",
+						[email]
 					);
 					console.log("user", newUserData);
 					await this.mysql.query(
 						`INSERT INTO account_info (fullname,birthday,accountId)
 						VALUES (?, ?, ? )`,
-						[
-							fullname,
-							birthday,
-							newUserData.id
-						]
+						[fullname, birthday, newUserData.id]
 					);
 					// const ref_user = await this.mysql.query(`SELECT * from users where ref_id = $1`,[ref_id])
 					// console.log("ref_user",checkRef_id);
@@ -150,20 +138,27 @@ const schema = {
 							newUserData.id,
 						]
 					);
-					const loginRecord = await this.mysql.query(
-						"SELECT id FROM login_history WHERE account_id = ?",
-						[newUserData.id]
-					).then(res => res[0]);
+					const loginRecord = await this.mysql
+						.query(
+							"SELECT id FROM login_history WHERE account_id = ?",
+							[newUserData.id]
+						)
+						.then((res) => res[0]);
 
 					const secretKey = Buffer.from(
 						AUTH_PRIVATE_KEY,
 						"base64"
 					).toString("utf-8");
-					const infoData = await this.mysql.query(`
+					const infoData = await this.mysql
+						.query(
+							`
 						SELECT * FROM
 					 	account INNER JOIN account_info
 						ON account.id = account_info.accountId
-						WHERE account.id = ? `, [newUserData.id]).then(res => res[0]);
+						WHERE account.id = ? `,
+							[newUserData.id]
+						)
+						.then((res) => res[0]);
 					const user = safeUser(infoData);
 
 					const token = tokenHelper.signJWT(
@@ -210,7 +205,6 @@ const schema = {
 						},
 						null
 					);
-					
 				} catch (e) {
 					this.logger.error("Register Error", e);
 					// Error code for unique constraint
@@ -787,7 +781,7 @@ const schema = {
 			},
 			async handler(ctx) {
 				try {
-					console.log("token",ctx.params.token);
+					console.log("token", ctx.params.token);
 					const publicKey = Buffer.from(
 						process.env.AUTH_PUBLIC_KEY ||
 							"LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlHZk1BMEdDU3FHU0liM0RRRUJBUVVBQTRHTkFEQ0JpUUtCZ1FEV2QzNHZWZ1RPNXUvOUFMaUpKRjF6UDlMNgpsVm1HU1dFZWN0ZWdsVHFZWDIySkx3aklrTmQySzBLVjUzTWVoY3J5dHlUR1FtdWYyZGQzMDl0Y2hBSGp0ZmV6Ck43Tkwzckcwek5ReDdBM3dJVi9IaDRlU0g4OWF1S2JJeFNxaWl2MFJ2a2ZYMmZ3N0ZDQzBlb0tsVWExM1NDb3oKZTJXNTJsaUZsU1M1RFRwT1d3SURBUUFCCi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=",
@@ -797,7 +791,7 @@ const schema = {
 						ctx.params.token,
 						publicKey
 					);
-					console.log("logout",tokenInfo);
+					console.log("logout", tokenInfo);
 					this.logger.info("decoded token: ", tokenInfo);
 
 					await this.redis.del(
@@ -819,18 +813,19 @@ const schema = {
 			async handler(ctx) {
 				try {
 					let { refresh_token: refreshToken } = ctx.params;
-					console.log("refesh-token",refreshToken);
+					console.log("refesh-token", refreshToken);
 					const secretKey = Buffer.from(
 						AUTH_PRIVATE_KEY,
 						"base64"
 					).toString("utf-8");
 					const key = HS256_KEY || "secret";
 					const decoded = tokenHelper.verify(refreshToken, key);
-					console.log("decode",decoded);
+					console.log("decode", decoded);
 					if (decoded) {
 						const redisToken = await this.redis.get(
 							`${refreshTokenPrefix}${decoded.loginId}`
 						);
+						console.log("redisToken", redisToken);
 						if (redisToken !== refreshToken) {
 							throw new MoleculerError(
 								"Token expired",
@@ -839,13 +834,18 @@ const schema = {
 								[]
 							);
 						}
-						console.log("decode",decoded);
-						const userData = await this.mysql.query(
-							`select * from account INNER JOIN account_info 
-							ON account.id = account_info.accountId
-							WHERE account.id = ? `,
-							[decoded.id]
-						).then(res => res[0]);
+						console.log("decode", decoded);
+						const userData = await this.mysql
+							.query(
+								`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+									ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+									from account as a INNER JOIN account_info as ai
+									ON a.id = ai.accountId
+									WHERE a.id = ? `,
+								[decoded.id]
+							)
+							.then((res) => res[0]);
+						console.log("userDataRefresh", userData);
 						const token = tokenHelper.signJWT(
 							{
 								...userData,

@@ -212,7 +212,6 @@ const schema = {
 								publicKey
 							);
 							ctx.meta.user = user;
-							console.log("USER", user);
 						} catch (error) {
 							console.log("api error", error);
 						}
