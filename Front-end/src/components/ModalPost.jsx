@@ -5,6 +5,7 @@ import { SIZETYPE, COLORS } from '../constants';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, IconButton, TextField, Typography } from '@material-ui/core';
 import ImageIcon from '@material-ui/icons/Image';
+import ImageReader from '../components/ImageReader';
 
 const useStyles = makeStyles((theme) => ({
   btn_Post: {
@@ -25,21 +26,43 @@ const useStyles = makeStyles((theme) => ({
     padding: SIZETYPE.small,
     marginStart: SIZETYPE.small,
   },
+  wrapImg: {
+    display: 'flex',
+    flexDirection: 'row',
+    margin: SIZETYPE.small,
+  },
 }));
 function ModalPost(props) {
   const { isShowModal, isCloseModal } = props;
   const { t, i18n } = useTranslation('common');
+  const [imgUrl, setImgUrl] = useState();
   const classes = useStyles();
   const [content, setContent] = useState('');
   const [backgroundDisable, setBackgroundDisable] = useState('#e4e6eb');
+  const handleUploadImage = (e) => {
+    setImgUrl(e.target.files[0]);
+  };
+  console.log('imgUrl', imgUrl);
   useEffect(() => {
     if (content) {
       setBackgroundDisable('#007bff');
     } else {
       setBackgroundDisable('#e4e6eb');
     }
-  }, [content, backgroundDisable]);
-  console.log('color', backgroundDisable);
+  }, [content, backgroundDisable, imgUrl]);
+  const renderImage = (
+    <div className={classes.wrapImg}>
+      <ImageReader
+        image={imgUrl}
+        width={200}
+        height={230}
+        handleCloseImg={() => {
+          setImgUrl('');
+          document.getElementById('upload').value= ""
+        }}
+      ></ImageReader>
+    </div>
+  );
   return (
     <>
       <Modal show={isShowModal} onHide={isCloseModal}>
@@ -60,16 +83,23 @@ function ModalPost(props) {
             }}
             variant='outlined'
           />
+          <div>{imgUrl ? renderImage : ''}</div>
           <Card className={classes.wrap_add}>
             <Typography className={classes.text}>
               {t('modal_post.add_on')}
             </Typography>
-            <div>
+            <form>
               <IconButton component='label' variant='contained'>
-                <input type='file' hidden />
+                <input
+                  onChange={handleUploadImage}
+                  type='file'
+                  id='upload'
+                  accept='image/*'
+                  hidden
+                />
                 <ImageIcon></ImageIcon>
               </IconButton>
-            </div>
+            </form>
           </Card>
         </Modal.Body>
         <Modal.Footer>

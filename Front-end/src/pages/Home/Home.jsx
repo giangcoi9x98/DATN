@@ -6,7 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import noti from '../../components/Notification';
 import api from '../../api';
+import Alert from '@material-ui/lab/Alert';
 import NewPost from '../../components/NewPost'
+import Post from '../../components/Post'
 import {withRouter} from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 
@@ -44,7 +46,10 @@ function Home(props) {
   console.log("userGlobal",user);
   return (
     <Container component='main' maxWidth='md' className={classes.container}>
-     <NewPost user ={user} ></NewPost>
+      <NewPost user={user} ></NewPost>
+      <div>
+        <Post user={user}></Post>
+      </div>
     </Container>
   );
 }

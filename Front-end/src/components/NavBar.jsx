@@ -119,10 +119,10 @@ function PrimarySearchAppBar(props) {
   const lang = useSelector((state) => state.lang);
   const { user } = useSelector((state) => state);
   let email;
-  // if (user) {
-  //   email  = user.userData.email
-  // }
-
+  if (user) {
+    email  = user.userData.email
+  }
+  console.log("navemail", email);
   useEffect(() => {
     return i18n.changeLanguage(lang.lang);
   }, [lang]);

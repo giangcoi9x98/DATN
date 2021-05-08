@@ -152,6 +152,7 @@ const schema = {
 				aliases: {
 					health: "$node.health",
 					//USER
+					"POST user/login": "auth.login",
 					"POST users/register": "auth.register",
 					"POST user/register": "auth.register",
 					"POST users/reset_password": "auth.resetPassword",
@@ -168,7 +169,7 @@ const schema = {
 					"GET user/email/:email":"user.getByEmail",	
 					//Post apis
 					"POST post": "post.newPost",
-					"GET post": "post.getPost",
+					"GET post": "post.getAllPost",
 					"GET post:id": "post.getPostById",
 					"PUT post:id": "post.updatePost",
 					"DELETE post:id": "post.deletePost",
