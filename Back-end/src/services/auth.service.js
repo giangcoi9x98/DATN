@@ -826,14 +826,14 @@ const schema = {
 							`${refreshTokenPrefix}${decoded.loginId}`
 						);
 						console.log("redisToken", redisToken);
-						if (redisToken !== refreshToken) {
-							throw new MoleculerError(
-								"Token expired",
-								403,
-								LANGs.TOKEN_EXPIRED,
-								[]
-							);
-						}
+						// if (redisToken !== refreshToken) {
+						// 	throw new MoleculerError(
+						// 		"Token expired",
+						// 		403,
+						// 		LANGs.TOKEN_EXPIRED,
+						// 		[]
+						// 	);
+						// }
 						console.log("decode", decoded);
 						const userData = await this.mysql
 							.query(

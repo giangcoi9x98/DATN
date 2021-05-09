@@ -7,6 +7,7 @@ const config = {
 	user: process.env.MYSQL_USER|| "root",
 	password: process.env.MYSQL_PASSWORD ,
 	database: process.env.MYSQL_DB,
+	connectionLimit : 10,
 };
 const pool = mysql.createPool(config);
 const logMySqlQuery = (sql, params) => {
