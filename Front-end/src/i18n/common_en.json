@@ -45,7 +45,8 @@
     "title":"Create Post",
     "post":"Post",
     "content":"Content",
-    "add_on":"Add to your Post"
+    "add_on":"Add to your Post",
+    "success":"Successs"
   }
   
 }

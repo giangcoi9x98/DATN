@@ -3,21 +3,28 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SIZETYPE, COLORS } from '../constants';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, IconButton, TextField, Typography } from '@material-ui/core';
+import {
+  Card,
+  LinearProgress,
+  IconButton,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import ImageIcon from '@material-ui/icons/Image';
 import ImageReader from '../components/ImageReader';
+import api from '../api';
+import AutorenewIcon from '@material-ui/icons/Autorenew';
+import noti from './Notification';
 
 const useStyles = makeStyles((theme) => ({
   btn_Post: {
     width: '100%',
-    marginStart: '12px',
   },
   textField: {},
   wrap_add: {
     height: '50px',
     display: 'flex',
     alignItems: 'center',
-    marginStart: '8px',
     justifyContent: 'space-around',
   },
   text: {
@@ -31,25 +38,59 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     margin: SIZETYPE.small,
   },
+  linerProgress: {
+    width: '100%',
+  },
 }));
 function ModalPost(props) {
   const { isShowModal, isCloseModal } = props;
   const { t, i18n } = useTranslation('common');
   const [imgUrl, setImgUrl] = useState();
   const classes = useStyles();
+  const [pendingReq, setPendingReq] = useState(false);
   const [content, setContent] = useState('');
+  const [isDisable, setIsDisable] = useState(true);
   const [backgroundDisable, setBackgroundDisable] = useState('#e4e6eb');
   const handleUploadImage = (e) => {
     setImgUrl(e.target.files[0]);
   };
-  console.log('imgUrl', imgUrl);
+
+  const handlePost = async (content, file ={}) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const resUpload = await api.media.upload(formData);
+    const resPost = await api.post.newPost({
+      content: content,
+      img: file.name || "",
+    });
+    if (resPost.status ) {
+      setTimeout(() => {
+        setPendingReq(false)
+        isCloseModal()
+        noti.success(t("modal_post.success"))
+      }, 2000);
+    }
+  };
   useEffect(() => {
     if (content) {
+      setIsDisable(false);
       setBackgroundDisable('#007bff');
     } else {
+      setIsDisable(true);
       setBackgroundDisable('#e4e6eb');
     }
   }, [content, backgroundDisable, imgUrl]);
+  const linearProgess = () => {
+    if (pendingReq) {
+      return (
+        <div className={classes.linerProgress}>
+          <LinearProgress></LinearProgress>
+        </div>
+      );
+    }
+    return <div></div>;
+  };
+
   const renderImage = (
     <div className={classes.wrapImg}>
       <ImageReader
@@ -58,7 +99,7 @@ function ModalPost(props) {
         height={230}
         handleCloseImg={() => {
           setImgUrl('');
-          document.getElementById('upload').value= ""
+          document.getElementById('upload').value = '';
         }}
       ></ImageReader>
     </div>
@@ -73,7 +114,6 @@ function ModalPost(props) {
           <TextField
             id='outlined-full-width'
             label={t('modal_post.content')}
-            style={{ margin: 8 }}
             placeholder={t('home.newPost')}
             fullWidth
             onChange={(e) => setContent(e.currentTarget.value)}
@@ -107,16 +147,23 @@ function ModalPost(props) {
             Close
           </Button> */}
           <Button
+            disabled={isDisable}
             style={{
               backgroundColor: backgroundDisable,
               borderColor: backgroundDisable,
             }}
             className={classes.btn_Post}
             variant='primary'
-            onClick={isCloseModal}
+            onClick={async () => {
+              setPendingReq(true);
+              //await handleUpload(imgUrl);
+              await handlePost(content, imgUrl);
+              //setTimeout(() => setPendingReq(false), 1000);
+            }}
           >
             {t('modal_post.post')}
           </Button>
+          {linearProgess()}
         </Modal.Footer>
       </Modal>
     </>

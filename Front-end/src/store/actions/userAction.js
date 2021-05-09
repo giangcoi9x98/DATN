@@ -9,7 +9,6 @@ export const getProfileAction = () => {
     //
     // });
     await api.user.getProfile().then((res) => {
-      console.log('aciton response', res.data.data);
       dispatch({
         type: 'GET_PROFILE',
         payload: res.data.data[0],

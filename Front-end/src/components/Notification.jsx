@@ -11,7 +11,6 @@ const setUseSnackbarRef = (useSnackbarRefProp) => {
 };
 export const Notificator = () => {
   return <InnerNotificator
-    style={{width:10}}
     setUseSnackbarRef={setUseSnackbarRef} />;
 };
 const noti = {

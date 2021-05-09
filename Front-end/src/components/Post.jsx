@@ -15,10 +15,12 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import config from '../configs'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    maxWidth: 600,
+    marginTop:'40px'
   },
   media: {
     height: 0,
@@ -39,10 +41,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard() {
+export default function RecipeReviewCard(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-
+  const { user, post } = props
+  console.log("post", post);
+  console.log("imgUrl",post.file);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -65,7 +69,7 @@ export default function RecipeReviewCard() {
       />
       <CardMedia
         className={classes.media}
-        image="/static/images/cards/paella.jpg"
+        image={config.BASE_URL + post}
         title="Paella dish"
       />
       <CardContent>
