@@ -82,7 +82,7 @@ axiosInstance.interceptors.response.use(
     }
     // Reject promise if usual error
     //check if error status is Unauthentication. Then try to refresh token
-    if (errorResponse.status === 401 && !error.response.config._retry) {
+    if (errorResponse.status === 401 && !error.response.config._retry && errorResponse.status !== 422) {
       // error.response.config._retry = true;
       return refreshAccessToken().then((access_token) => {
         const authorization = 'Bearer ' + access_token;

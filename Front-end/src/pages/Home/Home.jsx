@@ -58,13 +58,13 @@ function Home(props) {
     props.history.push('/login');
   }
   useEffect(() => {
-    async function fetchDataUser() {
-      await dispatch(getProfileAction());
-    }
-    async function fetchDataPost() {
-      await dispatch(fetchAllPost());
-    }
     if (useAuth) {
+      async function fetchDataUser() {
+        await dispatch(getProfileAction());
+      }
+      async function fetchDataPost() {
+        await dispatch(fetchAllPost());
+      }
       fetchDataUser();
       fetchDataPost();
     } else {

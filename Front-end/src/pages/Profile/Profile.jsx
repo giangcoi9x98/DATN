@@ -17,9 +17,10 @@ import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import { makeStyles } from '@material-ui/core/styles';
 import { COLORS, SIZETYPE, FONT } from '../../constants';
 import noti from '../../components/Notification';
-import api from '../../api'
+import api from '../../api';
 import NavProfile from './components/NavProfile';
 import ModalUpload from './components/ModalUpload';
+import './profile.css'
 const useStyle = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -54,9 +55,9 @@ const useStyle = makeStyles((theme) => ({
     alignItems: 'center',
     height: 40,
     background: '#eff2f5',
-    borderRadius:SIZETYPE.medium,
+    borderRadius: SIZETYPE.medium,
     paddingStart: SIZETYPE.small,
-    paddingRight:SIZETYPE.small
+    paddingRight: SIZETYPE.small,
   },
   div_updateCover: {
     height: '100%',
@@ -163,8 +164,8 @@ const useStyle = makeStyles((theme) => ({
     justifyContent: 'space-between',
   },
   colorText: {
-    color:COLORS.text
-  }
+    color: COLORS.text,
+  },
 }));
 
 function Profile(props) {
@@ -172,8 +173,10 @@ function Profile(props) {
   const classes = useStyle();
   const [image, setImage] = useState('');
   const { t, i18n } = useTranslation('common');
-  const [currentUser, setCurrentUser] = useState(props.location.pathname.split("/")[2])
-  const [user, setUser] = useState({})
+  const [currentUser, setCurrentUser] = useState(
+    props.location.pathname.split('/')[2]
+  );
+  const [user, setUser] = useState({});
   const handleChangeFile = (e) => {
     setImage(e.target.files[0]);
     setShowModal(true);
@@ -190,17 +193,17 @@ function Profile(props) {
 
   useEffect(() => {
     async function fetchDataUser() {
-      let email = currentUser + '@gmail.com'
-      const res = await api.user.getByEmail(email)
-      console.log(res,email);
+      let email = currentUser + '@gmail.com';
+      const res = await api.user.getByEmail(email);
+      console.log(res, email);
       if (res.status) {
-        await setUser(res.data.data[0])
+        await setUser(res.data.data[0]);
       }
     }
-     fetchDataUser()
+    fetchDataUser();
   }, [currentUser, showModal]);
   console.log('profile', user);
- 
+
   const renderModal = (key) => {
     if (key) {
       return (
@@ -268,7 +271,7 @@ function Profile(props) {
           </Container>
         </div>
         <Typography className={classes.name}>
-          {user.fullname ? user.fullname : " "}
+          {user.fullname ? user.fullname : ' '}
         </Typography>
         <Container component='main' maxWidth='md' className={classes.wrapNav}>
           <NavProfile></NavProfile>
@@ -291,6 +294,17 @@ function Profile(props) {
       </div>
       {}
       <Container component='main' maxWidth='md' className={classes.container}>
+        <Button>test</Button>
+        <div>
+        <div class="loading-screen">
+        <div class="loading">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+        </div>
         {/* <Typography>{user.userData} ? {user.useData}: "null"</Typography> */}
       </Container>
     </div>
