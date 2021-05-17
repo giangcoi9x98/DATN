@@ -6,7 +6,6 @@ const initialState = {
 function postReducer(state = initialState, action) {
   switch (action.type) {
     case GET_ALL_POST:
-      console.log("action.payload", action)
       return {
         ...state,
         postData: action.payload,

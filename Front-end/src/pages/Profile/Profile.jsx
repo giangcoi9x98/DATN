@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
+import Contacts from '../../components/Contacts'
 import {
   Avatar,
   Button,
@@ -70,7 +71,7 @@ const useStyle = makeStyles((theme) => ({
   containerCover: {
     display: 'flex',
     flexDirection: 'column',
-    width: '100%',
+    width: '72%',
     height: '400px',
     backgroundImage: 'url(/img/bg3.jpg)',
     backgroundPosition: 'center',
@@ -295,7 +296,7 @@ function Profile(props) {
       {}
       <Container component='main' maxWidth='md' className={classes.container}>
         <Button>test</Button>
-        <div>
+        {/* <div>
         <div class="loading-screen">
         <div class="loading">
             <span></span>
@@ -304,7 +305,8 @@ function Profile(props) {
             <span></span>
         </div>
     </div>
-        </div>
+    
+        </div> */}
         {/* <Typography>{user.userData} ? {user.useData}: "null"</Typography> */}
       </Container>
     </div>

@@ -5,6 +5,7 @@
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^5.15.3",
     "@material-ui/core": "^4.11.3",
+    "@material-ui/data-grid": "*",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "*",
     "@testing-library/jest-dom": "^5.11.9",
@@ -24,6 +25,7 @@
     "react-bootstrap": "^1.5.2",
     "react-datetime": "^3.0.4",
     "react-dom": "^17.0.2",
+    "react-file-picker": "^0.0.6",
     "react-i18next": "^11.8.13",
     "react-material-ui-carousel": "^2.2.6",
     "react-redux": "^7.2.3",
@@ -32,7 +34,9 @@
     "react-slick": "^0.28.1",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
+    "redux-socket.io": "^1.4.0",
     "redux-thunk": "^2.3.0",
+    "socket.io-client": "3.0.0",
     "web-vitals": "^1.1.1"
   },
   "scripts": {

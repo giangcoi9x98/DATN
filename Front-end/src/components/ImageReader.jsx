@@ -54,7 +54,7 @@ function ImageReader(props) {
       )
     }
   };
-  console.log('url', imageUrl); // Would see a path?
+  // console.log('url', imageUrl); // Would see a path?
   return (
     <Paper className={classes.wrapImg} >
       <div className={classes.closeBtn}>

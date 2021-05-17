@@ -41,7 +41,9 @@ const useStyles = makeStyles((theme) => ({
   toolBar: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft:'10px'
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -122,7 +124,6 @@ function PrimarySearchAppBar(props) {
   if (user) {
     email  = user.userData.email
   }
-  console.log("navemail", email);
   useEffect(() => {
     return i18n.changeLanguage(lang.lang);
   }, [lang]);
@@ -231,7 +232,7 @@ function PrimarySearchAppBar(props) {
   return (
     <div className={classes.grow}>
       <AppBar position='static' className={classes.navBar}>
-        <Container maxWidth='lg' component='main'>
+        <Container maxWidth='lg' component='main' >
           <Toolbar className={classes.toolBar}>
             {/* 
            logo codese

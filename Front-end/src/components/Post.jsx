@@ -50,7 +50,6 @@ export default function RecipeReviewCard(props) {
   const [expanded, setExpanded] = React.useState(false);
   const { user, post } = props;
   const [images, setImages] = useState(props.post.post.files);
-  console.log('images', images);
   const items = [
     { url: 'http://localhost:3000/giangcoi9x98@gmail.com/Rectangle 572.png' },
     { url: 'http://localhost:3000/giangcoi9x98@gmail.com/Rectangle 573.png' },
@@ -60,8 +59,8 @@ export default function RecipeReviewCard(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  let url = config.BASE_URL + post.post.files[0].path;
-  console.log('object', url);
+ //let url = config.BASE_URL + post.post.files[0].path;
+  //console.log('object', url);
   useEffect(() => {
     setImages(props.post.post.files);
   }, [props]);
@@ -82,7 +81,7 @@ export default function RecipeReviewCard(props) {
         subheader='September 14, 2016'
       />
       
-      <Carousel>{
+      <Carousel autoPlay = {false}>{
         items.map(e =><CardMedia
           className={classes.media}
           title='Paella dish'

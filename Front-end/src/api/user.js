@@ -27,7 +27,7 @@ export const signUp = async ({
 };
 export const getAll = async () => {
   try {
-    const res = await axiosInstance.get('/account');
+    const res = await axiosInstance.get('/accounts');
     return {
       status: true,
       data: res,

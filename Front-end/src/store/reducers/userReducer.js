@@ -8,11 +8,11 @@ const initialState = {
 function userReducer(state = initialState, action) {
   switch (action.type) {
     case GET_PROFILE:
-      console.log("action",action)
       return {
         ...state,
         userData: action.payload,
       };
+
     default:
       return state;
   }

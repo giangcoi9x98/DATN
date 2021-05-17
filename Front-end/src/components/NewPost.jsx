@@ -15,6 +15,8 @@ const useStyle = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    zIndex: 10,
+    cursor:'pointer'
   },
   text_hidden: {
     marginLeft: 5,
@@ -46,7 +48,9 @@ function NewPost(props) {
   };
   useEffect(() => {}, [user.userData]);
   return (
-    <div>
+    <div style={{
+      cursor:'pointer'
+    }}>
       <div className={classes.title} onClick={() => handleShowModal()}>
         <div>
           <Avatar src='/img/faces/kendall.jpg' className={classes.large} />
