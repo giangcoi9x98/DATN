@@ -20,7 +20,7 @@ const multer = require("../lib/ multer");
  * @type {import('moleculer').Service}
  */
 const schema = {
-	name: "api",
+	name: "api-gateway",
 	mixins: [APIGateway, socketMixin],
 	settings: {
 		port: process.env.PORT || 3000,
@@ -36,7 +36,6 @@ const schema = {
 					Fingerprint.geoip,
 				],
 			}),
-
 		],
 		cors: {
 			origin: "*", //Moleculer-io only pick up this option and set it to io.origins()
@@ -166,7 +165,8 @@ const schema = {
 					"PUT user/update": "user.updateProfile",
 					"GET user/profile": "user.getProfile",
 					"POST user/logout": "auth.logout",
-					"GET user/email/:email":"user.getByEmail",	
+					"GET user/email/:email": "user.getByEmail",
+					"GET accounts":"user.getAll",
 					//Post apis
 					"POST post": "post.newPost",
 					"GET post": "post.getAllPost",
@@ -316,20 +316,24 @@ const schema = {
 		io: {
 			namespaces: {
 				"/": {
-					authorization: true,
+					// authorization: true,
 					events: {
 						call: {
 							whitelist: [
-								"config.get",
-								"bond-trading.order",
-								"api-gateway.authenticate",
-								"user.refreshJwtToken",
-								"socket-subscribe.*",
-								"bond-trading.fetchRecentTrade",
-								"bond-trading.fetchOpeningOrder",
-								"bond-trading.getLastPrice",
+								"chat.*", // TODO: must login to send message
+								//TODO: remove
+								"crash.reuseHashes",
+								"crash.startGame",
+								"crash.stopGame",
 							],
-							callOptions: {},
+						},
+					},
+				},
+				"/crash": {
+					authorization: true,
+					events: {
+						call: {
+							whitelist: ["crash.bet", "crash.cashOut"],
 						},
 					},
 				},

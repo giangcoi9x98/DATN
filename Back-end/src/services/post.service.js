@@ -28,6 +28,7 @@ module.exports = {
 			async handler(ctx) {
 				try {
 					await this.mysql.query("START TRANSACTION;");
+
 					const data = await this.mysql
 						.queryMulti("SELECT * FROM post")
 						.then((res) => res);
@@ -88,6 +89,14 @@ module.exports = {
 				try {
 					const { user } = ctx.meta;
 					const { content, img } = ctx.params;
+					this.socketBroadcast({
+						event: "NEW_MESSAGE",
+						args: [
+							{
+								name: "giang",
+							},
+						],
+					});
 					await this.mysql.query("START TRANSACTION");
 					const res = await this.mysql.query(
 						"INSERT INTO post(accountId, content) VALUES(?, ?)",
@@ -103,7 +112,7 @@ module.exports = {
 							[
 								user.id,
 								"img",
-								`${user.email +"/"+ img}`,
+								`${user.email + "/" + img}`,
 								res.insertId,
 							]
 						);
