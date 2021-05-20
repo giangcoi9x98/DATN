@@ -15,7 +15,7 @@ import { IconButton } from '@material-ui/core';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
 
-//let persistor = persistStore(store)
+let persistor = persistStore(store)
 const notistackRef = React.createRef();
 const onClickDismiss = (key) => () => {
   notistackRef.current.closeSnackbar(key);

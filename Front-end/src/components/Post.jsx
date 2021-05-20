@@ -81,7 +81,7 @@ export default function RecipeReviewCard(props) {
         subheader='September 14, 2016'
       />
       
-      <Carousel autoPlay = {false}>{
+      <Carousel autoPlay = {false}  >{
         items.map(e =><CardMedia
           className={classes.media}
           title='Paella dish'

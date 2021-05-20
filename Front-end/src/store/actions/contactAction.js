@@ -1,6 +1,9 @@
 import api from '../../api';
 
-export const GET_CONTACTS= 'GET_CONTACTS';
+export const GET_CONTACTS = 'GET_CONTACTS';
+export const GET_CONTACT_SELECTED= 'GET_CONTACT_SELECTED';
+export const DELETE_CONTACT_SELECTED= 'DELETE_CONTACT_SELECTED';
+
 export const getContacts = () => {
   return async (dispatch) => {
     // api.user.getProfile().then((res) => {
@@ -15,3 +18,18 @@ export const getContacts = () => {
     });
   };
 };
+
+export const getContactsSelected = (data) => {
+  return {
+    type: 'GET_CONTACT_SELECTED',
+    payload:data
+    }
+}
+
+export const deleteContactSelected = (data) => {
+  return {
+    type: 'DELETE_CONTACT_SELECTED',
+    payload:data
+    }
+}
+

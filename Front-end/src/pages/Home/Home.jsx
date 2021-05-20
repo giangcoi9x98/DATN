@@ -67,7 +67,7 @@ const useStyle = makeStyles((theme) => ({
   mess: {
     margin: theme.spacing.unit, // You might not need this now
     position: 'fixed',
-    bottom: theme.spacing.unit * 2,
+    bottom: 0,
     right: theme.spacing.unit * 3,
     display: 'flex',
     zIndex: 5,
@@ -87,7 +87,7 @@ function Home(props) {
     props.history.push('/login');
   }
   useEffect(() => {
-    if (useAuth) {
+    if (isAuth) {
       async function fetchData() {
         await dispatch(getProfileAction());
         await dispatch(fetchAllPost());
@@ -98,7 +98,6 @@ function Home(props) {
       props.history.push('/login');
     }
   }, [dispatch, props.history]);
-  console.log('contatcs', contacts.contactData);
   const renderPost = () => {
     if (posts.postData) {
       return posts.postData.map((post) => {
@@ -120,9 +119,24 @@ function Home(props) {
   const renderChat = () => {
     if (contacts.contactData) {
       return contacts.contactData.map((contact) => {
-        return <Box className={classes.message}>
-          <BubbleChat message ={contact.contact.messages}></BubbleChat>
-        </Box>
+        let isShow = false;
+        contacts.isSelected.map((e) => {
+          if (e == contact.contact.id) isShow = true;
+        });
+        return (
+          <Box
+            className={classes.message}
+            key={contact.contact.id}
+            style={{
+              display: isShow ? 'block' : 'none',
+            }}
+          >
+            <BubbleChat
+              message={contact.contact.messages}
+              contact={contact.contact}
+            ></BubbleChat>
+          </Box>
+        );
       });
     } else {
       return <div></div>;
@@ -157,14 +171,12 @@ function Home(props) {
             style={{
               position: 'fixed',
               overflow: 'scroll',
-              height: '100%',
+              height: '85%',
               width: '18%',
             }}
           >
-            <Box className={classes.mess}>
-              {renderChat()}
-            </Box>
-            <Suggested></Suggested>
+            <Box className={classes.mess}>{renderChat()}</Box>
+            {/* <Suggested></Suggested> */}
             {renderContacts()}
           </div>
         </Grid>

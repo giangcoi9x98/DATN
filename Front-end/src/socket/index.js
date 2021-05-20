@@ -1,7 +1,7 @@
+import { useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 
-const SOCKET_URL =
-  process.env.REACT_APP_API_SOCKET_URL || 'localhost:3000';
+const SOCKET_URL = process.env.REACT_APP_API_SOCKET_URL || '192.168.0.132:3000';
 var instance;
 const init = function () {
   instance = io(SOCKET_URL, {
@@ -14,16 +14,10 @@ const init = function () {
     //   credentials: false
     // }
   });
-  instance.on('NEW_MESSAGE', (data) => {
-    console.log('data', data);
-  });
   instance.on('error', (data) => console.log('err', data));
   instance.on('connect_error', (data) => console.log('err', data));
   instance.on('connect', (data) => console.log('connect', instance.id, data));
-  instance.emit('thien', { name: 123 });
-  instance.on('thien', (data) => {
-    console.log(data);
-  });
+
   instance.on('disconnect', (data) => {
     console.log('disconnect', data);
     instance.removeAllListeners();

@@ -8,6 +8,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Avatar, Divider } from '@material-ui/core';
 import BubbleChat from './BubbleChat';
+import { useDispatch } from 'react-redux';
+import {getContactsSelected} from '../store/actions/contactAction'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
   },
   mess: {
     margin: theme.spacing.unit, // You might not need this now
-    position: 'fixed',
     bottom: theme.spacing.unit * 2,
     right: theme.spacing.unit * 3,
     display: 'flex',
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CheckboxListSecondary(props) {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const [checked, setChecked] = React.useState([1]);
   const [contact, setContact] = useState(props.contact);
   const handleToggle = (value) => () => {
@@ -43,7 +45,7 @@ export default function CheckboxListSecondary(props) {
   };
 
   return (
-    <div onClick ={() => console.log(contact.contact)}>
+    <div onClick ={() => dispatch(getContactsSelected(contact.contact.id))}>
       <List dense className={classes.root}>
         <ListItem button>
           <ListItemAvatar>
