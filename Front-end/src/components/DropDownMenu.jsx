@@ -66,23 +66,41 @@ export default function CustomizedMenus() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem>
-          <ListItemIcon>
-            <SendIcon fontSize="small" />
+        <StyledMenuItem style={{height:"72px", width:"400px"}}>
+          <ListItemIcon style={{width:"50px", height:"50px",}}>
+            <div style={{width:"10px", height:"10px", position:"absolute", top:"68%", left:"13%"}}>
+              <div style={{backgroundColor:"#31a24c", width:"10px", height:"10px", borderRadius:"50%"}}> </div>
+            </div>
+            <img style={{borderRadius:"50%", backgroundSize:"cover", width:"50px", height:"50px"}} src="img\profile-bg.jpg" alt="" />
           </ListItemIcon>
-          <ListItemText primary="Sent mail" />
+          <div style={{marginTop: "2px", marginLeft:"7px"}}>
+            <p style={{margin:"0px", padding:"0px", fontSize:"17px", color:"#050505"}}>Giang</p>
+            <p style={{margin:"0px", padding:"0px", fontSize:"13px", color:"#9a9b9d"}}>Da gui tin nhan cho b</p>
+          </div>
         </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <DraftsIcon fontSize="small" />
+        <StyledMenuItem style={{height:"72px", width:"400px"}}>
+          <ListItemIcon style={{width:"50px", height:"50px",}}>
+            <div style={{width:"10px", height:"10px", position:"absolute", top:"68%", left:"13%"}}>
+              <div style={{backgroundColor:"#31a24c", width:"10px", height:"10px", borderRadius:"50%"}}> </div>
+            </div>
+            <img style={{borderRadius:"50%", backgroundSize:"cover", width:"50px", height:"50px"}} src="img\profile-bg.jpg" alt="" />
           </ListItemIcon>
-          <ListItemText primary="Drafts" />
+          <div style={{marginTop: "2px", marginLeft:"7px"}}>
+            <p style={{margin:"0px", padding:"0px", fontSize:"17px", color:"#050505"}}>Giang</p>
+            <p style={{margin:"0px", padding:"0px", fontSize:"13px", color:"#9a9b9d"}}>Da gui tin nhan cho b</p>
+          </div>
         </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <InboxIcon fontSize="small" />
+        <StyledMenuItem style={{height:"72px", width:"400px"}}>
+          <ListItemIcon style={{width:"50px", height:"50px",}}>
+            <div style={{width:"10px", height:"10px", position:"absolute", top:"68%", left:"13%"}}>
+              <div style={{backgroundColor:"#31a24c", width:"10px", height:"10px", borderRadius:"50%"}}> </div>
+            </div>
+            <img style={{borderRadius:"50%", backgroundSize:"cover", width:"50px", height:"50px"}} src="img\profile-bg.jpg" alt="" />
           </ListItemIcon>
-          <ListItemText primary="Inbox" />
+          <div style={{marginTop: "2px", marginLeft:"7px"}}>
+            <p style={{margin:"0px", padding:"0px", fontSize:"17px", color:"#050505"}}>Giang</p>
+            <p style={{margin:"0px", padding:"0px", fontSize:"13px", color:"#9a9b9d"}}>Da gui tin nhan cho b</p>
+          </div>
         </StyledMenuItem>
       </StyledMenu>
     </div>

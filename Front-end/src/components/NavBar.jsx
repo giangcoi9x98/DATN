@@ -197,12 +197,10 @@ function PrimarySearchAppBar(props) {
         <p>{t('navBar.home')}</p>
       </MenuItem>
       <MenuItem>
-        {/* <IconButton aria-label='show 4 new mails' color='inherit'>
-          <Badge badgeContent={4} color='secondary'>
-            <MailIcon />
-          </Badge>
-        </IconButton> */}
-        <DropDownMenu></DropDownMenu>
+        <IconButton aria-label='show 4 new mails' color='inherit'>
+        <DropDownMenu/>
+          
+        </IconButton>
         <p>{t('navBar.message')}</p>
       </MenuItem>
       <MenuItem>
