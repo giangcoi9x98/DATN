@@ -100,27 +100,29 @@ module.exports = {
 						data.map(async (e) => {
 							const message = await this.mysql
 								.queryMulti(
-									`SELECT email, a.id as accountId,m.id as messageId, messageInfoId, groupId,
+									`SELECT email, a.id as accountId,m.id as messageId, groupId,
 									senderId, receiverId, m.is_delete  from account as a
 									 INNER JOIN message  as m ON a.id = m.senderId
-									 WHERE a.id = ? AND receiverId = ?`,
-									[user.id, e.id]
+									 WHERE a.id = ? AND receiverId = ? OR a.id = ? AND receiverId = ?`,
+									[user.id, e.id, e.id, user.id]
 								)
 								.then((res) => res);
-							if (message.length) {
-								await Promise.all(
-									message.map(async (e) => {
-										console.log(e);
-										const detailMessage = await this.mysql
-											.query(
-												"SELECT * FROM message_detail  WHERE messageId = ?",
-												[e.messageInfoId]
-											)
-											.then((res) => res[0]);
-										e.detail = detailMessage;
-									})
-								);
-							}
+							await Promise.all(
+								message.map(async (e) => {
+									console.log("dasdasdsadas", e);
+									const detailMessage = await this.mysql
+										.query(
+											"SELECT * FROM message_detail  WHERE messageId = ?",
+											[e.messageId]
+										)
+										.then((res) => res[0]);
+									e.detail = detailMessage;
+									return {
+										e,
+									};
+								})
+							);
+
 							e.messages = message;
 							return {
 								contact: e,

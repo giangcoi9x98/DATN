@@ -2,7 +2,7 @@
 const CommonMixin = require("../mixins/common.mixin");
 const ResponseData = require("../lib/response");
 const { MoleculerError } = require("moleculer").Errors;
-
+const uuid = require("uuid").v4;
 module.exports = {
 	name: "chat",
 	mixins: [CommonMixin],
@@ -40,10 +40,39 @@ module.exports = {
 				message: "string",
 			},
 			async handler(ctx) {
-				this.broker.call("api-gateway.broadcast", {
-					event: "NEW_MESSAGE",
-					args: ["giang"],
-				});
+				try {
+					const { message, roomId } = ctx.params;
+					const { user } = ctx.meta;
+					const type = "text"; // TODO: is file with images
+					console.log("message", message);
+
+					const id = uuid();
+					console.log(id, uuid());
+					const msg = await this.mysql.query(
+						"INSERT INTO message(id, senderId, receiverId) VALUES(?, ?, ?) ;",
+						[id, user.id, roomId]
+					);
+					const msgDeatil = await this.mysql.query(
+						"INSERT INTO message_detail(content, type, messageId) VALUES(?, ?, ?)",
+						[message, type, id]
+					);
+					await Promise.all([msg, msgDeatil]);
+					this.broker.call("api-gateway.broadcast", {
+						event: "NEW_MESSAGE",
+						args: [
+							{
+								message,
+								roomId,
+							},
+						],
+						roomId: roomId,
+					});
+					return new ResponseData(true, "Success");
+				} catch (error) {
+					this.logger.error("ERROR at sendMessage", error);
+
+					throw error;
+				}
 			},
 			hooks: {
 				async before(ctx) {

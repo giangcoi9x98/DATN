@@ -166,7 +166,7 @@ const schema = {
 					"GET user/profile": "user.getProfile",
 					"POST user/logout": "auth.logout",
 					"GET user/email/:email": "user.getByEmail",
-					"GET accounts":"user.getAll",
+					"GET accounts": "user.getAll",
 					//Post apis
 					"POST post": "post.newPost",
 					"GET post": "post.getAllPost",
@@ -175,6 +175,8 @@ const schema = {
 					"DELETE post:id": "post.deletePost",
 					//media
 					"PUT media/upload": "media.upload",
+					//chat
+					"POST chat": "chat.sendMessage",
 				},
 				onBeforeCall(ctx, route, req) {
 					// console.log("req_params")

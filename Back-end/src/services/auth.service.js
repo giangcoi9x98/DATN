@@ -112,7 +112,7 @@ const schema = {
 					const newUserData = await this.mysql.queryOne(
 						"SELECT * FROM account WHERE email = ?",
 						[email]
-					);
+					).then(res => res);
 					console.log("user", newUserData);
 					await this.mysql.query(
 						`INSERT INTO account_info (fullname,birthday,accountId)
@@ -902,6 +902,8 @@ const schema = {
 							LANGs.TOKEN_EXPIRED
 						);
 					}
+					throw error
+					;
 				}
 				throw new MoleculerError(
 					"Invalid token!",
