@@ -43,6 +43,8 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 450,
     flexDirection: 'column',
     display: 'flex',
+    backgroundColor: 'white',
+    marginLeft:'10px'
   },
   media: {
     height: 0,
@@ -62,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
   listMess: {
-    overflow: 'scroll',
+    overflowY: 'scroll',
   },
   messageItem: {
     display: 'flex',
@@ -189,12 +191,15 @@ export default function RecipeReviewCard(props) {
       {renderMessageItem()}
       <Box
         style={{
-          justifyContent: 'center',
+          //justifyContent: 'center',
           alignItems: 'center',
           display: 'flex',
           position: 'absolute',
           bottom: 0,
           width: '100%',
+          padding: '0px',
+          margin: '0px',
+          maxWidth:345
         }}
         boxShadow={3}
       >

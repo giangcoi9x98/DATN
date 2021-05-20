@@ -170,13 +170,14 @@ function Home(props) {
           <div
             style={{
               position: 'fixed',
-              overflow: 'scroll',
+              overflowY: 'scroll',
               height: '85%',
               width: '18%',
             }}
           >
             <Box className={classes.mess}>{renderChat()}</Box>
-            {/* <Suggested></Suggested> */}
+            <Suggested></Suggested>
+            <Divider></Divider>
             {renderContacts()}
           </div>
         </Grid>
