@@ -20,7 +20,7 @@ import { COLORS, SIZETYPE } from '../constants';
 import { Container } from '@material-ui/core';
 import api from '../api';
 import { withRouter } from 'react-router';
-import DropDownMenu  from './DropDownMenu'
+import DropDownMenu from './DropDownMenu';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft:'10px'
+    marginLeft: '10px',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -123,7 +123,7 @@ function PrimarySearchAppBar(props) {
   const { user } = useSelector((state) => state);
   let email;
   if (user) {
-    email  = user.userData.email
+    email = user.userData.email;
   }
   useEffect(() => {
     return i18n.changeLanguage(lang.lang);
@@ -138,7 +138,9 @@ function PrimarySearchAppBar(props) {
   };
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+  const messIcon = () => {
+    return<MailIcon></MailIcon>
+  };
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -169,7 +171,7 @@ function PrimarySearchAppBar(props) {
     >
       <MenuItem
         onClick={() => {
-          props.history.push(`/profile/${email.slice(0,email.length-10)}`);
+          props.history.push(`/profile/${email.slice(0, email.length - 10)}`);
         }}
       >
         {t('navBar.profile')}
@@ -202,7 +204,7 @@ function PrimarySearchAppBar(props) {
             <MailIcon />
           </Badge>
         </IconButton> */}
-        <DropDownMenu></DropDownMenu>
+        <DropDownMenu icon={"mess"}></DropDownMenu>
         <p>{t('navBar.message')}</p>
       </MenuItem>
       <MenuItem>
@@ -234,7 +236,7 @@ function PrimarySearchAppBar(props) {
   return (
     <div className={classes.grow}>
       <AppBar position='static' className={classes.navBar}>
-        <Container maxWidth='lg' component='main' >
+        <Container maxWidth='lg' component='main'>
           <Toolbar className={classes.toolBar}>
             {/* 
            logo codese
@@ -259,8 +261,11 @@ function PrimarySearchAppBar(props) {
               <div />
             </div>
             <div className={classes.rightNav}>
-              <div className={classes.sectionDesktop} >
-                <IconButton color='inherit'  onClick={() => props.history.push('/')} >
+              <div className={classes.sectionDesktop}>
+                <IconButton
+                  color='inherit'
+                  onClick={() => props.history.push('/')}
+                >
                   <HomeIcon className={classes.homeIcon} />
                 </IconButton>
                 {/* <IconButton aria-label='show 4 new mails' color='inherit'>
@@ -268,7 +273,7 @@ function PrimarySearchAppBar(props) {
                     <MailIcon className={classes.icon} />
                   </Badge>
                 </IconButton> */}
-                <DropDownMenu></DropDownMenu>
+                <DropDownMenu icon = "mess"></DropDownMenu>
                 <IconButton
                   aria-label='show 17 new notifications'
                   color='inherit'

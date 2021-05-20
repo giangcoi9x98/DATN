@@ -1,7 +1,8 @@
 import { useDispatch } from 'react-redux';
 import io from 'socket.io-client';
+import config from '../configs';
 
-const SOCKET_URL = process.env.REACT_APP_API_SOCKET_URL || '192.168.0.132:3000';
+const SOCKET_URL = config.BASE_URL || '192.168.0.132:3000';
 var instance;
 const init = function () {
   instance = io(SOCKET_URL, {

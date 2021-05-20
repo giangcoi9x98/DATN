@@ -13,7 +13,9 @@ import {
   Divider,
   IconButton,
   Typography,
+  Grid
 } from '@material-ui/core';
+import Posts from '../../components/Post'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import { makeStyles } from '@material-ui/core/styles';
 import { COLORS, SIZETYPE, FONT } from '../../constants';
@@ -177,15 +179,16 @@ function Profile(props) {
   const [currentUser, setCurrentUser] = useState(
     props.location.pathname.split('/')[2]
   );
+  const [navProfile, setNavProfile] = useState(0)
   const [user, setUser] = useState({});
   const handleChangeFile = (e) => {
     setImage(e.target.files[0]);
     setShowModal(true);
   };
+  const posts = useSelector((state) => state.post);
   const [showModal, setShowModal] = useState(false);
   console.log(image);
   const handleUploadImage = async (file) => {
-    console.log('uploadfile');
     const formData = new FormData();
     formData.append('file', file);
     const res = await api.media.upload(formData);
@@ -203,8 +206,16 @@ function Profile(props) {
     }
     fetchDataUser();
   }, [currentUser, showModal]);
-  console.log('profile', user);
-
+  const renderContent = useCallback(() => {
+    console.log("navProfile", posts);
+    if (navProfile === 0) {
+      return posts.postData.map((post) => {
+        return <Posts post={post}></Posts>;
+      });
+    }
+    return <div>
+    </div>
+  },[navProfile,posts])
   const renderModal = (key) => {
     if (key) {
       return (
@@ -275,7 +286,10 @@ function Profile(props) {
           {user.fullname ? user.fullname : ' '}
         </Typography>
         <Container component='main' maxWidth='md' className={classes.wrapNav}>
-          <NavProfile></NavProfile>
+          <NavProfile setNavProfile={(e) => {
+            console.log("nac",e);
+            setNavProfile(e)
+          }} navProfile ={navProfile}></NavProfile>
           <div className={classes.editCover}>
             <IconButton
               variant='contained'
@@ -295,19 +309,9 @@ function Profile(props) {
       </div>
       {}
       <Container component='main' maxWidth='md' className={classes.container}>
-        <Button>test</Button>
-        {/* <div>
-        <div class="loading-screen">
-        <div class="loading">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-    
-        </div> */}
-        {/* <Typography>{user.userData} ? {user.useData}: "null"</Typography> */}
+      <Grid item xs={12} sm={12}>
+          {renderContent()}
+        </Grid>
       </Container>
     </div>
   );

@@ -6,10 +6,12 @@ import { persistReducer } from 'redux-persist';
 import socketInstance from '../socket'
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import socketMiddleware from './middlewares/socketMiddleWare';
+
 const persistConfig = {
   key: 'root',
   storage,
 }
+
 // console.log('object');
 var socket = socketInstance.getInstance()
 

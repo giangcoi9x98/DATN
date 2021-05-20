@@ -90,14 +90,14 @@ function Home(props) {
     if (isAuth) {
       async function fetchData() {
         await dispatch(getProfileAction());
-        await dispatch(fetchAllPost());
+       // await dispatch(fetchAllPost());
         await dispatch(getContacts());
       }
       fetchData();
     } else {
       props.history.push('/login');
     }
-  }, [dispatch, props.history]);
+  }, [dispatch, isAuth]);
   const renderPost = () => {
     if (posts.postData) {
       return posts.postData.map((post) => {

@@ -122,7 +122,6 @@ export default function RecipeReviewCard(props) {
     });
     console.log(res);
   };
-   console.log(message);
   const renderMessageItem = () => {
     if (message.length > 0) {
       return (

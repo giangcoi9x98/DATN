@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -11,26 +11,28 @@ import { COLORS, SIZETYPE, FONT } from '../../../constants';
 const useStyles = makeStyles({
   root: {
     width: 500,
-    fontSize:'1rem'
-    
+    fontSize: '1rem',
   },
   label: {
     color: 'black',
     fontSize: '1rem',
-    fontWeight:500
+    fontWeight: 500,
   },
 });
 
-export default function SimpleBottomNavigation() {
+export default function SimpleBottomNavigation({setNavProfile, navProfile}) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const { t, i18n } = useTranslation('common');
-
+  useEffect(() => {
+    setNavProfile(value)
+  }, [value])
   return (
     <BottomNavigation
       value={value}
       onChange={(event, newValue) => {
-        setValue(newValue);
+        setNavProfile(newValue)
+        setValue(newValue)
       }}
       showLabels
       className={classes.root}
@@ -38,7 +40,6 @@ export default function SimpleBottomNavigation() {
       <BottomNavigationAction
         className={classes.label}
         label={t('profile.post')}
-        
       />
       <BottomNavigationAction
         className={classes.label}
