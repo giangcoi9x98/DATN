@@ -20,6 +20,7 @@ import { COLORS, SIZETYPE } from '../constants';
 import { Container } from '@material-ui/core';
 import api from '../api';
 import { withRouter } from 'react-router';
+import DropDownMenu  from './DropDownMenu'
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -196,11 +197,12 @@ function PrimarySearchAppBar(props) {
         <p>{t('navBar.home')}</p>
       </MenuItem>
       <MenuItem>
-        <IconButton aria-label='show 4 new mails' color='inherit'>
+        {/* <IconButton aria-label='show 4 new mails' color='inherit'>
           <Badge badgeContent={4} color='secondary'>
             <MailIcon />
           </Badge>
-        </IconButton>
+        </IconButton> */}
+        <DropDownMenu></DropDownMenu>
         <p>{t('navBar.message')}</p>
       </MenuItem>
       <MenuItem>
@@ -261,11 +263,12 @@ function PrimarySearchAppBar(props) {
                 <IconButton color='inherit'  onClick={() => props.history.push('/')} >
                   <HomeIcon className={classes.homeIcon} />
                 </IconButton>
-                <IconButton aria-label='show 4 new mails' color='inherit'>
+                {/* <IconButton aria-label='show 4 new mails' color='inherit'>
                   <Badge badgeContent={4} color='secondary'>
                     <MailIcon className={classes.icon} />
                   </Badge>
-                </IconButton>
+                </IconButton> */}
+                <DropDownMenu></DropDownMenu>
                 <IconButton
                   aria-label='show 17 new notifications'
                   color='inherit'

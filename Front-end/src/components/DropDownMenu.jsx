@@ -8,6 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
+import MailIcon from '@material-ui/icons/Mail';
+import IconButton from '@material-ui/core/IconButton';
 
 const StyledMenu = withStyles({
   paper: {
@@ -48,15 +50,15 @@ export default function CustomizedMenus() {
 
   return (
     <div>
-      <Button
+      <IconButton
         aria-controls="customized-menu"
         aria-haspopup="true"
         variant="contained"
         color="primary"
         onClick={handleClick}
       >
-        Open Menu
-      </Button>
+        <MailIcon></MailIcon>
+      </IconButton>
       <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
