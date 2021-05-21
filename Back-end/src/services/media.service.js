@@ -48,7 +48,8 @@ module.exports = {
 					const { email } = ctx.params;
 					const files = fs.readdirSync(`uploads/${email}`);
 					const filterFiles = files.filter(e => e !== ".DS_Store");
-					return new ResponseData(true, "Success", filterFiles);
+					const res = filterFiles.map(e => `${email}/${e}`);
+					return new ResponseData(true, "Success", res);
 				} catch (error) {
 					this.logger.error("Error media servirce", error);
 					return new ResponseData(true, "Success", []);
