@@ -49,7 +49,6 @@ export default function CustomizedMenus(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(icon);
   const renderIcon = () => {
     if (icon == 'mess') {
       return<MailIcon></MailIcon>

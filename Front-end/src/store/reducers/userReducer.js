@@ -1,8 +1,9 @@
-import { GET_PROFILE,SET_PROFILE } from '../actions/userAction';
+import { GET_PROFILE,SET_PROFILE,GET_IMAGES } from '../actions/userAction';
 
 const initialState = {
   userData: {},
   isOnline: false,
+  images:[]
 };
 
 function userReducer(state = initialState, action) {
@@ -12,7 +13,12 @@ function userReducer(state = initialState, action) {
         ...state,
         userData: action.payload,
       };
-
+    case GET_IMAGES: {
+      return {
+        ...state,
+        images: action.payload
+      }
+    }  
     default:
       return state;
   }
