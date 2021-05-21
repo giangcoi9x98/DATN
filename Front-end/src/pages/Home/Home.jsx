@@ -82,8 +82,8 @@ function Home(props) {
   const dispatch = useDispatch();
   const [pendingReq, setPendingReq] = useState(true);
   const classes = useStyle();
-  const isAuth = useAuth;
-  if (!isAuth()) {
+  const isAuth = useAuth();
+  if (!isAuth) {
     props.history.push('/login');
   }
   useEffect(() => {
