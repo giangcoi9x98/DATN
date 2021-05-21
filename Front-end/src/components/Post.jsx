@@ -16,8 +16,9 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import config from '../configs';
-import { Box } from '@material-ui/core';
+import { Box, Input } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   media: {
     // 56 . 25
     paddingTop: '100%',
-    backgroundPosition:'center'
+    backgroundPosition: 'center'
     // 16:9
   },
   expand: {
@@ -59,7 +60,7 @@ export default function RecipeReviewCard(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
- //let url = config.BASE_URL + post.post.files[0].path;
+  //let url = config.BASE_URL + post.post.files[0].path;
   //console.log('object', url);
   useEffect(() => {
     setImages(props.post.post.files);
@@ -80,14 +81,14 @@ export default function RecipeReviewCard(props) {
         title='Shrimp and Chorizo Paella'
         subheader='September 14, 2016'
       />
-      
-      <Carousel autoPlay = {false}  >{
-        items.map(e =><CardMedia
+
+      <Carousel autoPlay={false}  >{
+        items.map(e => <CardMedia
           className={classes.media}
           title='Paella dish'
           src={e.url}
           image={`${e.url}`}
-        /> )
+        />)
       }</Carousel>
       <CardContent>
         <Typography variant='body2' color='textSecondary' component='p'>
@@ -103,45 +104,54 @@ export default function RecipeReviewCard(props) {
         <IconButton aria-label='share'>
           <ShareIcon />
         </IconButton>
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
+        <div style={{ marginLeft: "auto" }}
           onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label='show more'
         >
-          <ExpandMoreIcon />
-        </IconButton>
+          <p style={{ color: " rgba(0, 0, 0, 0.54)", cursor: "pointer" }}> 3 Comments </p>
+        </div>
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
-          <Typography paragraph>Method:</Typography>
           <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and
-            set aside for 10 minutes.
+            <div style={{ display: "flex",  }}>
+              <div style={{ width: "40px", height: "40px", marginRight:"10px" }}>
+                <img style={{borderRadius:"50%", backgroundSize:"cover", width:"40px", height:"40px"}} src="img\profile-bg.jpg" alt="" />
+              </div>
+              <div style={{ paddingLeft: "10px", width: "100%" , backgroundColor:"#f0f2f5", borderRadius:"15px"}}>
+                <p style={{ padding: "0px", margin: "0px" }}> Giang Tran </p>
+                <p style={{ fontSize: "13px", color: " rgba(0, 0, 0, 0.54)", padding: "0px", margin: "0px" }}> This impressive paella is a perfect party dish and a fun meal to  </p>
+                <span style={{ fontSize: "13px" }}> Thich </span>
+                <span style={{ fontSize: "13px", paddingLeft: "10px" }}> Trả lời</span>
+              </div>
+            </div>
+            <div style={{ display: "flex", marginBottom: "10px", marginLeft: "40px", marginTop: "10px" }}>
+              <div style={{ width: "25px", height: "25px" }}>
+                  <img style={{borderRadius:"50%", backgroundSize:"cover", width:"25px", height:"25px"}} src="img\instagram.png" alt="" />
+              </div>
+              <div style={{ paddingLeft: "10px", width: "100%",  backgroundColor:"#f0f2f5", borderRadius:"15px" }}>
+                <p style={{ padding: "0px", margin: "0px", fontSize: "13px" }}> Giang Tran </p>
+                <p style={{ fontSize: "13px", color: " rgba(0, 0, 0, 0.54)" }}> Xin chao moi ng  </p>
+              </div>
+            </div>
           </Typography>
           <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet
-            over medium-high heat. Add chicken, shrimp and chorizo, and cook,
-            stirring occasionally until lightly browned, 6 to 8 minutes.
-            Transfer shrimp to a large plate and set aside, leaving chicken and
-            chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes,
-            onion, salt and pepper, and cook, stirring often until thickened and
-            fragrant, about 10 minutes. Add saffron broth and remaining 4 1/2
-            cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography paragraph>
-            Add rice and stir very gently to distribute. Top with artichokes and
-            peppers, and cook without stirring, until most of the liquid is
-            absorbed, 15 to 18 minutes. Reduce heat to medium-low, add reserved
-            shrimp and mussels, tucking them down into the rice, and cook again
-            without stirring, until mussels have opened and rice is just tender,
-            5 to 7 minutes more. (Discard any mussels that don’t open.)
+            <div style={{ display: "flex", }}>
+              <div style={{ width: "40px", height: "40px", marginRight:"10px" }}>
+                <img style={{borderRadius:"50%", backgroundSize:"cover", width:"40px", height:"40px"}} src="img\bg.jpg" alt="" />
+              </div>
+              <div style={{ paddingLeft: "10px", width: "100%",  backgroundColor:"#f0f2f5", borderRadius:"15px" }}>
+                <p style={{ padding: "0px", margin: "0px" }}> Giang Tran </p>
+                <p style={{ fontSize: "13px", color: " rgba(0, 0, 0, 0.54)", padding: "0px", margin: "0px" }}> Add 1 cup of frozen peas along with the mussels, if you like.  </p>
+                <span style={{ fontSize: "13px" }}> Thich </span>
+                <span style={{ fontSize: "13px", paddingLeft: "10px" }}> Trả lời</span>
+              </div>
+            </div>
+            
           </Typography>
           <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then
-            serve.
+            <PhotoCameraIcon style={{ marginRight: "10px" }} />
+            <Input style={{ width: "400px" }} placeholder="comments" />
+            <span style={{ marginLeft: "20px" }}> Đăng </span>
           </Typography>
         </CardContent>
       </Collapse>
