@@ -47,6 +47,10 @@
     "content":"Content",
     "add_on":"Add to your Post",
     "success":"Successs"
+  },
+  "post":{
+    "like":"Like",
+    "share":"Share"
   }
   
 }

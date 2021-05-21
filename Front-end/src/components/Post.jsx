@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -16,11 +16,14 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import config from '../configs';
-import { Box, Input } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
+
+import { Box, Input, Tooltip } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import TelegramIcon from '@material-ui/icons/Telegram';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,9 +50,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
 }));
-
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 14,
+  },
+}))(Tooltip);
 export default function RecipeReviewCard(props) {
   const classes = useStyles();
+  const { t, i18n } = useTranslation('common');
   const [expanded, setExpanded] = React.useState(false);
   const { user, post } = props;
   const [images, setImages] = useState(props.post.post.files);
@@ -120,12 +131,16 @@ export default function RecipeReviewCard(props) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
+        <LightTooltip title = {t("post.like")}  placeholder="left">
         <IconButton aria-label='add to favorites'>
           <FavoriteIcon />
         </IconButton>
+          </LightTooltip>
+        <LightTooltip title ={t("post.share")} placeholder="top" >
         <IconButton aria-label='share'>
-          <ShareIcon />
+          <TelegramIcon/>
         </IconButton>
+        </LightTooltip>
         <div style={{ marginLeft: 'auto' }} onClick={handleExpandClick}>
           <p style={{ color: ' rgba(0, 0, 0, 0.54)', cursor: 'pointer' }}>
             {' '}
