@@ -175,6 +175,7 @@ const schema = {
 					"DELETE post:id": "post.deletePost",
 					//media
 					"PUT media/upload": "media.upload",
+					"GET images":"media.getAll",
 					//chat
 					"POST chat": "chat.sendMessage",
 				},
