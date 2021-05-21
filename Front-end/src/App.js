@@ -6,8 +6,8 @@ import NotFound from './pages/NotFound/NotFound';
 import { useAuth } from './hooks/useAuth';
 import { useDispatch } from 'react-redux';
 import {fetchAllPost} from './store/actions/postAction'
-function App() {
-  const isAuth = useAuth;
+function App(props) {
+  const isAuth = useAuth();
   const dispatch = useDispatch()
   
   useEffect(() => {
