@@ -97,7 +97,7 @@ function Home(props) {
     } else {
       props.history.push('/login');
     }
-  }, [dispatch, isAuth]);
+  }, [dispatch, isAuth,props.history]);
   const renderPost = () => {
     if (posts.postData) {
       return posts.postData.map((post) => {

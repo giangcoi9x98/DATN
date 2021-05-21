@@ -51,9 +51,9 @@ export default function RecipeReviewCard(props) {
   const { user, post } = props;
   const [images, setImages] = useState(props.post.post.files);
   const items = [
-    { url: 'http://localhost:3000/giangcoi9x98@gmail.com/Rectangle 572.png' },
-    { url: 'http://localhost:3000/giangcoi9x98@gmail.com/Rectangle 573.png' },
-    { url: 'http://localhost:3000/giangcoi9x98@gmail.com/Rectangle 574.png' },
+    { url:  `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 572.png` },
+    { url:`${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 573.png` },
+    { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 574.png` },
 
   ];
   const handleExpandClick = () => {
