@@ -1,12 +1,19 @@
 import socket from '../../socket';
-import { SOCKET_NEW_MESSAGE } from '../actions/chatAction';
-const initialState = {};
+import { SOCKET_NEW_MESSAGE, GET_CHAT_HISTORY } from '../actions/chatAction';
+const initialState = {
+  history:[]
+};
 
 function chatReducer(state = initialState, action) {
-  switch (action.payload) {
+  switch (action.type) {
     case SOCKET_NEW_MESSAGE: {
-      console.log('socket', action.payload);
       return state
+    }
+    case GET_CHAT_HISTORY: {
+      return {
+        ...state,
+        history:action.payload
+      }
     }
     default:
       return state;

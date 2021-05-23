@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -11,6 +11,7 @@ import SendIcon from '@material-ui/icons/Send';
 import MailIcon from '@material-ui/icons/Mail';
 import IconButton from '@material-ui/core/IconButton';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import { useSelector } from 'react-redux';
 
 const StyledMenu = withStyles({
   paper: {
@@ -38,23 +39,48 @@ const StyledMenuItem = withStyles((theme) => ({
 
 export default function CustomizedMenus(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const  [icon, setIcon] = useState(props.icon)
+  const [icon, setIcon] = useState(props.icon)
+  const chatHistory = useSelector(state => state.chat)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  console.log('object :>> ', chatHistory);
   useEffect(() => {
     setIcon(props.icon)
   }, [props.icon]);
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const renderChatHistory = useCallback(() => {
+    if (chatHistory.history.length) {
+      return chatHistory.history.map(e => {
+        return  <StyledMenuItem style={{height:"72px", width:"400px"}} key ={e.id}>
+        <ListItemIcon style={{width:"50px", height:"50px",}}>
+          <div style={{width:"10px", height:"10px", position:"absolute", top:"68%", left:"13%"}}>
+            <div style={{backgroundColor:"#31a24c", width:"10px", height:"10px", borderRadius:"50%"}}> </div>
+          </div>
+          <img style={{borderRadius:"50%", backgroundSize:"cover", width:"50px", height:"50px"}} src="img\profile-bg.jpg" alt="" />
+        </ListItemIcon>
+        <div style={{marginTop: "2px", marginLeft:"7px"}}>
+            <p style={{ margin: "0px", padding: "0px", fontSize: "17px", color: "#050505" }}>{e.contactData.fullname}</p>
+          <p style={{margin:"0px", padding:"0px", fontSize:"13px", color:"#9a9b9d"}}>Da gui tin nhan cho b</p>
+        </div>
+      </StyledMenuItem>
+      })
+    }
+    else {
+      return <div>
+        
+      </div>
+    }
+  },[chatHistory.history])
   const renderIcon = () => {
     if (icon == 'mess') {
       return<MailIcon></MailIcon>
     }
     return <NotificationsIcon></NotificationsIcon>
   }
+  
   return (
     <div>
       <IconButton
@@ -73,42 +99,8 @@ export default function CustomizedMenus(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem style={{height:"72px", width:"400px"}}>
-          <ListItemIcon style={{width:"50px", height:"50px",}}>
-            <div style={{width:"10px", height:"10px", position:"absolute", top:"68%", left:"13%"}}>
-              <div style={{backgroundColor:"#31a24c", width:"10px", height:"10px", borderRadius:"50%"}}> </div>
-            </div>
-            <img style={{borderRadius:"50%", backgroundSize:"cover", width:"50px", height:"50px"}} src="img\profile-bg.jpg" alt="" />
-          </ListItemIcon>
-          <div style={{marginTop: "2px", marginLeft:"7px"}}>
-            <p style={{margin:"0px", padding:"0px", fontSize:"17px", color:"#050505"}}>Giang</p>
-            <p style={{margin:"0px", padding:"0px", fontSize:"13px", color:"#9a9b9d"}}>Da gui tin nhan cho b</p>
-          </div>
-        </StyledMenuItem>
-        <StyledMenuItem style={{height:"72px", width:"400px"}}>
-          <ListItemIcon style={{width:"50px", height:"50px",}}>
-            <div style={{width:"10px", height:"10px", position:"absolute", top:"68%", left:"13%"}}>
-              <div style={{backgroundColor:"#31a24c", width:"10px", height:"10px", borderRadius:"50%"}}> </div>
-            </div>
-            <img style={{borderRadius:"50%", backgroundSize:"cover", width:"50px", height:"50px"}} src="img\profile-bg.jpg" alt="" />
-          </ListItemIcon>
-          <div style={{marginTop: "2px", marginLeft:"7px"}}>
-            <p style={{margin:"0px", padding:"0px", fontSize:"17px", color:"#050505"}}>Giang</p>
-            <p style={{margin:"0px", padding:"0px", fontSize:"13px", color:"#9a9b9d"}}>Da gui tin nhan cho b</p>
-          </div>
-        </StyledMenuItem>
-        <StyledMenuItem style={{height:"72px", width:"400px"}}>
-          <ListItemIcon style={{width:"50px", height:"50px",}}>
-            <div style={{width:"10px", height:"10px", position:"absolute", top:"68%", left:"13%"}}>
-              <div style={{backgroundColor:"#31a24c", width:"10px", height:"10px", borderRadius:"50%"}}> </div>
-            </div>
-            <img style={{borderRadius:"50%", backgroundSize:"cover", width:"50px", height:"50px"}} src="img\profile-bg.jpg" alt="" />
-          </ListItemIcon>
-          <div style={{marginTop: "2px", marginLeft:"7px"}}>
-            <p style={{margin:"0px", padding:"0px", fontSize:"17px", color:"#050505"}}>Giang</p>
-            <p style={{margin:"0px", padding:"0px", fontSize:"13px", color:"#9a9b9d"}}>Da gui tin nhan cho b</p>
-          </div>
-        </StyledMenuItem>
+
+       {renderChatHistory()}
       </StyledMenu>
     </div>
   );
