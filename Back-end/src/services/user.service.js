@@ -83,28 +83,30 @@ module.exports = {
 		},
 		getAll: {
 			async handler(ctx) {
+				const conn = await this.mysql.beginTransaction();
 				try {
-					await this.mysql.query("START TRANSACTION;");
 					let { user } = ctx.meta;
-					const data = await this.mysql
-						.queryMulti(
-							`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+					const data = await this.mysql.queryMulti(
+						`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 						ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 						from account as a INNER JOIN account_info as ai
 						ON a.id = ai.accountId WHERE ai.accountId != ?`,
-							[user.id]
-						)
-						.then((res) => res);
-					await this.mysql.query("SET autocommit = 0");
+						[user.id],
+						conn
+					);
+
+					//await this.mysql.query("SET autocommit = 0");
+
 					const result = await Promise.all(
 						data.map(async (e) => {
 							const message = await this.mysql
 								.queryMulti(
 									`SELECT email, a.id as accountId,m.id as messageId, groupId,
 									senderId, receiverId, m.is_delete  from account as a
-									 INNER JOIN message  as m ON a.id = m.senderId
+									 INNER JOIN fmessage  as m ON a.id = m.senderId
 									 WHERE a.id = ? AND receiverId = ? OR a.id = ? AND receiverId = ?`,
-									[user.id, e.id, e.id, user.id]
+									[user.id, e.id, e.id, user.id],
+									conn
 								)
 								.then((res) => res);
 							await Promise.all(
@@ -113,7 +115,8 @@ module.exports = {
 									const detailMessage = await this.mysql
 										.query(
 											"SELECT * FROM message_detail  WHERE messageId = ?",
-											[e.messageId]
+											[e.messageId],
+											conn
 										)
 										.then((res) => res[0]);
 									e.detail = detailMessage;
@@ -122,18 +125,17 @@ module.exports = {
 									};
 								})
 							);
-
 							e.messages = message;
 							return {
 								contact: e,
 							};
 						})
 					);
-					await this.mysql.query("COMMIT;");
+					await this.mysql.commitTransaction(conn);
 					return new ResponseData(true, "SUCCESS", result);
 				} catch (error) {
 					this.logger.error("Error at GetAllUser action ", error);
-					await this.mysql.query("ROLLBACK");
+					await this.mysql.rollbackTransaction(conn);
 					throw error;
 				}
 			},

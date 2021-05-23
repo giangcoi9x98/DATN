@@ -5,6 +5,7 @@ const { match } = require("moleculer").Utils;
 const { ServiceNotFoundError } = require("moleculer").Errors;
 const { BadRequestError } = require("./errors");
 const chalk = require("chalk");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
 	name: "io",
@@ -116,14 +117,19 @@ module.exports = {
 
 		this.io.on("thien", (data) => console.log(data));
 		this.io.on("connection", (socket) => {
-			console.log(socket.id);
-			socket.emit("thien", { name: 456 });
+			console.log("socket", socket.handshake.auth.token);
+			const user = jwt.decode(socket.handshake.auth.token);
+			if (user) {
+				this.socketJoinRooms(socket, user.id);
+			}
+			console.log("user", user);
 			socket.on("error", (data) => console.log("error", data));
 			socket.on("thien", (data) => console.log("thien", data));
 			socket.on("connect_error", (data) =>
 				console.log("connect_error", data)
 			);
 		});
+	
 		this.io.on("error", (data) => console.log(data));
 		this.io.on("connect_error", (data) => console.log(data));
 		// this.logger.info("Socket.io API Gateway started.");

@@ -104,20 +104,24 @@ const schema = {
 						[]
 					);
 				}
+				const conn = await this.mysql.beginTransaction();
 				try {
-					await this.mysql.query(
+					await conn.query(
 						"INSERT INTO account (email,password) VALUES (?,?)  ",
-						[regex.getEmail(email.toLowerCase()), hash]
+						[regex.getEmail(email.toLowerCase()), hash],
+						
 					);
 					const newUserData = await this.mysql.queryOne(
 						"SELECT * FROM account WHERE email = ?",
-						[email]
-					).then(res => res);
+						[email],
+						conn
+					);
 					console.log("user", newUserData);
 					await this.mysql.query(
 						`INSERT INTO account_info (fullname,birthday,accountId)
 						VALUES (?, ?, ? )`,
-						[fullname, birthday, newUserData.id]
+						[fullname, birthday, newUserData.id],
+						conn
 					);
 					// const ref_user = await this.mysql.query(`SELECT * from users where ref_id = $1`,[ref_id])
 					// console.log("ref_user",checkRef_id);
@@ -136,29 +140,31 @@ const schema = {
 							userAgent.browser.name,
 							deviceName,
 							newUserData.id,
-						]
+						],
+						conn
 					);
 					const loginRecord = await this.mysql
-						.query(
+						.queryOne(
 							"SELECT id FROM login_history WHERE account_id = ?",
-							[newUserData.id]
-						)
-						.then((res) => res[0]);
+							[newUserData.id],
+							conn
+						);
+						
 
 					const secretKey = Buffer.from(
 						AUTH_PRIVATE_KEY,
 						"base64"
 					).toString("utf-8");
 					const infoData = await this.mysql
-						.query(
+						.queryOne(
 							`
 						SELECT * FROM
 					 	account INNER JOIN account_info
 						ON account.id = account_info.accountId
 						WHERE account.id = ? `,
-							[newUserData.id]
-						)
-						.then((res) => res[0]);
+							[newUserData.id],
+							conn
+						);		
 					const user = safeUser(infoData);
 
 					const token = tokenHelper.signJWT(
@@ -195,6 +201,7 @@ const schema = {
 						60 * 60,
 						refreshToken
 					);
+					await this.mysql.commitTransaction(conn);
 					return new ResponseData(
 						true,
 						"SUCCESS",
@@ -207,6 +214,7 @@ const schema = {
 					);
 				} catch (e) {
 					this.logger.error("Register Error", e);
+					await this.mysql.rollbackTransaction(conn);
 					// Error code for unique constraint
 					if (e.code === "23505") {
 						if (e.constraint === "users_ref_id") {
@@ -544,6 +552,7 @@ const schema = {
 					"base64"
 				).toString("utf-8");
 				const key = HS256_KEY || "secret";
+
 				const findUserByEmail = await this.mysql.queryOne(
 					"SELECT * FROM account where email = ? ",
 					[ctx.params.email.toLowerCase().trim()]
