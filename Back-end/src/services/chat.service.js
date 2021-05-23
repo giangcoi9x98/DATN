@@ -127,7 +127,10 @@ module.exports = {
 						chatHistory.map(async e => {
 							const contactId =  e.senderId == e.accountId ? e.receiverId : e.senderId;
 							const contact = await this.mysql.queryOne(
-								"SELECT * FROM account WHERE id = ?",
+								`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+								ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+								from account as a INNER JOIN account_info as ai
+								ON a.id = ai.accountId WHERE ai.accountId = ?`,
 								[contactId],
 								conn
 							);
