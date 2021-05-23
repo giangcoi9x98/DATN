@@ -15,13 +15,14 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { COLORS, SIZETYPE } from '../constants';
 import { Container } from '@material-ui/core';
 import api from '../api';
 import { withRouter } from 'react-router';
 import DropDownMenu from './DropDownMenu';
-
+import { useAuth } from '../hooks/useAuth';
+import {getChatHistory} from '../store/actions/chatAction'
 const useStyles = makeStyles((theme) => ({
   grow: {
     width: '100%',
@@ -121,13 +122,22 @@ function PrimarySearchAppBar(props) {
   const { t, i18n } = useTranslation('common');
   const lang = useSelector((state) => state.lang);
   const { user } = useSelector((state) => state);
+  const isAuth = useAuth();
+  const dispatch = useDispatch()
   let email;
   if (user) {
     email = user.userData.email;
   }
   useEffect(() => {
+    if (isAuth) {
+      async function fetchData() {
+        await dispatch(getChatHistory())
+      }
+      fetchData()
+    }
     return i18n.changeLanguage(lang.lang);
-  }, [lang]);
+   
+  }, [lang,i18n,dispatch,isAuth]);
   const handleLogout = async () => {
     const res = await api.auth.logOut();
     if (res.status) {

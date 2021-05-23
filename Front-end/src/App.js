@@ -7,7 +7,6 @@ import { useAuth } from './hooks/useAuth';
 import { useDispatch } from 'react-redux';
 import {fetchAllPost} from './store/actions/postAction'
 import { getContacts } from './store/actions/contactAction';
-
 function App(props) {
   const isAuth = useAuth();
   const dispatch = useDispatch()
