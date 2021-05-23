@@ -91,7 +91,7 @@ function Home(props) {
       async function fetchData() {
         await dispatch(getProfileAction());
        // await dispatch(fetchAllPost());
-        await dispatch(getContacts());
+       // await dispatch(getContacts());
       }
       fetchData();
     } else {

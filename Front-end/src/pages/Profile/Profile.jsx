@@ -226,7 +226,6 @@ function Profile(props) {
     async function fetchDataUser() {
       let email = currentUser + "@gmail.com";
       const res = await api.user.getByEmail(email);
-      console.log(res, email);
       if (res.status) {
         await setUser(res.data.data[0]);
       }
@@ -235,7 +234,6 @@ function Profile(props) {
     fetchDataUser();
   }, [currentUser, showModal, dispatch]);
   const renderContent = useCallback(() => {
-    console.log("navProfile", posts);
     if (navProfile === 0) {
       return posts.postData.map((post) => {
         return <Posts post={post}></Posts>;
@@ -388,7 +386,6 @@ function Profile(props) {
     }
     return <div></div>;
   }, [navProfile, posts, userData, anchorEl, open, classes.gridList, contacts]);
-  console.log(userData.images);
   const renderModal = (key) => {
     if (key) {
       return (
