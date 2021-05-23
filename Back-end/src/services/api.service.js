@@ -178,6 +178,7 @@ const schema = {
 					"GET images":"media.getAll",
 					//chat
 					"POST chat": "chat.sendMessage",
+					"GET chat":"chat.getChatHistory",
 				},
 				onBeforeCall(ctx, route, req) {
 					// console.log("req_params")
