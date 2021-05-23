@@ -37,13 +37,10 @@ const refreshAccessToken = () =>
         errType === 'TOKEN_EXPIRED' ||
         errType === 'TOKEN_INVALID' ||
         !localStorage.getItem('refresh_token')
+        || err.response.status === 422
       ) {
         localStorage.removeItem('token');
         localStorage.removeItem('refresh_token');
-        //redirect to login page
-        // window.location.replace(
-        //   "/login?return=" + router.history.current.fullPath
-        // );
       }
     });
 
@@ -77,8 +74,8 @@ axiosInstance.interceptors.response.use(
     // window.NProgress.start();
     const errorResponse = error.response;
     console.log(errorResponse.data.msg);
-    if (errorResponse.data.msg === 'jwt expired') {
-      console.log('expried');
+    if (errorResponse.status === 422) {
+      return false;
     }
     // Reject promise if usual error
     //check if error status is Unauthentication. Then try to refresh token

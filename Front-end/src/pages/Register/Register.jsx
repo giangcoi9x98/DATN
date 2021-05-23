@@ -92,9 +92,14 @@ function SignUp(props) {
     <Container component='main' maxWidth='sm' style={{ zIndex: 1 }}>
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+        <div style={{
+          backgroundImage: `url('/logo192.svg')`,
+          height: 80,
+          width: 80,
+          backgroundRepeat: 'no-repeat',
+          marginRight:'10px'
+        }}>
+        </div>
         <Typography component='h1' variant='h5'>
           {t('signup.title')}
         </Typography>

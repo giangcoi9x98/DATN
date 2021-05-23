@@ -102,6 +102,7 @@ export default function RecipeReviewCard(props) {
         setMessage([
           ...message,
           {
+            avatar:data.sender.avatar,
             detail: {
               content: data.message,
             },
@@ -110,7 +111,7 @@ export default function RecipeReviewCard(props) {
       }
       console.log(message);
     });
-  }, [message]);
+  }, [message, user.userData.id, setMessage]);
   const handlerSend = async (msg, roomId = contact.id) => {
     const res = await api.chat.send({
       message: msg,
@@ -120,6 +121,14 @@ export default function RecipeReviewCard(props) {
       message: msg,
       roomId: roomId,
     });
+    setMessage([
+      ...message,
+      {
+        detail: {
+          content: msg
+        }
+      }
+    ])
     console.log(res);
   };
   const renderMessageItem = () => {
@@ -127,7 +136,7 @@ export default function RecipeReviewCard(props) {
       return (
         <div className={classes.wrapMessage}>
           {message.map((value) => {
-            console.log(value);
+            //console.log(value);
             return (
               <div
                 key={value}
@@ -146,13 +155,13 @@ export default function RecipeReviewCard(props) {
                     <Avatar
                       alt={`Avatar n°${value + 1}`}
                       src={`${
-                        value.senderId == contact.id ? contact.avatar : ''
+                        value.senderId == contact.id ? contact.avatar : value.avatar
                       }`}
                     />
                   </ListItemAvatar>
                   <ListItemText
-                    id={value.detail.id}
-                    primary={`${value.detail.content}`}
+                    id={value.detail? value.detail.id : 1}
+                    primary={`${value.detail? value.detail.content : value.avatar}`}
                   />
                 </Box>
               </div>
