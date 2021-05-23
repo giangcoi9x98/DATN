@@ -1,13 +1,12 @@
 require("dotenv").config();
 const mysql = require("mysql");
-
 const config = {
-	host:process.env.MYSQL_HOST ,
-	port: process.env.MYSQL_PORT  || 3306,
-	user: process.env.MYSQL_USER|| "root",
-	password: process.env.MYSQL_PASSWORD ,
+	host: process.env.MYSQL_HOST,
+	port: process.env.MYSQL_PORT || 3306,
+	user: process.env.MYSQL_USER || "root",
+	password: process.env.MYSQL_PASSWORD,
 	database: process.env.MYSQL_DB,
-	connectionLimit : 10,
+	connectionLimit: 10,
 };
 const pool = mysql.createPool(config);
 const logMySqlQuery = (sql, params) => {
@@ -22,33 +21,48 @@ const logMySqlQuery = (sql, params) => {
 	); // loại bỏ khoảng trắng thừa kiểu như này 'SELECT     * FROM     WHERE   '
 };
 
-const query = (sql, params) => {
-	logMySqlQuery(sql, params);
+const query = (sql, params, connection) => {
 	return new Promise((resolve, reject) => {
-		pool.query(sql, params, (err, result) => {
-			if (err) reject(err);
-			else resolve(result);
-		});
+		if (connection) {
+			console.log("Query using connection from transaction");
+			logMySqlQuery(sql, params);
+			connection.query(sql, params, (err, result) => {
+				if (err) reject(err);
+				else resolve(result);
+			});
+		} else {
+			console.log("paramsaa", params);
+			pool.query(sql, params, (err, result) => {
+				if (err) reject(err);
+				else resolve(result);
+			});
+		}
 	});
 };
-const queryOne = (sql, params) => {
-	logMySqlQuery(sql, params);
+
+const queryOne = (sql, params, connection) => {
 	return new Promise((resolve, reject) => {
-		pool.query(sql, params, (err, result) => {
-			if (err) reject(err);
-			else resolve(result[0]);
-		});
+		if (connection) {
+			console.log("Query using connection from transaction");
+			logMySqlQuery(sql, params);
+			connection.query(sql, params, (err, result) => {
+				if (err) reject(err);
+				else resolve(result[0]);
+			});
+		} else {
+			console.log("paramsaa", params);
+			pool.query(sql, params, (err, result) => {
+				if (err) reject(err);
+				else resolve(result[0]);
+			});
+		}
 	});
 };
-const queryMulti = (sql, params) => {
-	logMySqlQuery(sql, params);
-	return new Promise((resolve, reject) => {
-		pool.query(sql, params, (err, result) => {
-			if (err) reject(err);
-			else resolve(result);
-		});
-	});
+
+const queryMulti = (sql, params, connection) => {
+	return query(sql, params, connection);
 };
+
 const getConnection = async () =>
 	new Promise((resolve, reject) => {
 		pool.getConnection((err, connection) => {
@@ -60,6 +74,7 @@ const getConnection = async () =>
 	});
 
 const beginTransaction = async () => {
+	console.log("Begin transaction");
 	const connection = await getConnection();
 	return new Promise((resolve, reject) => {
 		connection.beginTransaction((err) => {
@@ -74,28 +89,31 @@ const beginTransaction = async () => {
 	});
 };
 
-const rollbackTransaction = async (transaction) =>
+const rollbackTransaction = async (connection) =>
 	new Promise((resolve, reject) => {
-		transaction.rollback((err) => {
-			transaction.release();
+		connection.rollback((err) => {
+			console.log("Rollback transaction");
+			connection.release();
 			if (err) {
 				return reject(err);
 			}
 			return resolve();
 		});
 	});
-const commitTransaction = async (transaction) =>
+
+const commitTransaction = async (connection) =>
 	new Promise((resolve, reject) => {
-		transaction.commit(async (errCommit) => {
+		connection.commit(async (errCommit) => {
+			console.log("Rollback transaction");
 			if (errCommit) {
 				try {
-					await rollbackTransaction(transaction);
+					await rollbackTransaction(connection);
 				} catch (errorRollback) {
 					return reject(Object.assign(errCommit, { errorRollback }));
 				}
 				return reject(errCommit);
 			}
-			transaction.release();
+			connection.release();
 			return resolve();
 		});
 	});

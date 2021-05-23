@@ -46,21 +46,24 @@ module.exports = {
 					const type = "text"; // TODO: is file with images
 					console.log("message", message);
 
-					const id = uuid();
-					console.log(id, uuid());
-					const msg = await this.mysql.query(
-						"INSERT INTO message(id, senderId, receiverId) VALUES(?, ?, ?) ;",
-						[id, user.id, roomId]
-					);
-					const msgDeatil = await this.mysql.query(
-						"INSERT INTO message_detail(content, type, messageId) VALUES(?, ?, ?)",
-						[message, type, id]
-					);
-					await Promise.all([msg, msgDeatil]);
+					let id = uuid();
+					const conn = await this.mysql.beginTransaction();
+					await conn
+						.query(
+							"INSERT INTO fmessage(id, senderId, receiverId) VALUES(?, ?, ?) ;",
+							[id, user.id, roomId]
+						);
+					await conn
+						.query(
+							"INSERT INTO message_detail(content, type, messageId) VALUES(?, ?, ?)",
+							[message, type, id]
+						);
+					await this.mysql.commitTransaction(conn);
 					this.broker.call("api-gateway.broadcast", {
 						event: "NEW_MESSAGE",
 						args: [
 							{
+								sender: user,
 								message,
 								roomId,
 							},
@@ -70,7 +73,7 @@ module.exports = {
 					return new ResponseData(true, "Success");
 				} catch (error) {
 					this.logger.error("ERROR at sendMessage", error);
-
+					//	await this.mysql.query("ROLLBACK");
 					throw error;
 				}
 			},
