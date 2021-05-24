@@ -80,13 +80,15 @@ module.exports = {
 							[roomId,user.id, roomId, id]
 						);
 					}
+
 					await conn.query(
-						"UPDATE chat_history set senderId = ?, receiverId = ?, messageId = ? WHERE accountId = ?",
-						[user.id, roomId, id, user.id]
+						"UPDATE chat_history set senderId = ?, receiverId = ?, messageId = ? WHERE (accountId = ? AND receiverId =?) OR (senderId =? AND accountId = ?)",
+						[user.id, roomId, id, user.id, roomId, roomId, user.id]
 					);
+
 					await conn.query(
-						"UPDATE chat_history set senderId = ?, receiverId = ?, messageId = ? WHERE accountId = ?",
-						[user.id, roomId, id, roomId]
+						"UPDATE chat_history set senderId = ?, receiverId = ?, messageId = ? WHERE (accountId = ? AND receiverId =?) OR (senderId =? AND accountId = ?) ",
+						[user.id, roomId, id, roomId, user.id, user.id, roomId]
 					);
 					await this.mysql.commitTransaction(conn);
 					this.broker.call("api-gateway.broadcast", {
