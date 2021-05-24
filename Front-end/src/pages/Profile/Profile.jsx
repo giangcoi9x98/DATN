@@ -310,7 +310,7 @@ function Profile(props) {
           }}
         >
           {contacts.contactData.map((tile) => (
-            <Grid item sx={12} sm={5} spacing={2} s>
+            <Grid item sx={12} sm={5} spacing={2} >
               <Box
                 boxShadow={3}
                 style={{

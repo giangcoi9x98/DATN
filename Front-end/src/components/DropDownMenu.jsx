@@ -44,7 +44,7 @@ export default function CustomizedMenus(props) {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  console.log('object :>> ', chatHistory);
+  console.log('object :>> ', chatHistory.history);
   useEffect(() => {
     setIcon(props.icon)
   }, [props.icon]);

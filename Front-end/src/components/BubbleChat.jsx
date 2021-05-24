@@ -34,7 +34,7 @@ import { deleteContactSelected } from '../store/actions/contactAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { SIZETYPE } from '../constants';
 import api from '../api';
-import { newMessage } from '../store/actions/chatAction';
+import { newMessage, setHistoryChat } from '../store/actions/chatAction';
 import socket from '../socket';
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,6 +91,7 @@ export default function RecipeReviewCard(props) {
   const [expanded, setExpanded] = React.useState(false);
   const [contact, setContact] = useState(props.contact);
   const [message, setMessage] = useState(props.message) || [];
+  const chatHistory = useSelector(state => state.chat)
   const [content, setContent] = useState('');
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -98,6 +99,7 @@ export default function RecipeReviewCard(props) {
   // console.log(message);
   useEffect(() => {
     socket.getInstance().on('NEW_MESSAGE', async (data) => {
+      console.log('data :>> ', data);
       if (data.roomId == user.userData.id) {
         setMessage([
           ...message,
@@ -108,6 +110,12 @@ export default function RecipeReviewCard(props) {
             },
           },
         ]);
+        dispatch(setHistoryChat(
+          {
+            accountId: data.roomId,
+            contactData: data.sender
+          }
+        ))
       }
       console.log(message);
     });
