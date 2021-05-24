@@ -251,6 +251,9 @@ function PrimarySearchAppBar(props) {
             {/* 
            logo codese
             */}
+            <div>
+              <img src = "/Guiang.svg" height={20} width={20}/>
+            </div>
             <div className={classes.leftNav}>
               <Typography className={classes.title} variant='h6' noWrap>
                 Codeses

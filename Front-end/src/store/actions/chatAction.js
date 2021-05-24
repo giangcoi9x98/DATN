@@ -2,6 +2,7 @@ import socket from '../../socket';
 import api  from '../../api'
 export const SOCKET_NEW_MESSAGE = 'SOCKET_NEW_MESSAGE';
 export const GET_CHAT_HISTORY = 'GET_CHAT_HISTORY';
+export const SET_CHAT_HISTORY = 'SET_CHAT_HISTORY'
 
 export const newMessage = () => {
   return (dispatch) => {
@@ -24,5 +25,12 @@ export const getChatHistory = () => {
         payload: res.data
       })
     })
+  }
+}
+
+export const setHistoryChat = (data) => {
+  return{
+    type: 'SET_CHAT_HISTORY',
+    payload: data
   }
 }
