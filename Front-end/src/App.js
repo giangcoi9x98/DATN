@@ -7,6 +7,7 @@ import { useAuth } from './hooks/useAuth';
 import { useDispatch } from 'react-redux';
 import {fetchAllPost} from './store/actions/postAction'
 import { getContacts } from './store/actions/contactAction';
+import { getProfileAction } from './store/actions/userAction';
 function App(props) {
   const isAuth = useAuth();
   const dispatch = useDispatch()
@@ -16,8 +17,11 @@ function App(props) {
       async function fetchData() {
         await dispatch(fetchAllPost());
         await dispatch(getContacts());
+        await dispatch(getProfileAction());
       }
       fetchData();
+    }else{
+      window.location = "/login"
     }
   }, [isAuth, dispatch]);
 

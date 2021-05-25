@@ -99,7 +99,7 @@ export default function RecipeReviewCard(props) {
   // console.log(message);
   useEffect(() => {
     socket.getInstance().on('NEW_MESSAGE', async (data) => {
-      console.log('data :>> ', data);
+      //console.log('data :>> ', data);
       if (data.roomId == user.userData.id) {
         setMessage([
           ...message,
@@ -110,14 +110,8 @@ export default function RecipeReviewCard(props) {
             },
           },
         ]);
-        dispatch(setHistoryChat(
-          {
-            accountId: data.roomId,
-            contactData: data.sender
-          }
-        ))
       }
-      console.log(message);
+      //console.log(message);
     });
   }, [message, user.userData.id, setMessage]);
   const handlerSend = async (msg, roomId = contact.id) => {
@@ -144,10 +138,9 @@ export default function RecipeReviewCard(props) {
       return (
         <div className={classes.wrapMessage}>
           {message.map((value) => {
-            //console.log(value);
             return (
               <div
-                key={value}
+                key={value.messageId}
                 button
                 className={classes.messageItem}
                 style={{
