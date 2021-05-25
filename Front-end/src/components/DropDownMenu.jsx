@@ -11,7 +11,9 @@ import SendIcon from '@material-ui/icons/Send';
 import MailIcon from '@material-ui/icons/Mail';
 import IconButton from '@material-ui/core/IconButton';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {setHistoryChat} from '../store/actions/chatAction'
+import socket from '../socket';
 
 const StyledMenu = withStyles({
   paper: {
@@ -40,6 +42,7 @@ const StyledMenuItem = withStyles((theme) => ({
 export default function CustomizedMenus(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [icon, setIcon] = useState(props.icon)
+  const dispatch = useDispatch()
   const chatHistory = useSelector(state => state.chat)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,10 +50,22 @@ export default function CustomizedMenus(props) {
   console.log('object :>> ', chatHistory.history);
   useEffect(() => {
     setIcon(props.icon)
+    socket.getInstance().on('NEW_CHAT_HISTORY', data => {
+      console.log('data dropdown :>> ', data);
+      // dispatch(setHistoryChat(
+      //   {
+          
+      //     accountId: data.roomId,
+      //     contactData: data.sender
+      //   }
+      // ))
+    })
+    
   }, [props.icon]);
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
   const renderChatHistory = useCallback(() => {
     if (chatHistory.history.length) {
       return chatHistory.history.map(e => {

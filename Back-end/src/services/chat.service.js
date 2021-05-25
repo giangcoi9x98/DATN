@@ -102,6 +102,17 @@ module.exports = {
 						],
 						roomId: roomId,
 					});
+					this.broker.call("api-gateway.broadcast", {
+						event: "NEW_CHAT_HISTORY",
+						args: [
+							{
+								sender: user,
+								message,
+								roomId,
+							},
+						],
+						roomId: roomId,
+					});
 					return new ResponseData(true, "Success");
 				} catch (error) {
 					this.logger.error("ERROR at sendMessage", error);
