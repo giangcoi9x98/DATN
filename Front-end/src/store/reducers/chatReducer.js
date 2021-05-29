@@ -18,7 +18,9 @@ function chatReducer(state = initialState, action) {
     case SET_CHAT_HISTORY:{
       return {
         ...state,
-        history:[...state.history.filter(item => item.accountId !== action.payload.accountId ), action.payload]
+        history:[...state.history
+          .filter(item => item.contactData.id !== action.payload.contactData.accountId )]
+          .concat(action.payload)
       }  
     }
     default:

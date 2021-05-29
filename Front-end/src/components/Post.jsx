@@ -58,7 +58,7 @@ const LightTooltip = withStyles((theme) => ({
     fontSize: 14,
   },
 }))(Tooltip);
-export default function RecipeReviewCard(props) {
+export default function Post(props) {
   const classes = useStyles();
   const { t, i18n } = useTranslation('common');
   const [expanded, setExpanded] = React.useState(false);
@@ -114,8 +114,9 @@ export default function RecipeReviewCard(props) {
           },
         }}
       >
-        {items.map((e) => (
+        {items.map((e) => (         
           <CardMedia
+            key ={e.url}
             className={classes.media}
             title='Paella dish'
             src={e.url}
