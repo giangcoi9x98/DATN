@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import routes from '../src/pages/routes';
 import NotFound from './pages/NotFound/NotFound';
 import { useAuth } from './hooks/useAuth';
@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import {fetchAllPost} from './store/actions/postAction'
 import { getContacts } from './store/actions/contactAction';
 import { getProfileAction } from './store/actions/userAction';
+
 function App(props) {
   const isAuth = useAuth();
   const dispatch = useDispatch()
@@ -21,6 +22,7 @@ function App(props) {
       }
       fetchData();
     }
+    console.log(isAuth)
   }, [isAuth, dispatch]);
 
   return (

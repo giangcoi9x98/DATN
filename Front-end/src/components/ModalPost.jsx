@@ -52,30 +52,35 @@ function ModalPost(props) {
   const [isDisable, setIsDisable] = useState(true);
   const [backgroundDisable, setBackgroundDisable] = useState('#e4e6eb');
   const handleUploadImage = (e) => {
-    let newArr = []
-    for (let i = 0; i < e.target.files.length; i++){
-      newArr.push(e.target.files[i])
+    let newArr = [];
+    for (let i = 0; i < e.target.files.length; i++) {
+      newArr.push(e.target.files[i]);
     }
-    setImgUrl(newArr)
+    setImgUrl(newArr);
   };
   console.log('imgUrl :>> ', imgUrl);
-  const handlePost = async (content, file ={}) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    const resUpload = await api.media.upload(formData);
+  const handlePost = async (content, file = []) => {
+    console.log('file :>> ', file.map(e => e.name));
+    const resUpload = await Promise.all(
+      file.map(async (e) => {
+        const formData = new FormData();
+        formData.append('file', e);
+        return await api.media.upload(formData);
+      })
+    );
+    console.log('resUpload', resUpload);
     const resPost = await api.post.newPost({
       content: content,
-      img: file.name || "",
+      img: file.map(e => e.name),
     });
-    if (resPost.status ) {
+    if (resPost.status) {
       setTimeout(() => {
-        setPendingReq(false)
-        isCloseModal()
-        noti.success(t("modal_post.success"))
+        setPendingReq(false);
+        isCloseModal();
+        noti.success(t('modal_post.success'));
       }, 2000);
     }
   };
-
 
   useEffect(() => {
     if (content) {
@@ -99,21 +104,21 @@ function ModalPost(props) {
 
   const renderImage = (
     <div className={classes.wrapImg}>
-      {imgUrl.map(e => <ImageReader
-        image={e}
-        width={200}
-        height={230}
-        handleCloseImg={async (name) => {
-          const newArr = [...imgUrl.filter(
-            e => e.name !== name
-          )]
-          console.log(newArr);
-          await setImgUrl(newArr);
-          if (!imgUrl.length) {
-            document.getElementById('upload').value = '';
-          }
-        }}
-      ></ImageReader>)}
+      {imgUrl.map((e) => (
+        <ImageReader
+          image={e}
+          width={200}
+          height={230}
+          handleCloseImg={async (name) => {
+            const newArr = [...imgUrl.filter((e) => e.name !== name)];
+            console.log(newArr);
+            await setImgUrl(newArr);
+            if (!imgUrl.length) {
+              document.getElementById('upload').value = '';
+            }
+          }}
+        ></ImageReader>
+      ))}
     </div>
   );
   return (
@@ -147,7 +152,7 @@ function ModalPost(props) {
                   type='file'
                   id='upload'
                   accept='image/*'
-                  multiple="multiple"
+                  multiple='multiple'
                   hidden
                 />
                 <ImageIcon></ImageIcon>

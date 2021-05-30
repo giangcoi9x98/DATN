@@ -104,7 +104,7 @@ export default function RecipeReviewCard(props) {
         setMessage([
           ...message,
           {
-            avatar:data.sender.avatar,
+            avatar:data?.sender?.avatar,
             detail: {
               content: data.message,
             },

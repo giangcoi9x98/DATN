@@ -1,6 +1,6 @@
 import axiosInstance from './api';
 
-export const newPost = async ({ content, img = "" }) => {
+export const newPost = async ({ content, img = [] }) => {
   try {
     const res = await axiosInstance.post('post', {
       content: content,

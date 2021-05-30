@@ -88,9 +88,12 @@ function SignIn(props) {
   const dispatch = useDispatch();
   console.log(t('login.title'));
 
-  useEffect(async () => {
-    await i18n.changeLanguage(lang.lang);
-  }, [lang]);
+  useEffect(() => {
+    async function changeLang() {
+      await i18n.changeLanguage(lang.lang);
+    }
+    changeLang();
+  }, [lang, i18n]);
 
   const loginHandler = async (email, password) => {
     const res = await api.auth.logIn({
