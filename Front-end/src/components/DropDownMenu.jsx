@@ -1,36 +1,38 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
-import SendIcon from "@material-ui/icons/Send";
-import MailIcon from "@material-ui/icons/Mail";
-import IconButton from "@material-ui/core/IconButton";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import { useDispatch, useSelector } from "react-redux";
-import { setHistoryChat } from "../store/actions/chatAction";
-import socket from "../socket";
-import Badge from "@material-ui/core/Badge";
+import React, { useCallback, useEffect, useState } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
+import MailIcon from '@material-ui/icons/Mail';
+import IconButton from '@material-ui/core/IconButton';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { useDispatch, useSelector } from 'react-redux';
+import { setHistoryChat } from '../store/actions/chatAction';
+import socket from '../socket';
+import Badge from '@material-ui/core/Badge';
+import { bindActionCreators } from 'redux';
+import { formatDate } from '../utils/formatDate';
 
 const StyledMenu = withStyles({
   paper: {
-    border: "1px solid #d3d4d5",
+    border: '1px solid #d3d4d5',
   },
 })((props) => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
     anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center",
+      vertical: 'bottom',
+      horizontal: 'center',
     }}
     transformOrigin={{
-      vertical: "top",
-      horizontal: "center",
+      vertical: 'top',
+      horizontal: 'center',
     }}
     {...props}
   />
@@ -47,29 +49,47 @@ export default function CustomizedMenus(props) {
   const user = useSelector((state) => state.user);
   const [countChatHistory, setCountHistory] = useState([]);
   const chatHistory = useSelector((state) => state.chat);
-  const [history, setHistory] = useState(chatHistory.history);
-
+  const [history, setHistory] = useState([]);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  console.log(chatHistory);
+
   useEffect(() => {
-    setIcon(props.icon);
     setHistory(chatHistory.history);
-    socket.getInstance().on("NEW_CHAT_HISTORY", (data) => {
-      console.log("data :>> ", data, user.userData.id);
+  }, [chatHistory.history]);
+
+  useEffect(() => {
+    socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
+      console.log('data :>> ', data);
       if (data.roomId === user.userData.id) {
-        setCountHistory([...countChatHistory.filter(
-          item => item !== data.sender.accountId), data.sender.accountId]);
+        console.log("object", typeof history);
+        const newHistory = [...history.filter(e => e.contactData.id !== data.sender.id)]
+        newHistory
+          .unshift({
+            contactData: data.sender,
+            message: {
+              content: data.message,
+            },
+            update_at: formatDate(Date.now()),
+          })
+        console.log('newHistor :>> ', newHistory);  
+       await setHistory( newHistory)
       }
     });
-  }, [
-    props.icon,
-    countChatHistory,
-    user.userData,
-    dispatch,
-    chatHistory.history,
-  ]);
+  }, [history, user.userData]) 
+  
+  useEffect(() => {
+    setIcon(props.icon);
+    socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
+      console.log('data :>> ', data);
+      if (data.roomId === user.userData.id) {
+        setCountHistory([
+          ...countChatHistory.filter((item) => item !== data.sender.accountId),
+          data.sender.accountId,
+        ]);
+      }
+    });
+  }, [props.icon, countChatHistory, user.userData,]);
   const handleClose = () => {
     setAnchorEl(null);
     setCountHistory([]);
@@ -79,59 +99,59 @@ export default function CustomizedMenus(props) {
     if (history.length) {
       return history.map((e) => {
         return (
-          <StyledMenuItem style={{ height: "72px", width: "400px" }} key={e.id}>
-            <ListItemIcon style={{ width: "50px", height: "50px" }}>
+          <StyledMenuItem style={{ height: '72px', width: '400px' }} key={e.id}>
+            <ListItemIcon style={{ width: '50px', height: '50px' }}>
               <div
                 style={{
-                  width: "10px",
-                  height: "10px",
-                  position: "absolute",
-                  top: "68%",
-                  left: "13%",
+                  width: '10px',
+                  height: '10px',
+                  position: 'absolute',
+                  top: '68%',
+                  left: '13%',
                 }}
               >
                 <div
                   style={{
-                    backgroundColor: "#31a24c",
-                    width: "10px",
-                    height: "10px",
-                    borderRadius: "50%",
+                    backgroundColor: '#31a24c',
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
                   }}
                 >
-                  {" "}
+                  {' '}
                 </div>
               </div>
               <img
                 style={{
-                  borderRadius: "50%",
-                  backgroundSize: "cover",
-                  width: "50px",
-                  height: "50px",
+                  borderRadius: '50%',
+                  backgroundSize: 'cover',
+                  width: '50px',
+                  height: '50px',
                 }}
-                src="img\profile-bg.jpg"
-                alt=""
+                src='img\profile-bg.jpg'
+                alt=''
               />
             </ListItemIcon>
-            <div style={{ marginTop: "2px", marginLeft: "7px" }}>
+            <div style={{ marginTop: '2px', marginLeft: '7px' }}>
               <p
                 style={{
-                  margin: "0px",
-                  padding: "0px",
-                  fontSize: "17px",
-                  color: "#050505",
+                  margin: '0px',
+                  padding: '0px',
+                  fontSize: '17px',
+                  color: '#050505',
                 }}
               >
                 {e.contactData.fullname}
               </p>
               <p
                 style={{
-                  margin: "0px",
-                  padding: "0px",
-                  fontSize: "13px",
-                  color: "#9a9b9d",
+                  margin: '0px',
+                  padding: '0px',
+                  fontSize: '13px',
+                  color: '#9a9b9d',
                 }}
               >
-                Da gui tin nhan cho b
+                {e?.message?.content}
               </p>
             </div>
           </StyledMenuItem>
@@ -142,9 +162,9 @@ export default function CustomizedMenus(props) {
     }
   }, [history]);
   const renderIcon = () => {
-    if (icon == "mess") {
+    if (icon == 'mess') {
       return (
-        <Badge badgeContent={countChatHistory.length} color="secondary">
+        <Badge badgeContent={countChatHistory.length} color='secondary'>
           <MailIcon />
         </Badge>
       );
@@ -155,16 +175,16 @@ export default function CustomizedMenus(props) {
   return (
     <div>
       <IconButton
-        aria-controls="customized-menu"
-        aria-haspopup="true"
-        variant="contained"
-        color="primary"
+        aria-controls='customized-menu'
+        aria-haspopup='true'
+        variant='contained'
+        color='primary'
         onClick={handleClick}
       >
         {renderIcon()}
       </IconButton>
       <StyledMenu
-        id="customized-menu"
+        id='customized-menu'
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}

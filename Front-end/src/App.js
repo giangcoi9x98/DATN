@@ -20,8 +20,6 @@ function App(props) {
         await dispatch(getProfileAction());
       }
       fetchData();
-    }else{
-      window.location = "/login"
     }
   }, [isAuth, dispatch]);
 
