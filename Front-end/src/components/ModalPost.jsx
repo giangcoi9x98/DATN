@@ -45,16 +45,20 @@ const useStyles = makeStyles((theme) => ({
 function ModalPost(props) {
   const { isShowModal, isCloseModal } = props;
   const { t, i18n } = useTranslation('common');
-  const [imgUrl, setImgUrl] = useState();
+  const [imgUrl, setImgUrl] = useState([]);
   const classes = useStyles();
   const [pendingReq, setPendingReq] = useState(false);
   const [content, setContent] = useState('');
   const [isDisable, setIsDisable] = useState(true);
   const [backgroundDisable, setBackgroundDisable] = useState('#e4e6eb');
   const handleUploadImage = (e) => {
-    setImgUrl(e.target.files[0]);
+    let newArr = []
+    for (let i = 0; i < e.target.files.length; i++){
+      newArr.push(e.target.files[i])
+    }
+    setImgUrl(newArr)
   };
-
+  console.log('imgUrl :>> ', imgUrl);
   const handlePost = async (content, file ={}) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -71,6 +75,8 @@ function ModalPost(props) {
       }, 2000);
     }
   };
+
+
   useEffect(() => {
     if (content) {
       setIsDisable(false);
@@ -93,15 +99,21 @@ function ModalPost(props) {
 
   const renderImage = (
     <div className={classes.wrapImg}>
-      <ImageReader
-        image={imgUrl}
+      {imgUrl.map(e => <ImageReader
+        image={e}
         width={200}
         height={230}
-        handleCloseImg={() => {
-          setImgUrl('');
-          document.getElementById('upload').value = '';
+        handleCloseImg={async (name) => {
+          const newArr = [...imgUrl.filter(
+            e => e.name !== name
+          )]
+          console.log(newArr);
+          await setImgUrl(newArr);
+          if (!imgUrl.length) {
+            document.getElementById('upload').value = '';
+          }
         }}
-      ></ImageReader>
+      ></ImageReader>)}
     </div>
   );
   return (
@@ -135,6 +147,7 @@ function ModalPost(props) {
                   type='file'
                   id='upload'
                   accept='image/*'
+                  multiple="multiple"
                   hidden
                 />
                 <ImageIcon></ImageIcon>

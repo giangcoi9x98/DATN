@@ -73,7 +73,7 @@ export default function CustomizedMenus(props) {
             update_at: formatDate(Date.now()),
           })
         console.log('newHistor :>> ', newHistory);  
-       await setHistory( newHistory)
+        await setHistory( newHistory)
       }
     });
   }, [history, user.userData]) 

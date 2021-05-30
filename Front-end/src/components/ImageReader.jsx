@@ -24,16 +24,13 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 function ImageReader(props) {
-  const { image, width, height, handleCloseImg } = props;
+  const { image, width, height, handleCloseImg } = props ;
   const classes = useStyle();
   const [url, setUrl] = useState('');
   const reader = new FileReader();
   const imageUrl = reader.readAsDataURL(image);
   reader.onloadend = function (e) {
     setUrl(reader.result);
-  };
-  const closeImg = () => {
-   handleCloseImg()
   };
   const renderImg = () => {
     if (image) {
@@ -58,7 +55,7 @@ function ImageReader(props) {
   return (
     <Paper className={classes.wrapImg} >
       <div className={classes.closeBtn}>
-        <IconButton onClick={closeImg}>
+        <IconButton onClick={() =>handleCloseImg(image.name)}>
           <HighlightOffIcon />
         </IconButton>
       </div>
