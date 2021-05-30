@@ -94,7 +94,7 @@ function Home(props) {
   const renderPost = () => {
     if (posts.postData) {
       return posts.postData.map((post) => {
-        return <Post post={post} key={post.post.id}></Post>;
+        return <Post post={post.post} key={post.post.id}></Post>;
       });
     } else {
       return <div></div>;

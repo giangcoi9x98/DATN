@@ -24,11 +24,13 @@ import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import TelegramIcon from '@material-ui/icons/Telegram';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '600px',
     marginTop: '40px',
+    cursor:'pointer'
   },
   media: {
     // 56 . 25
@@ -58,12 +60,12 @@ const LightTooltip = withStyles((theme) => ({
     fontSize: 14,
   },
 }))(Tooltip);
-export default function Post(props) {
+ function Post(props) {
   const classes = useStyles();
   const { t, i18n } = useTranslation('common');
   const [expanded, setExpanded] = React.useState(false);
   const { user, post } = props;
-  const [images, setImages] = useState(props.post.post.files);
+  const [images, setImages] = useState(post.files);
   const items = [
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 572.png` },
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 573.png` },
@@ -72,14 +74,19 @@ export default function Post(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const redirectToDetailPost = (id) => {
+    props.history.push(`/post/${id}`);
+  }
   //let url = config.BASE_URL + post.post.files[0].path;
-  //console.log('object', url);
   useEffect(() => {
-    setImages(props.post.post.files);
-  }, [props]);
+    setImages(post.files);
+  }, [post]);
   return (
     <Box boxShadow={3} className={classes.root}>
       <CardHeader
+        onClick={
+          () => redirectToDetailPost(post?.id)
+        }
         avatar={
           <Avatar aria-label='recipe' className={classes.avatar}>
             R
@@ -126,9 +133,7 @@ export default function Post(props) {
       </Carousel>
       <CardContent>
         <Typography variant='body2' color='textSecondary' component='p'>
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          {post?.content}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -288,3 +293,5 @@ export default function Post(props) {
     </Box>
   );
 }
+
+export default withRouter(Post)

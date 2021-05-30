@@ -30,7 +30,23 @@ export const getAllPost = async () => {
     console.log(err)
     return {
       status: false,
-      mesage: ' login falied',
+      mesage: ' get All Post fail',
+    };
+  }
+};
+
+export const getById = async (id) => {
+  try {
+    const res = await axiosInstance.get(`/post/${id}`);
+    return {
+      status: true,
+      data: res.data,
+    };
+  } catch (err) {
+    console.log(err)
+    return {
+      status: false,
+      mesage: ' get Fail By ID',
     };
   }
 };

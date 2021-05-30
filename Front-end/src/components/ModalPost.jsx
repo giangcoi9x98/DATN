@@ -15,6 +15,8 @@ import ImageReader from '../components/ImageReader';
 import api from '../api';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import noti from './Notification';
+import { fetchAllPost } from '../store/actions/postAction';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   btn_Post: {
@@ -47,6 +49,7 @@ function ModalPost(props) {
   const { t, i18n } = useTranslation('common');
   const [imgUrl, setImgUrl] = useState([]);
   const classes = useStyles();
+  const dispatch = useDispatch()
   const [pendingReq, setPendingReq] = useState(false);
   const [content, setContent] = useState('');
   const [isDisable, setIsDisable] = useState(true);
@@ -74,7 +77,8 @@ function ModalPost(props) {
       img: file.map(e => e.name),
     });
     if (resPost.status) {
-      setTimeout(() => {
+      setTimeout(async () => {
+        await dispatch(fetchAllPost());
         setPendingReq(false);
         isCloseModal();
         noti.success(t('modal_post.success'));
