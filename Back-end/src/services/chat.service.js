@@ -132,7 +132,7 @@ module.exports = {
 				const conn = await this.mysql.beginTransaction();
 				try {
 					const chatHistory = await this.mysql.queryMulti(
-						"SELECT * FROM chat_history WHERE accountId = ?",
+						"SELECT * FROM chat_history WHERE accountId = ? ORDER BY update_at DESC ",
 						[user.id],
 						conn
 					);
@@ -147,10 +147,17 @@ module.exports = {
 								[contactId],
 								conn
 							);
+							const messageDetail = await this.mysql.queryOne(
+								"SELECT * FROM message_detail  WHERE messageId = ?",
+								[e.messageId],
+								conn
+							);
+							e.message = messageDetail;
 							e.contactData = contact;
 							return e;
 						})
 					);
+
 					return new ResponseData(true, "Success", res);
 				} catch (error) {
 					await this.mysql.rollbackTransaction();
