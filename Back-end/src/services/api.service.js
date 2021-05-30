@@ -170,7 +170,7 @@ const schema = {
 					//Post apis
 					"POST post": "post.newPost",
 					"GET post": "post.getAllPost",
-					"GET post:id": "post.getPostById",
+					"GET post/:id": "post.getPostById",
 					"PUT post:id": "post.updatePost",
 					"DELETE post:id": "post.deletePost",
 					//media

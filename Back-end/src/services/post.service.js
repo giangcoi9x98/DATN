@@ -30,26 +30,23 @@ module.exports = {
 				const conn = await this.mysql.beginTransaction();
 
 				try {
-					const data = await this.mysql
-						.queryMulti(
-							"SELECT * FROM post ORDER BY update_at DESC",
-							[],
-							conn
-						);
+					const data = await this.mysql.queryMulti(
+						"SELECT * FROM post ORDER BY update_at DESC",
+						[],
+						conn
+					);
 					const result = await Promise.all(
 						data.map(async (element) => {
-							const comment = await this.mysql
-								.queryMulti(
-									"SELECT * FROM comment WHERE postId =?",
-									[element.id],
-									conn
-								);
-							const like = await this.mysql
-								.queryMulti(
-									"SELECT * FROM like_post WHERE postId = ?",
-									[element.id],
-									conn
-								);
+							const comment = await this.mysql.queryMulti(
+								"SELECT * FROM comment WHERE postId =?",
+								[element.id],
+								conn
+							);
+							const like = await this.mysql.queryMulti(
+								"SELECT * FROM like_post WHERE postId = ?",
+								[element.id],
+								conn
+							);
 							const file = await this.mysql.queryMulti(
 								"SELECT * FROM file WHERE postId = ?",
 								[element.id],
@@ -111,7 +108,7 @@ module.exports = {
 					if (img.length) {
 						console.log("img", img);
 						await Promise.all(
-							img.map(async e => {
+							img.map(async (e) => {
 								let fileId = uuid();
 								await conn.query(
 									`
@@ -137,6 +134,58 @@ module.exports = {
 				} catch (error) {
 					this.logger.error("Error at newPost action ", error);
 					await this.mysql.rollbackTransaction(conn);
+					throw error;
+				}
+			},
+			hooks: {
+				async before(ctx) {
+					this.originalSchema.hooks.before.isAuthenticate(ctx);
+				},
+			},
+		},
+
+		getPostById: {
+			params: {
+				id: "string",
+			},
+			async handler(ctx) {
+				const conn = await this.mysql.beginTransaction();
+				try {
+					const { id } = ctx.params;
+					const data = await this.mysql.queryOne(
+						"SELECT * FROM post WHERE id = ?",
+						[id],
+						conn
+					);
+
+					const comment = await this.mysql.queryMulti(
+						"SELECT * FROM comment WHERE postId =?",
+						[data.id],
+						conn
+					);
+
+					const like = await this.mysql.queryMulti(
+						"SELECT * FROM like_post WHERE postId = ?",
+						[data.id],
+						conn
+					);
+
+					const file = await this.mysql.queryMulti(
+						"SELECT * FROM file WHERE postId = ?",
+						[data.id],
+						conn
+					);
+					data.totalLike = like.length;
+					data.likes = like;
+					data.totalComment = comment.length;
+					data.comments = comment;
+					data.files = file;
+					
+					await this.mysql.commitTransaction(conn);	
+					return new ResponseData(true, "SUCCESS", data);
+				} catch (error) {
+					await this.mysql.rollbackTransaction(conn);
+					console.log("error", error);
 					throw error;
 				}
 			},
