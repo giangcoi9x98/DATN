@@ -17,6 +17,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import config from '../configs';
 import { useTranslation } from 'react-i18next';
+import SendIcon from '@material-ui/icons/Send';
 
 import { Box, Input, Tooltip } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
@@ -25,12 +26,13 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import TelegramIcon from '@material-ui/icons/Telegram';
 import { withRouter } from 'react-router-dom';
+import api from '../api';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '600px',
     marginTop: '40px',
-    cursor:'pointer'
+    cursor: 'pointer',
   },
   media: {
     // 56 . 25
@@ -60,12 +62,13 @@ const LightTooltip = withStyles((theme) => ({
     fontSize: 14,
   },
 }))(Tooltip);
- function Post(props) {
+function Post(props) {
   const classes = useStyles();
   const { t, i18n } = useTranslation('common');
   const [expanded, setExpanded] = React.useState(false);
   const { user, post } = props;
   const [images, setImages] = useState(post.files);
+  const [content, setContent] = useState("")
   const items = [
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 572.png` },
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 573.png` },
@@ -76,6 +79,16 @@ const LightTooltip = withStyles((theme) => ({
   };
   const redirectToDetailPost = (id) => {
     props.history.push(`/post/${id}`);
+  };
+
+  const likePost = async (postId) => {
+    const res = await api.post.likePost(postId);
+    console.log(res);
+  };
+
+  const addComment = async (postId, content, img = "") => {
+    const res = await api.post.addComment(postId, content, img);
+    console.log(res);
   }
   //let url = config.BASE_URL + post.post.files[0].path;
   useEffect(() => {
@@ -84,9 +97,7 @@ const LightTooltip = withStyles((theme) => ({
   return (
     <Box boxShadow={3} className={classes.root}>
       <CardHeader
-        onClick={
-          () => redirectToDetailPost(post?.id)
-        }
+        onClick={() => redirectToDetailPost(post?.id)}
         avatar={
           <Avatar aria-label='recipe' className={classes.avatar}>
             R
@@ -110,20 +121,21 @@ const LightTooltip = withStyles((theme) => ({
           style: {
             backgroundColor: '#9c8b8b',
           },
-        }} indicatorIconButtonProps={{
+        }}
+        indicatorIconButtonProps={{
           style: {
-              padding: '5px',    // 1
-          }
-      }}
+            padding: '5px', // 1
+          },
+        }}
         activeIndicatorIconButtonProps={{
           style: {
             backgroundColor: ' rgb(239 236 239)',
           },
         }}
       >
-        {items.map((e) => (         
+        {items.map((e) => (
           <CardMedia
-            key ={e.url}
+            key={e.url}
             className={classes.media}
             title='Paella dish'
             src={e.url}
@@ -137,15 +149,18 @@ const LightTooltip = withStyles((theme) => ({
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <LightTooltip title = {t("post.like")}  placeholder="left">
-        <IconButton aria-label='add to favorites'>
-          <FavoriteIcon />
-        </IconButton>
-          </LightTooltip>
-        <LightTooltip title ={t("post.share")} placeholder="top" >
-        <IconButton aria-label='share'>
-          <TelegramIcon/>
-        </IconButton>
+        <LightTooltip title={t('post.like')} placeholder='left'>
+          <IconButton
+            aria-label='add to favorites'
+            onClick={() => likePost(post.id)}
+          >
+            <FavoriteIcon />
+          </IconButton>
+        </LightTooltip>
+        <LightTooltip title={t('post.share')} placeholder='top'>
+          <IconButton aria-label='share'>
+            <TelegramIcon />
+          </IconButton>
         </LightTooltip>
         <div style={{ marginLeft: 'auto' }} onClick={handleExpandClick}>
           <p style={{ color: ' rgba(0, 0, 0, 0.54)', cursor: 'pointer' }}>
@@ -285,8 +300,21 @@ const LightTooltip = withStyles((theme) => ({
           </Typography>
           <Typography>
             <PhotoCameraIcon style={{ marginRight: '10px' }} />
-            <Input style={{ width: '400px' }} placeholder='comments' />
-            <span style={{ marginLeft: '20px' }}> Đăng </span>
+            <Input
+              style={{ width: '400px' }}
+              placeholder='comments'
+              onChange = { e => setContent(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  console.log('comment');
+                }
+              }}
+            />
+            <IconButton>
+              <SendIcon color='primary' onClick={
+                () => addComment(post.id, content)
+              }></SendIcon>
+            </IconButton>
           </Typography>
         </CardContent>
       </Collapse>
@@ -294,4 +322,4 @@ const LightTooltip = withStyles((theme) => ({
   );
 }
 
-export default withRouter(Post)
+export default withRouter(Post);
