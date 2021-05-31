@@ -173,6 +173,10 @@ const schema = {
 					"GET post/:id": "post.getPostById",
 					"PUT post:id": "post.updatePost",
 					"DELETE post:id": "post.deletePost",
+					//interactive 
+					"POST like": "post.likePost",
+					"POST comment": "post.addComment",
+
 					//media
 					"PUT media/upload": "media.upload",
 					"GET images":"media.getAll",
