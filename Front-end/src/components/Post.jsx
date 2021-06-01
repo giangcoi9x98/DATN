@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -27,6 +27,7 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import TelegramIcon from '@material-ui/icons/Telegram';
 import { withRouter } from 'react-router-dom';
 import api from '../api';
+import Comment from './Comment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +77,10 @@ function Post(props) {
   const [content, setContent] = useState('');
   const [totalLike, setTotalLike] = useState(null);
   const [liked, setLiked] = useState(false);
-  const [colorLike, setColorLike] = useState('rgba(0, 0, 0, 0.54)')
+  const [totalComment, setTotalComment] = useState(null);
+  const [colorLike, setColorLike] = useState('rgba(0, 0, 0, 0.54)');
+  const [comments, setComments] = useState([]);
+  const [likes, setLikes] = useState([]);
   const items = [
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 572.png` },
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 573.png` },
@@ -96,11 +100,11 @@ function Post(props) {
       if (liked) {
         setLiked(false);
         setTotalLike(totalLike - 1);
-        setColorLike('rgba(0, 0, 0, 0.54)')
+        setColorLike('rgba(0, 0, 0, 0.54)');
       } else {
         setLiked(true);
         setTotalLike(totalLike + 1);
-        setColorLike('red')
+        setColorLike('red');
       }
     }
   };
@@ -111,13 +115,27 @@ function Post(props) {
   };
   useEffect(() => {
     setLiked(isLike);
+    if (isLike) {
+      setColorLike('red');
+    }
   }, [isLike]);
-  console.log('colorLike :>> ', colorLike);
   //let url = config.BASE_URL + post.post.files[0].path;
   useEffect(() => {
     setTotalLike(post?.totalLike);
-
+    setTotalComment(post?.totalComment);
     setImages(post.files);
+    setComments(post?.comments);
+  }, [post]);
+
+  //render element
+  const renderComment = useCallback(() => {
+    if (post.comments.length) {
+     return  post.comments?.map((e) => {
+        console.log(e);
+        return <Comment key={e.id} comment ={e}></Comment>;
+      });
+    }
+    return <div></div>;
   }, [post]);
   return (
     <Box boxShadow={3} className={classes.root}>
@@ -195,141 +213,17 @@ function Post(props) {
         </LightTooltip>
         <div style={{ marginLeft: 'auto' }} onClick={handleExpandClick}>
           <p style={{ color: ' rgba(0, 0, 0, 0.54)', cursor: 'pointer' }}>
-            {' '}
-            3 Comments{' '}
+            {totalComment ? totalComment + ' comments' : ''}
           </p>
         </div>
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
-          <Typography paragraph>
-            <div style={{ display: 'flex' }}>
-              <div
-                style={{ width: '40px', height: '40px', marginRight: '10px' }}
-              >
-                <img
-                  style={{
-                    borderRadius: '50%',
-                    backgroundSize: 'cover',
-                    width: '40px',
-                    height: '40px',
-                  }}
-                  src='img\profile-bg.jpg'
-                  alt=''
-                />
-              </div>
-              <div
-                style={{
-                  paddingLeft: '10px',
-                  width: '100%',
-                  backgroundColor: '#f0f2f5',
-                  borderRadius: '15px',
-                }}
-              >
-                <p style={{ padding: '0px', margin: '0px' }}> Giang Tran </p>
-                <p
-                  style={{
-                    fontSize: '13px',
-                    color: ' rgba(0, 0, 0, 0.54)',
-                    padding: '0px',
-                    margin: '0px',
-                  }}
-                >
-                  {' '}
-                  This impressive paella is a perfect party dish and a fun meal
-                  to{' '}
-                </p>
-                <span style={{ fontSize: '13px' }}> Thich </span>
-                <span style={{ fontSize: '13px', paddingLeft: '10px' }}>
-                  {' '}
-                  Trả lời
-                </span>
-              </div>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                marginBottom: '10px',
-                marginLeft: '40px',
-                marginTop: '10px',
-              }}
-            >
-              <div style={{ width: '25px', height: '25px' }}>
-                <img
-                  style={{
-                    borderRadius: '50%',
-                    backgroundSize: 'cover',
-                    width: '25px',
-                    height: '25px',
-                  }}
-                  src='img\instagram.png'
-                  alt=''
-                />
-              </div>
-              <div
-                style={{
-                  paddingLeft: '10px',
-                  width: '100%',
-                  backgroundColor: '#f0f2f5',
-                  borderRadius: '15px',
-                }}
-              >
-                <p style={{ padding: '0px', margin: '0px', fontSize: '13px' }}>
-                  {' '}
-                  Giang Tran{' '}
-                </p>
-                <p style={{ fontSize: '13px', color: ' rgba(0, 0, 0, 0.54)' }}>
-                  {' '}
-                  Xin chao moi ng{' '}
-                </p>
-              </div>
-            </div>
-          </Typography>
-          <Typography paragraph>
-            <div style={{ display: 'flex' }}>
-              <div
-                style={{ width: '40px', height: '40px', marginRight: '10px' }}
-              >
-                <img
-                  style={{
-                    borderRadius: '50%',
-                    backgroundSize: 'cover',
-                    width: '40px',
-                    height: '40px',
-                  }}
-                  src='img\bg.jpg'
-                  alt=''
-                />
-              </div>
-              <div
-                style={{
-                  paddingLeft: '10px',
-                  width: '100%',
-                  backgroundColor: '#f0f2f5',
-                  borderRadius: '15px',
-                }}
-              >
-                <p style={{ padding: '0px', margin: '0px' }}> Giang Tran </p>
-                <p
-                  style={{
-                    fontSize: '13px',
-                    color: ' rgba(0, 0, 0, 0.54)',
-                    padding: '0px',
-                    margin: '0px',
-                  }}
-                >
-                  {' '}
-                  Add 1 cup of frozen peas along with the mussels, if you like.{' '}
-                </p>
-                <span style={{ fontSize: '13px' }}> Thich </span>
-                <span style={{ fontSize: '13px', paddingLeft: '10px' }}>
-                  {' '}
-                  Trả lời
-                </span>
-              </div>
-            </div>
-          </Typography>
-          <Typography>
+          <div>
+          {renderComment()}
+          </div>
+
+          <div>
             <PhotoCameraIcon style={{ marginRight: '10px' }} />
             <Input
               style={{ width: '400px' }}
@@ -347,7 +241,7 @@ function Post(props) {
                 onClick={() => addComment(post.id, content)}
               ></SendIcon>
             </IconButton>
-          </Typography>
+          </div>
         </CardContent>
       </Collapse>
     </Box>
