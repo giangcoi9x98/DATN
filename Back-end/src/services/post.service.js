@@ -173,13 +173,39 @@ module.exports = {
 						[data.id],
 						conn
 					);
-
+					await Promise.all(
+						comment.map(async (e) => {
+							const userComment = await this.mysql.queryOne(
+								`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+								ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+								from account as a INNER JOIN account_info as ai
+								ON a.id = ai.accountId WHERE ai.accountId != ?`,
+								[e.accountId],
+								conn
+							);
+							e.detailUserComment = userComment;
+							return e;
+						})
+					);
 					const like = await this.mysql.queryMulti(
 						"SELECT * FROM like_post WHERE postId = ? AND is_delete = 0",
 						[data.id],
 						conn
 					);
-
+					await Promise.all(
+						like.map(async (e) => {
+							const userLike = await this.mysql.queryOne(
+								`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+								ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+								from account as a INNER JOIN account_info as ai
+								ON a.id = ai.accountId WHERE ai.accountId != ?`,
+								[e.accountId],
+								conn
+							);
+							e.detailUserLike = userLike;
+							return e;
+						})
+					);
 					const file = await this.mysql.queryMulti(
 						"SELECT * FROM file WHERE postId = ? AND is_delete = 0",
 						[data.id],
