@@ -88,13 +88,30 @@ function Home(props) {
   }
   useEffect(() => {
     if (!isAuth) {
-      window.location = "/login"
+      window.location = '/login';
     }
-  }, [ isAuth,props.history]);
+  }, [isAuth, props.history]);
   const renderPost = () => {
     if (posts.postData) {
       return posts.postData.map((post) => {
-        return <Post post={post.post} key={post.post.id}></Post>;
+        let isLike = false;
+        post.post.likes?.forEach((e) => {
+          if (e.accontId === user.id) {
+            isLike = true;
+          } else {
+            isLike = false;
+          }
+        });
+
+        //if(user.id === post)
+        return (
+          <Post
+            post={post.post}
+            key={post.post.id}
+            user={user}
+            isLike={isLike}
+          ></Post>
+        );
       });
     } else {
       return <div></div>;
@@ -103,7 +120,7 @@ function Home(props) {
   const renderContacts = useCallback(() => {
     if (contacts.contactData) {
       return contacts.contactData.map((contact) => {
-        return <Contacts contact={contact}  key={contact.contact.id}></Contacts>;
+        return <Contacts contact={contact} key={contact.contact.id}></Contacts>;
       });
     } else {
       return <div></div>;
@@ -123,7 +140,6 @@ function Home(props) {
             style={{
               display: isShow ? 'block' : 'none',
             }}
-            
           >
             <BubbleChat
               message={contact.contact.messages}

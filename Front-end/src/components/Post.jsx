@@ -53,6 +53,11 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: red[500],
   },
+  center: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -66,14 +71,18 @@ function Post(props) {
   const classes = useStyles();
   const { t, i18n } = useTranslation('common');
   const [expanded, setExpanded] = React.useState(false);
-  const { user, post } = props;
+  const { user, post, isLike } = props;
   const [images, setImages] = useState(post.files);
-  const [content, setContent] = useState("")
+  const [content, setContent] = useState('');
+  const [totalLike, setTotalLike] = useState(null);
+  const [liked, setLiked] = useState(false);
+  const [colorLike, setColorLike] = useState('rgba(0, 0, 0, 0.54)')
   const items = [
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 572.png` },
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 573.png` },
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 574.png` },
   ];
+  console.log('isLike :>> ', isLike);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -83,15 +92,31 @@ function Post(props) {
 
   const likePost = async (postId) => {
     const res = await api.post.likePost(postId);
-    console.log(res);
+    if (res.status) {
+      if (liked) {
+        setLiked(false);
+        setTotalLike(totalLike - 1);
+        setColorLike('rgba(0, 0, 0, 0.54)')
+      } else {
+        setLiked(true);
+        setTotalLike(totalLike + 1);
+        setColorLike('red')
+      }
+    }
   };
 
-  const addComment = async (postId, content, img = "") => {
+  const addComment = async (postId, content, img = '') => {
     const res = await api.post.addComment(postId, content, img);
     console.log(res);
-  }
+  };
+  useEffect(() => {
+    setLiked(isLike);
+  }, [isLike]);
+  console.log('colorLike :>> ', colorLike);
   //let url = config.BASE_URL + post.post.files[0].path;
   useEffect(() => {
+    setTotalLike(post?.totalLike);
+
     setImages(post.files);
   }, [post]);
   return (
@@ -150,12 +175,18 @@ function Post(props) {
       </CardContent>
       <CardActions disableSpacing>
         <LightTooltip title={t('post.like')} placeholder='left'>
-          <IconButton
-            aria-label='add to favorites'
-            onClick={() => likePost(post.id)}
-          >
-            <FavoriteIcon />
-          </IconButton>
+          <div className={classes.center}>
+            {totalLike > 0 ? totalLike : ''}
+            <IconButton
+              style={{
+                color: colorLike,
+              }}
+              aria-label='add to favorites'
+              onClick={() => likePost(post.id)}
+            >
+              <FavoriteIcon />
+            </IconButton>
+          </div>
         </LightTooltip>
         <LightTooltip title={t('post.share')} placeholder='top'>
           <IconButton aria-label='share'>
@@ -303,7 +334,7 @@ function Post(props) {
             <Input
               style={{ width: '400px' }}
               placeholder='comments'
-              onChange = { e => setContent(e.target.value)}
+              onChange={(e) => setContent(e.target.value)}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   console.log('comment');
@@ -311,9 +342,10 @@ function Post(props) {
               }}
             />
             <IconButton>
-              <SendIcon color='primary' onClick={
-                () => addComment(post.id, content)
-              }></SendIcon>
+              <SendIcon
+                color='primary'
+                onClick={() => addComment(post.id, content)}
+              ></SendIcon>
             </IconButton>
           </Typography>
         </CardContent>
