@@ -283,7 +283,7 @@ module.exports = {
 						);
 					} else {
 						conn.query(
-							"UPDATE like_post SET is_delete = 1 WHERE accountId = ? and postId = ?",
+							"UPDATE like_post SET is_delete = (is_delete + 1)% 2 WHERE accountId = ? and postId = ?",
 							[user.id, postId]
 						);
 					}
