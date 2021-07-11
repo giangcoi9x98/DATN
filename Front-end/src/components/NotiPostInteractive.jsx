@@ -42,20 +42,22 @@ const StyledMenuItem = withStyles((theme) => ({
   root: {},
 }))(MenuItem);
 
-export default function DropDownMenu(props) {
+export default function NotiPostInteractive(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [icon, setIcon] = useState(props.icon);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [countChatHistory, setCountHistory] = useState([]);
   const chatHistory = useSelector((state) => state.chat);
+  const notiPost = useSelector(state => state.post.postNoti)
   const [history, setHistory] = useState([]);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  console.log('objectnotiPost :>> ', notiPost);
   useEffect(() => {
     setHistory(chatHistory.history);
+    
   }, [chatHistory.history]);
 
   useEffect(() => {
@@ -162,14 +164,11 @@ export default function DropDownMenu(props) {
     }
   }, [history]);
   const renderIcon = () => {
-    if (icon == 'mess') {
-      return (
-        <Badge badgeContent={countChatHistory.length} >
-          <MailIcon />
-        </Badge>
-      );
-    }
-    return <NotificationsIcon></NotificationsIcon>;
+    return (
+      <Badge badgeContent={countChatHistory.length} color='secondary'>
+        <NotificationsIcon></NotificationsIcon>
+      </Badge>
+    );
   };
 
   return (

@@ -304,7 +304,10 @@ module.exports = {
 
 		addComment: {
 			params: {
-				content: "string",
+				content: {
+					type: "string",
+					require: true,
+				},
 				img: "string|optinal",
 				postId: "string",
 			},
@@ -333,6 +336,188 @@ module.exports = {
 					return new ResponseData(true, "SUCCESS");
 				} catch (error) {
 					this.logger.error("Err at add comment", error);
+					await this.mysql.rollbackTransaction(conn);
+					throw error;
+				}
+			},
+			hooks: {
+				async before(ctx) {
+					this.originalSchema.hooks.before.isAuthenticate(ctx);
+				},
+			},
+		},
+		getAllPostByUser: {
+			async handler(ctx) {
+				const conn = await this.mysql.beginTransaction();
+				try {
+					const data = await this.mysql.queryMulti(
+						"SELECT * FROM post WHERE accountId = ? ORDER BY update_at DESC",
+						[ctx.meta.user.id],
+						conn
+					);
+					const result = await Promise.all(
+						data.map(async (element) => {
+							const comment = await this.mysql.queryMulti(
+								`SELECT c.id, accountId, postId, c.create_at, c.update_at, content, type, imageUrl 
+								FROM comment as c 
+								INNER JOIN detail_comment as dc 
+								ON c.id = dc.commentId 
+								WHERE c.postId = ? AND c.is_delete = 0
+								ORDER BY c.update_at DESC`,
+								[element.id],
+								conn
+							);
+							await Promise.all(
+								comment.map(async (e) => {
+									const userComment =
+										await this.mysql.queryOne(
+											`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+										from account as a INNER JOIN account_info as ai
+										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+											[e.accountId],
+											conn
+										);
+									e.detailUserComment = userComment;
+									return e;
+								})
+							);
+							console.log("comment", comment);
+							const like = await this.mysql.queryMulti(
+								"SELECT * FROM like_post WHERE postId = ? and is_delete = 0",
+								[element.id],
+								conn
+							);
+							await Promise.all(
+								like.map(async (e) => {
+									const userLike = await this.mysql.queryOne(
+										`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+										from account as a INNER JOIN account_info as ai
+										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+										[e.accountId],
+										conn
+									);
+									e.detailUserLike = userLike;
+									return e;
+								})
+							);
+							const file = await this.mysql.queryMulti(
+								"SELECT * FROM file WHERE postId = ? and is_delete = 0",
+								[element.id],
+								conn
+							);
+							element.totalLike = like.length;
+							element.likes = like;
+							element.totalComment = comment.length;
+							element.comments = comment;
+							element.files = file;
+							return {
+								post: element,
+							};
+						})
+					);
+					// console.log("el", res);
+					await this.mysql.commitTransaction(conn);
+					return new ResponseData(true, "SUCCESS", result);
+				} catch (error) {
+					this.logger.error("Error at getAllPost action ", error);
+					await this.mysql.rollbackTransaction(conn);
+					throw error;
+				}
+			},
+			hooks: {
+				async before(ctx) {
+					this.originalSchema.hooks.before.isAuthenticate(ctx);
+				},
+			},
+		},
+		getNotiPost: {
+			async handler(ctx) {
+				const conn = await this.mysql.beginTransaction();
+				try {
+					const data = await this.mysql.queryMulti(
+						"SELECT * FROM post WHERE accountId = ? ORDER BY update_at DESC",
+						[ctx.meta.user.id],
+						conn
+					);
+					const result = await Promise.all(
+						data.map(async (element) => {
+							const comment = await this.mysql.queryMulti(
+								`SELECT c.id, accountId, postId, c.create_at, c.update_at, content, type, imageUrl 
+								FROM comment as c 
+								INNER JOIN detail_comment as dc 
+								ON c.id = dc.commentId 
+								WHERE c.postId = ? AND c.is_delete = 0
+								ORDER BY c.update_at DESC`,
+								[element.id],
+								conn
+							);
+							await Promise.all(
+								comment.map(async (e) => {
+									const userComment =
+										await this.mysql.queryOne(
+											`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+										from account as a INNER JOIN account_info as ai
+										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+											[e.accountId],
+											conn
+										);
+									e.detailUserComment = userComment;
+									return e;
+								})
+							);
+							console.log("comment", comment);
+							const like = await this.mysql.queryMulti(
+								"SELECT * FROM like_post WHERE postId = ? and is_delete = 0",
+								[element.id],
+								conn
+							);
+							await Promise.all(
+								like.map(async (e) => {
+									const userLike = await this.mysql.queryOne(
+										`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+										from account as a INNER JOIN account_info as ai
+										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+										[e.accountId],
+										conn
+									);
+									e.detailUserLike = userLike;
+									return e;
+								})
+							);
+							const file = await this.mysql.queryMulti(
+								"SELECT * FROM file WHERE postId = ? and is_delete = 0",
+								[element.id],
+								conn
+							);
+							element.totalLike = like.length;
+							element.likes = like;
+							element.totalComment = comment.length;
+							element.comments = comment;
+							element.files = file;
+							return {
+								post: element,
+							};
+						})
+					);
+					// console.log("el", res);
+
+					await this.mysql.commitTransaction(conn);
+					const history = result.filter((e) => {
+						if (
+							Number(e.post.totalComment) > 0 ||
+							Number(e.post.totalLike) > 0
+						) {
+							return e;
+						}
+					});
+					console.log("history", history);
+					return new ResponseData(true, "SUCCESS", history);
+				} catch (error) {
+					this.logger.error("Error at getAllPost action ", error);
 					await this.mysql.rollbackTransaction(conn);
 					throw error;
 				}

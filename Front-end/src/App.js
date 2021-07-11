@@ -5,7 +5,7 @@ import routes from '../src/pages/routes';
 import NotFound from './pages/NotFound/NotFound';
 import { useAuth } from './hooks/useAuth';
 import { useDispatch } from 'react-redux';
-import {fetchAllPost} from './store/actions/postAction'
+import {fetchAllPost, getAllNotiPost} from './store/actions/postAction'
 import { getContacts } from './store/actions/contactAction';
 import { getProfileAction } from './store/actions/userAction';
 
@@ -17,6 +17,7 @@ function App(props) {
     if (isAuth) {
       async function fetchData() {
         await dispatch(fetchAllPost());
+        await dispatch(getAllNotiPost());
         await dispatch(getContacts());
         await dispatch(getProfileAction());
       }

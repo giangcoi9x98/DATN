@@ -35,6 +35,39 @@ export const getAllPost = async () => {
   }
 };
 
+export const getAllMyPost = async () => {
+  try {
+    const res = await axiosInstance.get('/mypost');
+    return {
+      status: true,
+      data: res.data,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: false,
+      mesage: ' get All Post fail',
+    };
+  }
+};
+
+
+export const getNotiPost = async () => {
+  try {
+    const res = await axiosInstance.get('/history');
+    return {
+      status: true,
+      data: res.data,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: false,
+      mesage: ' get All Post fail',
+    };
+  }
+};
+
 export const getById = async (id) => {
   try {
     const res = await axiosInstance.get(`/post/${id}`);

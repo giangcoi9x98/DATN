@@ -86,7 +86,6 @@ function Post(props) {
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 573.png` },
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 574.png` },
   ];
-  console.log('isLike :>> ', isLike);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -111,8 +110,16 @@ function Post(props) {
 
   const addComment = async (postId, content, img = '') => {
     const res = await api.post.addComment(postId, content, img);
-    console.log(res);
-  };
+    if (res) {
+      setComments([{
+        content: content,
+        update_at: Date.now(),
+        detailUserComment: user.userData
+      }, ...comments])
+      
+      setContent('')
+    };
+  }
   useEffect(() => {
     setLiked(isLike);
     if (isLike) {
@@ -129,14 +136,14 @@ function Post(props) {
 
   //render element
   const renderComment = useCallback(() => {
-    if (post.comments.length) {
-     return  post.comments?.map((e) => {
-        console.log(e);
+    if (comments?.length) {
+     return  comments?.map((e) => {
+        //console.log(e);
         return <Comment key={e.id} comment ={e}></Comment>;
       });
     }
     return <div></div>;
-  }, [post]);
+  }, [comments]);
   return (
     <Box boxShadow={3} className={classes.root}>
       <CardHeader
@@ -213,7 +220,7 @@ function Post(props) {
         </LightTooltip>
         <div style={{ marginLeft: 'auto' }} onClick={handleExpandClick}>
           <p style={{ color: ' rgba(0, 0, 0, 0.54)', cursor: 'pointer' }}>
-            {totalComment ? totalComment + ' comments' : ''}
+            {totalComment ? totalComment + ' comments' : 'comment'}
           </p>
         </div>
       </CardActions>
@@ -235,7 +242,10 @@ function Post(props) {
                 }
               }}
             />
-            <IconButton>
+            <IconButton
+              disabled={content ? false : true}
+              
+            >
               <SendIcon
                 color='primary'
                 onClick={() => addComment(post.id, content)}

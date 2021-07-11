@@ -167,11 +167,14 @@ const schema = {
 					"POST user/logout": "auth.logout",
 					"GET user/email/:email": "user.getByEmail",
 					"GET accounts": "user.getAll",
+
 					//Post apis
 					"POST post": "post.newPost",
 					"GET post": "post.getAllPost",
 					"GET post/:id": "post.getPostById",
 					"PUT post:id": "post.updatePost",
+					"GET mypost": "post.getAllPostByUser",
+					"GET history":"post.getNotiPost",
 					"DELETE post:id": "post.deletePost",
 					//interactive 
 					"POST like": "post.likePost",

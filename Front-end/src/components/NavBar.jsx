@@ -21,6 +21,7 @@ import { Container } from '@material-ui/core';
 import api from '../api';
 import { withRouter } from 'react-router';
 import DropDownMenu from './DropDownMenu';
+import NotiPostInteractive from './NotiPostInteractive';
 import { useAuth } from '../hooks/useAuth';
 import {getChatHistory} from '../store/actions/chatAction'
 const useStyles = makeStyles((theme) => ({
@@ -287,14 +288,15 @@ function PrimarySearchAppBar(props) {
                   </Badge>
                 </IconButton> */}
                 <DropDownMenu icon = "mess"></DropDownMenu>
-                <IconButton
+                {/* <IconButton
                   aria-label='show 17 new notifications'
                   color='inherit'
                 >
                   <Badge badgeContent={17} color='secondary'>
                     <NotificationsIcon className={classes.icon} />
                   </Badge>
-                </IconButton>
+                </IconButton> */}
+                <NotiPostInteractive></NotiPostInteractive>
                 <IconButton
                   edge='end'
                   aria-label='account of current user'
