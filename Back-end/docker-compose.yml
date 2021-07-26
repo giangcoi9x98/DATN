@@ -1,24 +1,24 @@
 version: "3.3"
 
 services:
-  rabbitmq:
-    image: rabbitmq:3
-    container_name: 'rabbitmq'
-    environment:
-      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
-      RABBITMQ_DEFAULT_USER: "rabbitmq"
-      RABBITMQ_DEFAULT_PASS: "rabbitmq"
-      RABBITMQ_DEFAULT_VHOST: "/"
-    ports:
-      - 5672:5672
-      - 15672:15672
+  # rabbitmq:
+  #   image: rabbitmq:3
+  #   container_name: 'rabbitmq'
+  #   environment:
+  #     RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+  #     RABBITMQ_DEFAULT_USER: "rabbitmq"
+  #     RABBITMQ_DEFAULT_PASS: "rabbitmq"
+  #     RABBITMQ_DEFAULT_VHOST: "/"
+  #   ports:
+  #     - 5672:5672
+  #     - 15672:15672
       
-    volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    hostname: rabbitmq
-    networks:
-      - internal
+  #   volumes:
+  #     - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+  #     - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+  #   hostname: rabbitmq
+  #   networks:
+  #     - internal
   # /etc/grafana/grafana.ini
   
   # grafana:
@@ -133,7 +133,7 @@ services:
       - redis
       - mysql
       # - influxdb
-      - rabbitmq
+      # - rabbitmq
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api-gw.rule=PathPrefix(`/`)"

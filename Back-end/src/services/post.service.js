@@ -270,7 +270,6 @@ module.exports = {
 				try {
 					const { postId } = ctx.params;
 					const { user } = ctx.meta;
-					console.log(postId);
 					const isLike = await this.mysql.queryOne(
 						"SELECT count(id) as isLike FROM like_post WHERE postId = ? AND accountId = ?",
 						[postId, user.id],
@@ -288,6 +287,16 @@ module.exports = {
 						);
 					}
 					this.mysql.commitTransaction(conn);
+					this.broker.call("api-gateway.broadcast", {
+						event: "NEW_LIKE",
+						args: [
+							{
+								sender: user,
+								postId,
+								newLike: isLike.isLike === 0 ? true : false
+							},
+						],
+					});
 					return new ResponseData(true, "SUCCESS");
 				} catch (error) {
 					this.logger.error("Erorr like post", error);
@@ -333,6 +342,16 @@ module.exports = {
 						[detail_commentId, commentId, content, type, imgurl]
 					);
 					this.mysql.commitTransaction(conn);
+					this.broker.call("api-gateway.broadcast", {
+						event: "NEW_COMMENT",
+						args: [
+							{
+								sender: user,
+								postId,
+								content
+							},
+						],
+					});
 					return new ResponseData(true, "SUCCESS");
 				} catch (error) {
 					this.logger.error("Err at add comment", error);
