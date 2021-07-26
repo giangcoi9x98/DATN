@@ -189,6 +189,7 @@ const options = ["1", "2", "3"];
 const ITEM_HEIGHT = 48;
 function Profile(props) {
   const userData = useSelector((state) => state.user);
+  const myPosts = useSelector((state) => state.post.myPosts);
   const dispatch = useDispatch();
   const contacts = useSelector((state) => state.contact);
   const classes = useStyle();
@@ -235,8 +236,8 @@ function Profile(props) {
   }, [currentUser, showModal, dispatch]);
   const renderContent = useCallback(() => {
     if (navProfile === 0) {
-      return posts.postData.map((post) => {
-        return <Posts post={post}></Posts>;
+      return myPosts?.map((post) => {
+        return <Posts post={post.post}></Posts>;
       });
     }
     if (navProfile === 1) {

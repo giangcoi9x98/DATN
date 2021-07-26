@@ -49,7 +49,7 @@ export default function CheckboxListSecondary(props) {
       <List dense className={classes.root}>
         <ListItem button>
           <ListItemAvatar>
-            <Avatar alt={`Avatar `} src={contact.contact.avarter} />
+            <Avatar alt={`Avatar `} src={contact?.contact?.avatar} />
           </ListItemAvatar>
           <ListItemText primary={contact.contact.fullname} />
         </ListItem>

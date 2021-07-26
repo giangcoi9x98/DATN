@@ -1,8 +1,13 @@
-import { GET_ALL_POST, GET_NOTI_POST } from '../actions/postAction';
+import {
+  GET_ALL_POST,
+  GET_NOTI_POST,
+  GET_MY_POST,
+} from '../actions/postAction';
 
 const initialState = {
   postData: [],
-  postNoti: []
+  postNoti: [],
+  myPosts: [],
 };
 function postReducer(state = initialState, action) {
   switch (action.type) {
@@ -11,11 +16,16 @@ function postReducer(state = initialState, action) {
         ...state,
         postData: action.payload,
       };
-      case GET_NOTI_POST:
-        return {
-          ...state,
-          postNoti: action.payload,
-        };
+    case GET_MY_POST:
+      return {
+        ...state,
+        myPosts: action.payload,
+      };
+    case GET_NOTI_POST:
+      return {
+        ...state,
+        postNoti: action.payload,
+      };
     default:
       return state;
   }

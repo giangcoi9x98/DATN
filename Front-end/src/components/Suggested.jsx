@@ -36,18 +36,30 @@ export default function Suggested() {
   return (
     <List dense className={classes.root}>
       {[
-        0, 1, 2, 3
+        {
+          name: 'John',
+          avatar: '/img/faces/card-profile1-square.jpg',
+        },
+        {
+          name: 'Hanna',
+          avatar: '/img/faces/card-profile2-square.jpg',
+        },
+        {
+          name: 'Justin',
+          avatar: '/img/faces/card-profile4-square.jpg',
+        },
+        {
+          name: 'Thomas',
+          avatar: '/img/faces/card-profile5-square.jpg',
+        },
       ].map((value) => {
         const labelId = `checkbox-list-secondary-label-${value}`;
         return (
           <ListItem key={value} button>
             <ListItemAvatar>
-              <Avatar
-                alt={`Avatar n°${value + 1}`}
-                src={`/static/images/avatar/${value + 1}.jpg`}
-              />
+              <Avatar alt={`Avatar n°${value + 1}`} src={value?.avatar} />
             </ListItemAvatar>
-            <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+            <ListItemText id={labelId} primary={` ${value?.name}`} />
           </ListItem>
         );
       })}

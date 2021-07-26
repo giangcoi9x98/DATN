@@ -49,37 +49,38 @@ export default function NotiPostInteractive(props) {
   const user = useSelector((state) => state.user);
   const [countChatHistory, setCountHistory] = useState([]);
   const chatHistory = useSelector((state) => state.chat);
-  const notiPost = useSelector(state => state.post.postNoti)
+  const notiPost = useSelector((state) => state.post.postNoti);
   const [history, setHistory] = useState([]);
+  const [notiPosts, setNotiPosts] = useState([]);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   console.log('objectnotiPost :>> ', notiPost);
   useEffect(() => {
-    setHistory(chatHistory.history);
-    
-  }, [chatHistory.history]);
+    setNotiPosts(notiPost);
+  }, [notiPost]);
 
   useEffect(() => {
     socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
       console.log('data :>> ', data);
       if (data.roomId === user.userData.id) {
-        console.log("object", typeof history);
-        const newHistory = [...history.filter(e => e.contactData.id !== data.sender.id)]
-        newHistory
-          .unshift({
-            contactData: data.sender,
-            message: {
-              content: data.message,
-            },
-            update_at: formatDate(Date.now()),
-          })
-        console.log('newHistor :>> ', newHistory);  
-        await setHistory( newHistory)
+        console.log('object', typeof history);
+        const newHistory = [
+          ...history.filter((e) => e.contactData.id !== data.sender.id),
+        ];
+        newHistory.unshift({
+          contactData: data.sender,
+          message: {
+            content: data.message,
+          },
+          update_at: formatDate(Date.now()),
+        });
+        console.log('newHistor :>> ', newHistory);
+        await setHistory(newHistory);
       }
     });
-  }, [history, user.userData]) 
-  
+  }, [history, user.userData]);
+
   useEffect(() => {
     setIcon(props.icon);
     socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
@@ -91,15 +92,15 @@ export default function NotiPostInteractive(props) {
         ]);
       }
     });
-  }, [props.icon, countChatHistory, user.userData,]);
+  }, [props.icon, countChatHistory, user.userData]);
   const handleClose = () => {
     setAnchorEl(null);
     setCountHistory([]);
   };
 
   const renderChatHistory = useCallback(() => {
-    if (history.length) {
-      return history.map((e) => {
+    if (notiPosts.length) {
+      return notiPosts.map((e) => {
         return (
           <StyledMenuItem style={{ height: '72px', width: '400px' }} key={e.id}>
             <ListItemIcon style={{ width: '50px', height: '50px' }}>
@@ -143,7 +144,7 @@ export default function NotiPostInteractive(props) {
                   color: '#050505',
                 }}
               >
-                {e.contactData.fullname}
+                {e?.post?.totalComment}
               </p>
               <p
                 style={{
@@ -153,7 +154,7 @@ export default function NotiPostInteractive(props) {
                   color: '#9a9b9d',
                 }}
               >
-                {e?.message?.content}
+                {e?.post?.content}
               </p>
             </div>
           </StyledMenuItem>
@@ -162,11 +163,11 @@ export default function NotiPostInteractive(props) {
     } else {
       return <div></div>;
     }
-  }, [history]);
+  }, [notiPosts]);
   const renderIcon = () => {
     return (
       <Badge badgeContent={countChatHistory.length} color='secondary'>
-        <NotificationsIcon></NotificationsIcon>
+        <NotificationsIcon style={{ color: 'white' }}></NotificationsIcon>
       </Badge>
     );
   };
@@ -174,6 +175,7 @@ export default function NotiPostInteractive(props) {
   return (
     <div>
       <IconButton
+        style={{ marginTop: '4px' }}
         aria-controls='customized-menu'
         aria-haspopup='true'
         variant='contained'

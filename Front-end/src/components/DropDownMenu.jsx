@@ -62,22 +62,23 @@ export default function DropDownMenu(props) {
     socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
       console.log('data :>> ', data);
       if (data.roomId === user.userData.id) {
-        console.log("object", typeof history);
-        const newHistory = [...history.filter(e => e.contactData.id !== data.sender.id)]
-        newHistory
-          .unshift({
-            contactData: data.sender,
-            message: {
-              content: data.message,
-            },
-            update_at: formatDate(Date.now()),
-          })
-        console.log('newHistor :>> ', newHistory);  
-        await setHistory( newHistory)
+        console.log('object', typeof history);
+        const newHistory = [
+          ...history.filter((e) => e.contactData.id !== data.sender.id),
+        ];
+        newHistory.unshift({
+          contactData: data.sender,
+          message: {
+            content: data.message,
+          },
+          update_at: formatDate(Date.now()),
+        });
+        console.log('newHistor :>> ', newHistory);
+        await setHistory(newHistory);
       }
     });
-  }, [history, user.userData]) 
-  
+  }, [history, user.userData]);
+
   useEffect(() => {
     setIcon(props.icon);
     socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
@@ -89,7 +90,7 @@ export default function DropDownMenu(props) {
         ]);
       }
     });
-  }, [props.icon, countChatHistory, user.userData,]);
+  }, [props.icon, countChatHistory, user.userData]);
   const handleClose = () => {
     setAnchorEl(null);
     setCountHistory([]);
@@ -164,17 +165,18 @@ export default function DropDownMenu(props) {
   const renderIcon = () => {
     if (icon == 'mess') {
       return (
-        <Badge badgeContent={countChatHistory.length} >
-          <MailIcon />
+        <Badge badgeContent={countChatHistory.length}>
+          <MailIcon style={{ color: 'white' }} />
         </Badge>
       );
     }
-    return <NotificationsIcon></NotificationsIcon>;
+    return <NotificationsIcon style={{ color: 'white' }}></NotificationsIcon>;
   };
 
   return (
     <div>
       <IconButton
+        style={{ marginTop: '4px' }}
         aria-controls='customized-menu'
         aria-haspopup='true'
         variant='contained'

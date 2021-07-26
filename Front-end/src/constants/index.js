@@ -1,5 +1,5 @@
 const COLORS = {
-  background_gradiant: " linear-gradient(to right, #f64f59, #c471ed, #12c2e9)",
+  background_gradiant: " linear-gradient(to left, #f64f59, #c471ed, #12c2e9)",
   hidden_text: "#65676b",
   text:'#262626'
 }

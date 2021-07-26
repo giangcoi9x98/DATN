@@ -82,8 +82,8 @@ function Post(props) {
   const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState([]);
   const items = [
-    { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 572.png` },
-    { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 573.png` },
+    { url: `/img/bg.jpg` },
+    { url: '/img/bg2.jpg' },
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 574.png` },
   ];
   const handleExpandClick = () => {
@@ -159,7 +159,7 @@ function Post(props) {
           </IconButton>
         }
         title='Shrimp and Chorizo Paella'
-        subheader='September 14, 2016'
+        subheader='June 20, 2021'
       />
 
       <Carousel
@@ -207,7 +207,7 @@ function Post(props) {
                 color: colorLike,
               }}
               aria-label='add to favorites'
-              onClick={() => likePost(post.id)}
+              onClick={() => likePost(post?.id)}
             >
               <FavoriteIcon />
             </IconButton>

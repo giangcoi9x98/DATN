@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
+import { Avatar, CardMedia, MenuItem } from '@material-ui/core';
 import Menu from '@material-ui/core/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
@@ -23,7 +23,7 @@ import { withRouter } from 'react-router';
 import DropDownMenu from './DropDownMenu';
 import NotiPostInteractive from './NotiPostInteractive';
 import { useAuth } from '../hooks/useAuth';
-import {getChatHistory} from '../store/actions/chatAction'
+import { getChatHistory } from '../store/actions/chatAction';
 const useStyles = makeStyles((theme) => ({
   grow: {
     width: '100%',
@@ -54,7 +54,10 @@ const useStyles = makeStyles((theme) => ({
   title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
-      display: 'block',
+      marginLeft:'4px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems:'center'
     },
   },
   search: {
@@ -124,7 +127,7 @@ function PrimarySearchAppBar(props) {
   const lang = useSelector((state) => state.lang);
   const { user } = useSelector((state) => state);
   const isAuth = useAuth();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   let email;
   if (user) {
     email = user.userData.email;
@@ -132,13 +135,12 @@ function PrimarySearchAppBar(props) {
   useEffect(() => {
     if (isAuth) {
       async function fetchData() {
-        await dispatch(getChatHistory())
+        await dispatch(getChatHistory());
       }
-      fetchData()
+      fetchData();
     }
     return i18n.changeLanguage(lang.lang);
-   
-  }, [lang,i18n,dispatch,isAuth]);
+  }, [lang, i18n, dispatch, isAuth]);
   const handleLogout = async () => {
     const res = await api.auth.logOut();
     if (res.status) {
@@ -150,7 +152,7 @@ function PrimarySearchAppBar(props) {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const messIcon = () => {
-    return<MailIcon></MailIcon>
+    return <MailIcon></MailIcon>;
   };
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -215,7 +217,7 @@ function PrimarySearchAppBar(props) {
             <MailIcon />
           </Badge>
         </IconButton> */}
-        <DropDownMenu icon={"mess"}></DropDownMenu>
+        <DropDownMenu icon={'mess'}></DropDownMenu>
         <p>{t('navBar.message')}</p>
       </MenuItem>
       <MenuItem>
@@ -252,13 +254,11 @@ function PrimarySearchAppBar(props) {
             {/* 
            logo codese
             */}
-            <div>
-              <img src = "/Guiang.svg" height={20} width={20}/>
-            </div>
             <div className={classes.leftNav}>
-              <Typography className={classes.title} variant='h6' noWrap>
+              <Avatar src='/Guiang.svg' />
+              <div className={classes.title} variant='h6' noWrap>
                 Codeses
-              </Typography>
+              </div>
               <div className={classes.search}>
                 <div className={classes.searchIcon}>
                   <SearchIcon />
@@ -287,7 +287,7 @@ function PrimarySearchAppBar(props) {
                     <MailIcon className={classes.icon} />
                   </Badge>
                 </IconButton> */}
-                <DropDownMenu icon = "mess"></DropDownMenu>
+                <DropDownMenu icon='mess'></DropDownMenu>
                 {/* <IconButton
                   aria-label='show 17 new notifications'
                   color='inherit'
