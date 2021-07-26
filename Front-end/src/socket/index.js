@@ -1,7 +1,5 @@
-import { useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import config from '../configs';
-import jwt from 'jsonwebtoken'
 
 const SOCKET_URL = config.BASE_URL || '192.168.0.132:3000';
 var instance;

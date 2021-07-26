@@ -1,22 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
-import MailIcon from '@material-ui/icons/Mail';
 import IconButton from '@material-ui/core/IconButton';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHistoryChat } from '../store/actions/chatAction';
 import socket from '../socket';
 import Badge from '@material-ui/core/Badge';
-import { bindActionCreators } from 'redux';
-import { formatDate } from '../utils/formatDate';
 
 const StyledMenu = withStyles({
   paper: {
@@ -61,23 +52,23 @@ export default function NotiPostInteractive(props) {
   }, [notiPost]);
 
   useEffect(() => {
-    socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
+    socket.getInstance().on('NEW_LIKE', async (data) => {
       console.log('data :>> ', data);
-      if (data.roomId === user.userData.id) {
-        console.log('object', typeof history);
-        const newHistory = [
-          ...history.filter((e) => e.contactData.id !== data.sender.id),
-        ];
-        newHistory.unshift({
-          contactData: data.sender,
-          message: {
-            content: data.message,
-          },
-          update_at: formatDate(Date.now()),
-        });
-        console.log('newHistor :>> ', newHistory);
-        await setHistory(newHistory);
-      }
+      // if (data.roomId === user.userData.id) {
+      //   console.log('object', typeof history);
+      //   const newHistory = [
+      //     ...history.filter((e) => e.contactData.id !== data.sender.id),
+      //   ];
+      //   newHistory.unshift({
+      //     contactData: data.sender,
+      //     message: {
+      //       content: data.message,
+      //     },
+      //     update_at: formatDate(Date.now()),
+      //   });
+      //   console.log('newHistor :>> ', newHistory);
+      //   await setHistory(newHistory);
+      // }
     });
   }, [history, user.userData]);
 

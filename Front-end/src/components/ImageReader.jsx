@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Card, IconButton, Paper } from '@material-ui/core';
-import { SIZETYPE, COLORS } from '../constants';
+import { IconButton, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyle = makeStyles((theme) => ({

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ModalPost from './ModalPost';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { SIZETYPE, COLORS } from '../constants';
-import { Card, Avatar, Button, Typography } from '@material-ui/core';
+import {  Avatar, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import noti from './Notification';
 

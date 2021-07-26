@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import EditIcon from "@material-ui/icons/Edit";
 import Contacts from "../../components/Contacts";
 import {
-  Avatar,
-  Button,
   Card,
-  CardMedia,
   Container,
   Divider,
   IconButton,

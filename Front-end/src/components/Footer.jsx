@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@material-ui/core';
-import { COLORS, SIZETYPE } from '../constants';
+import { COLORS } from '../constants';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme) => ({

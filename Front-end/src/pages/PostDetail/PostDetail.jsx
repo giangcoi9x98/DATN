@@ -5,11 +5,7 @@ import Post from '../../components/Post';
 import { COLORS, SIZETYPE } from '../../constants';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Button,
   Container,
-  Divider,
-  Typography,
-  Box,
   Grid,
 } from '@material-ui/core';
 

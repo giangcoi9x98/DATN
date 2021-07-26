@@ -1,29 +1,21 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Button,
   Container,
   Divider,
-  Typography,
-  Box,
   Grid,
+  Box
 } from '@material-ui/core';
-import { COLORS, SIZETYPE } from '../../constants';
+import { COLORS } from '../../constants';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import noti from '../../components/Notification';
-import api from '../../api';
-import { getProfileAction } from '../../store/actions/userAction';
-import { fetchAllPost } from '../../store/actions/postAction';
-import { getContacts } from '../../store/actions/contactAction';
 import NewPost from '../../components/NewPost';
 import Post from '../../components/Post';
 import { withRouter } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Contacts from '../../components/Contacts';
 import Suggested from '../../components/Suggested';
-import Chat from '../../components/Chat';
-import socket from '../../socket';
 import BubbleChat from '../../components/BubbleChat';
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -80,7 +72,6 @@ function Home(props) {
   const posts = useSelector((state) => state.post);
   const contacts = useSelector((state) => state.contact);
   const dispatch = useDispatch();
-  const [pendingReq, setPendingReq] = useState(true);
   const classes = useStyle();
   const isAuth = useAuth();
   if (!isAuth) {
@@ -91,32 +82,22 @@ function Home(props) {
       window.location = '/login';
     }
   }, [isAuth, props.history]);
-  const renderPost = () => {
+  const renderPost = useCallback(() => {
     if (posts.postData) {
       return posts.postData.map((post) => {
-        let isLike = false;
-        post.post.likes?.forEach((e) => {
-          if (e.accontId === user.id) {
-            isLike = true;
-          } else {
-            isLike = false;
-          }
-        });
-
         //if(user.id === post)
         return (
           <Post
             post={post.post}
             key={post.post.id}
-            user={user}
-            isLike={isLike}
+            user={user.userData}
           ></Post>
         );
       });
     } else {
       return <div></div>;
     }
-  };
+  },[posts.postData, user]);
   const renderContacts = useCallback(() => {
     if (contacts.contactData) {
       return contacts.contactData.map((contact) => {

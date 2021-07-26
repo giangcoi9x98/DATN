@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,8 +10,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import config from '../configs';
 import { useTranslation } from 'react-i18next';
@@ -64,7 +60,7 @@ const LightTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.white,
     color: 'rgba(0, 0, 0, 0.87)',
-    boxShadow: theme.shadows[1],
+    boxSPadow: theme.shadows[1],
     fontSize: 14,
   },
 }))(Tooltip);
@@ -72,7 +68,7 @@ function Post(props) {
   const classes = useStyles();
   const { t, i18n } = useTranslation('common');
   const [expanded, setExpanded] = React.useState(false);
-  const { user, post, isLike } = props;
+  const { user, post } = props;
   const [images, setImages] = useState(post.files);
   const [content, setContent] = useState('');
   const [totalLike, setTotalLike] = useState(null);
@@ -80,7 +76,6 @@ function Post(props) {
   const [totalComment, setTotalComment] = useState(null);
   const [colorLike, setColorLike] = useState('rgba(0, 0, 0, 0.54)');
   const [comments, setComments] = useState([]);
-  const [likes, setLikes] = useState([]);
   const items = [
     { url: `/img/bg.jpg` },
     { url: '/img/bg2.jpg' },
@@ -92,7 +87,7 @@ function Post(props) {
   const redirectToDetailPost = (id) => {
     props.history.push(`/post/${id}`);
   };
-
+  console.log('post :>> ', post);
   const likePost = async (postId) => {
     const res = await api.post.likePost(postId);
     if (res.status) {
@@ -111,35 +106,38 @@ function Post(props) {
   const addComment = async (postId, content, img = '') => {
     const res = await api.post.addComment(postId, content, img);
     if (res) {
-      setComments([{
-        content: content,
-        update_at: Date.now(),
-        detailUserComment: user.userData
-      }, ...comments])
-      
-      setContent('')
-    };
-  }
-  useEffect(() => {
-    setLiked(isLike);
-    if (isLike) {
-      setColorLike('red');
+      setComments([
+        {
+          content: content,
+          update_at: Date.now(),
+          detailUserComment: user.userData,
+        },
+        ...comments,
+      ]);
+
+      setContent('');
     }
-  }, [isLike]);
-  //let url = config.BASE_URL + post.post.files[0].path;
+  };
+  useEffect(() => {
+    post?.likes &&
+      post.likes.map((e) => {
+        if (e.accountId == user.id) {
+          setLiked(true);
+        }
+      });
+  }, [post, user]);
   useEffect(() => {
     setTotalLike(post?.totalLike);
     setTotalComment(post?.totalComment);
     setImages(post.files);
     setComments(post?.comments);
   }, [post]);
-
   //render element
   const renderComment = useCallback(() => {
     if (comments?.length) {
-     return  comments?.map((e) => {
+      return comments?.map((e) => {
         //console.log(e);
-        return <Comment key={e.id} comment ={e}></Comment>;
+        return <Comment key={e.id} comment={e}></Comment>;
       });
     }
     return <div></div>;
@@ -204,7 +202,7 @@ function Post(props) {
             {totalLike > 0 ? totalLike : ''}
             <IconButton
               style={{
-                color: colorLike,
+                color: liked ? 'red' :'',
               }}
               aria-label='add to favorites'
               onClick={() => likePost(post?.id)}
@@ -226,9 +224,7 @@ function Post(props) {
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
-          <div>
-          {renderComment()}
-          </div>
+          <div>{renderComment()}</div>
 
           <div>
             <PhotoCameraIcon style={{ marginRight: '10px' }} />
@@ -242,10 +238,7 @@ function Post(props) {
                 }
               }}
             />
-            <IconButton
-              disabled={content ? false : true}
-              
-            >
+            <IconButton disabled={content ? false : true}>
               <SendIcon
                 color='primary'
                 onClick={() => addComment(post.id, content)}

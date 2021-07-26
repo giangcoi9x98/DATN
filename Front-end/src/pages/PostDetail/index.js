@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React  from 'react';
 import { withRouter } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
 import DetailPost from './PostDetail';
 
 function Index(props) {

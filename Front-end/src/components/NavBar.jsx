@@ -3,10 +3,9 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
-import { Avatar, CardMedia, MenuItem } from '@material-ui/core';
+import { Avatar, MenuItem } from '@material-ui/core';
 import Menu from '@material-ui/core/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
@@ -151,9 +150,6 @@ function PrimarySearchAppBar(props) {
   };
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const messIcon = () => {
-    return <MailIcon></MailIcon>;
-  };
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };

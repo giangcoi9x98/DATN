@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
 import {
-  Avatar,
   Button,
   TextField,
   Typography,

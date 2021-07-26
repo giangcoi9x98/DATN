@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter, Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import routes from '../src/pages/routes';
 import NotFound from './pages/NotFound/NotFound';
 import { useAuth } from './hooks/useAuth';
