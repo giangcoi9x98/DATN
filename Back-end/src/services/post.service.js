@@ -348,7 +348,8 @@ module.exports = {
 							{
 								sender: user,
 								postId,
-								content
+								content,
+								roomId:user.id
 							},
 						],
 					});
@@ -417,7 +418,7 @@ module.exports = {
 										[e.accountId],
 										conn
 									);
-									e.detailUserLike = userLike;
+									e.detailUserLikae = userLike;
 									return e;
 								})
 							);
