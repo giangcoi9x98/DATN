@@ -16,20 +16,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Suggested() {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([1]);
-
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
 
   return (
     <List dense className={classes.root}>

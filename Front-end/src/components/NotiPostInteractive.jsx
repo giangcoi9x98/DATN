@@ -8,7 +8,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import socket from '../socket';
 import Badge from '@material-ui/core/Badge';
-
+import { setHistoryPostInteractive } from '../store/actions/postAction';
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5',
@@ -35,63 +35,48 @@ const StyledMenuItem = withStyles((theme) => ({
 
 export default function NotiPostInteractive(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [icon, setIcon] = useState(props.icon);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
-  const [countChatHistory, setCountHistory] = useState([]);
-  const chatHistory = useSelector((state) => state.chat);
-  const notiPost = useSelector((state) => state.post.postNoti);
-  const [history, setHistory] = useState([]);
-  const [notiPosts, setNotiPosts] = useState([]);
+  const [countNotiPost, setCountNotiPost] = useState(0);
+  const notiPost = useSelector((state) => state.post?.postNoti);
+  const mypost = useSelector((state) => state.post?.myPosts);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  console.log('objectnotiPost :>> ', notiPost);
-  useEffect(() => {
-    setNotiPosts(notiPost);
-  }, [notiPost]);
+
 
   useEffect(() => {
     socket.getInstance().on('NEW_LIKE', async (data) => {
-      console.log('data :>> ', data);
-      // if (data.roomId === user.userData.id) {
-      //   console.log('object', typeof history);
-      //   const newHistory = [
-      //     ...history.filter((e) => e.contactData.id !== data.sender.id),
-      //   ];
-      //   newHistory.unshift({
-      //     contactData: data.sender,
-      //     message: {
-      //       content: data.message,
-      //     },
-      //     update_at: formatDate(Date.now()),
-      //   });
-      //   console.log('newHistor :>> ', newHistory);
-      //   await setHistory(newHistory);
-      // }
+      mypost.forEach((e) => {
+        if (e.post?.id === data?.postId) {
+          if (data.newLike) {
+            dispatch(setHistoryPostInteractive(data));
+            setCountNotiPost(countNotiPost + 1);
+          }
+        }
+      });
     });
-  }, [history, user.userData]);
-
+  }, [mypost, dispatch, countNotiPost]);
   useEffect(() => {
-    setIcon(props.icon);
-    socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
-      console.log('data :>> ', data);
-      if (data.roomId === user.userData.id) {
-        setCountHistory([
-          ...countChatHistory.filter((item) => item !== data.sender.accountId),
-          data.sender.accountId,
-        ]);
-      }
+    socket.getInstance().on('NEW_COMMENT', async (data) => {
+      mypost.forEach((e) => {
+        if (e.post?.id === data?.postId) {
+          if (data) {
+            data.type = 'comment'
+            dispatch(setHistoryPostInteractive(data));
+            setCountNotiPost(countNotiPost + 1);
+          }
+        }
+      });
     });
-  }, [props.icon, countChatHistory, user.userData]);
+  }, [mypost, dispatch, countNotiPost]);
   const handleClose = () => {
     setAnchorEl(null);
-    setCountHistory([]);
+    setCountNotiPost([]);
   };
 
   const renderChatHistory = useCallback(() => {
-    if (notiPosts.length) {
-      return notiPosts.map((e) => {
+    if (notiPost?.length) {
+      return notiPost.map((e) => {
         return (
           <StyledMenuItem style={{ height: '72px', width: '400px' }} key={e.id}>
             <ListItemIcon style={{ width: '50px', height: '50px' }}>
@@ -154,10 +139,10 @@ export default function NotiPostInteractive(props) {
     } else {
       return <div></div>;
     }
-  }, [notiPosts]);
+  }, [notiPost]);
   const renderIcon = () => {
     return (
-      <Badge badgeContent={countChatHistory.length} color='secondary'>
+      <Badge badgeContent={countNotiPost ?? null} color='secondary'>
         <NotificationsIcon style={{ color: 'white' }}></NotificationsIcon>
       </Badge>
     );

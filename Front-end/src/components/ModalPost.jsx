@@ -1,7 +1,7 @@
 import { Modal, Button } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SIZETYPE, COLORS } from '../constants';
+import { SIZETYPE } from '../constants';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Card,
@@ -13,7 +13,6 @@ import {
 import ImageIcon from '@material-ui/icons/Image';
 import ImageReader from '../components/ImageReader';
 import api from '../api';
-import AutorenewIcon from '@material-ui/icons/Autorenew';
 import noti from './Notification';
 import { fetchAllPost } from '../store/actions/postAction';
 import { useDispatch } from 'react-redux';

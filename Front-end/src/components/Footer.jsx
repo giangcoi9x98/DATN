@@ -49,7 +49,7 @@ export default function Footer(props) {
       await i18n.changeLanguage(lang.lang);
     }
     updateLanguage()
-  }, [lang]);
+  }, [lang, i18n]);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);

@@ -22,7 +22,7 @@ export default function SimpleBottomNavigation({setNavProfile, navProfile}) {
   const { t, i18n } = useTranslation('common');
   useEffect(() => {
     setNavProfile(value)
-  }, [value])
+  }, [setNavProfile, value])
   return (
     <BottomNavigation
       value={value}

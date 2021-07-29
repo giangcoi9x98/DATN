@@ -68,7 +68,7 @@ function SignUp(props) {
   console.log(t('email'), lang);
   useEffect(() => {
     return i18n.changeLanguage(lang.lang);
-  }, [lang]);
+  }, [lang,i18n]);
   console.log(props);
   const handleSignup = async (email, password, fullname, birthday) => {
     const res = await api.user.signUp({

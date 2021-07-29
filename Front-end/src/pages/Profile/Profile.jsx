@@ -1,9 +1,9 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect, useCallback } from "react";
 import { withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import EditIcon from "@material-ui/icons/Edit";
-import Contacts from "../../components/Contacts";
 import {
   Card,
   Container,
@@ -23,7 +23,6 @@ import Posts from "../../components/Post";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import { makeStyles } from "@material-ui/core/styles";
 import { COLORS, SIZETYPE, FONT } from "../../constants";
-import noti from "../../components/Notification";
 import api from "../../api";
 import NavProfile from "./components/NavProfile";
 import ModalUpload from "./components/ModalUpload";
@@ -192,7 +191,7 @@ function Profile(props) {
   const classes = useStyle();
   const [image, setImage] = useState("");
   const { t, i18n } = useTranslation("common");
-  const [currentUser, setCurrentUser] = useState(
+  const [currentUser] = useState(
     props.location.pathname.split("/")[2]
   );
   const [navProfile, setNavProfile] = useState(0);

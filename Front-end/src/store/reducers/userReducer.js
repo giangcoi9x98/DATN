@@ -1,4 +1,4 @@
-import { GET_PROFILE,SET_PROFILE,GET_IMAGES } from '../actions/userAction';
+import { GET_PROFILE,GET_IMAGES } from '../actions/userAction';
 
 const initialState = {
   userData: {},

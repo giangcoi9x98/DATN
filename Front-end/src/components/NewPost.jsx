@@ -58,7 +58,7 @@ function NewPost(props) {
         <div className={classes.bg_text}>
           <Typography className={classes.text_hidden}>
             {t('home.newPost')}
-            {`${user.userData.fullname} ?`}
+            {`${user?.userData?.fullname} ?`}
           </Typography>
         </div>
       </div>

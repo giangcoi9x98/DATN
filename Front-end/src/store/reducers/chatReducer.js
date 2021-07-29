@@ -1,4 +1,3 @@
-import socket from '../../socket';
 import { SOCKET_NEW_MESSAGE, GET_CHAT_HISTORY, SET_CHAT_HISTORY } from '../actions/chatAction';
 const initialState = {
   history:[]

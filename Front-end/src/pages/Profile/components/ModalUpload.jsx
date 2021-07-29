@@ -2,7 +2,6 @@ import { Modal, Button } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
-import { COLORS, SIZETYPE, FONT } from '../../../constants';
 import ImageReader from '../../../components/ImageReader';
 
 const useStyle = makeStyles((theme) => ({
@@ -17,7 +16,7 @@ function ModalPost(props) {
   const classes = useStyle();
   const { image, handleUploadImage } = props;
 
-  const [show, setShow] = useState(props.showModal);
+  const [show] = useState(props.showModal);
   const { t, i18n } = useTranslation('common');
   const handleClose = () => {
     console.log('close');

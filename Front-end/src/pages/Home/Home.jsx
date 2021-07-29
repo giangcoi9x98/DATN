@@ -9,7 +9,6 @@ import {
 import { COLORS } from '../../constants';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import noti from '../../components/Notification';
 import NewPost from '../../components/NewPost';
 import Post from '../../components/Post';
 import { withRouter } from 'react-router-dom';
@@ -71,7 +70,6 @@ function Home(props) {
   const user = useSelector((state) => state.user);
   const posts = useSelector((state) => state.post);
   const contacts = useSelector((state) => state.contact);
-  const dispatch = useDispatch();
   const classes = useStyle();
   const isAuth = useAuth();
   if (!isAuth) {
@@ -132,9 +130,6 @@ function Home(props) {
     } else {
       return <div></div>;
     }
-  };
-  const click = () => {
-    return <BubbleChat></BubbleChat>;
   };
   return (
     <Container component='main' maxWidth='lg' className={classes.container}>

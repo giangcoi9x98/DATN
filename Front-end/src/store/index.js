@@ -1,23 +1,23 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import rootReducer from './reducers';
 import thunk from 'redux-thunk';
-import createSocketIoMiddleware from 'redux-socket.io';
-import { persistReducer } from 'redux-persist';
-import socketInstance from '../socket'
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import socketMiddleware from './middlewares/socketMiddleWare';
+// import createSocketIoMiddleware from 'redux-socket.io';
+// import { persistReducer } from 'redux-persist';
+// import socketInstance from '../socket'
+// import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
+// import socketMiddleware from './middlewares/socketMiddleWare';
 
-const persistConfig = {
-  key: 'root',
-  storage,
-}
+// const persistConfig = {
+//   key: 'root',
+//   storage,
+// }
 
 // console.log('object');
-var socket = socketInstance.getInstance()
+// var socket = socketInstance.getInstance()
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+// const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const middlewares = [thunk, socketMiddleware(socket)];
+// const middlewares = [thunk, socketMiddleware(socket)];
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(

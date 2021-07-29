@@ -6,7 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import MailIcon from '@material-ui/icons/Mail';
 import IconButton from '@material-ui/core/IconButton';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import socket from '../socket';
 import Badge from '@material-ui/core/Badge';
 import { formatDate } from '../utils/formatDate';
@@ -38,7 +38,6 @@ const StyledMenuItem = withStyles((theme) => ({
 export default function DropDownMenu(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [icon, setIcon] = useState(props.icon);
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [countChatHistory, setCountHistory] = useState([]);
   const chatHistory = useSelector((state) => state.chat);
@@ -48,7 +47,7 @@ export default function DropDownMenu(props) {
   };
 
   useEffect(() => {
-    setHistory(chatHistory.history);
+    setHistory(chatHistory?.history);
   }, [chatHistory.history]);
 
   useEffect(() => {
@@ -90,7 +89,7 @@ export default function DropDownMenu(props) {
   };
 
   const renderChatHistory = useCallback(() => {
-    if (history.length) {
+    if (history?.length) {
       return history.map((e) => {
         return (
           <StyledMenuItem style={{ height: '72px', width: '400px' }} key={e.id}>
@@ -156,7 +155,7 @@ export default function DropDownMenu(props) {
     }
   }, [history]);
   const renderIcon = () => {
-    if (icon == 'mess') {
+    if (icon === 'mess') {
       return (
         <Badge badgeContent={countChatHistory.length}>
           <MailIcon style={{ color: 'white' }} />

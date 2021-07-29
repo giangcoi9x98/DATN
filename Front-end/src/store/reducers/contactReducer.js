@@ -10,17 +10,17 @@ function contactReducer(state = initialState, action) {
     case GET_CONTACTS:
       return {
         ...state,
-        contactData: action.payload.data,
+        contactData: action?.payload?.data,
       };
     case GET_CONTACT_SELECTED:
     return {
       ...state,
-      isSelected: [...state.isSelected.filter(item => item !== action.payload), action.payload]
+      isSelected: [...state.isSelected.filter(item => item !== action?.payload), action?.payload]
     }
     case DELETE_CONTACT_SELECTED:
       return {
         ...state,
-        isSelected: [...state.isSelected.filter(item => item !== action.payload)]
+        isSelected: [...state.isSelected.filter(item => item !== action?.payload)]
       }
     default:
       return state;

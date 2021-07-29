@@ -9,7 +9,7 @@ export const getProfileAction = () => {
     await api.user.getProfile().then((res) => {
       dispatch({
         type: 'GET_PROFILE',
-        payload: res.data.data[0],
+        payload: res?.data?.data[0],
       });
     });
   };
@@ -21,7 +21,7 @@ export const getAllImages = (email) => {
       console.log(res)
       dispatch({
         type: 'GET_IMAGES',
-        payload:res.data
+        payload:res?.data
       })
     })
   }

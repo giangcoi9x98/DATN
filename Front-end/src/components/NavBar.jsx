@@ -10,7 +10,6 @@ import Menu from '@material-ui/core/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useTranslation } from 'react-i18next';
@@ -129,7 +128,7 @@ function PrimarySearchAppBar(props) {
   const dispatch = useDispatch();
   let email;
   if (user) {
-    email = user.userData.email;
+    email = user?.userData?.email;
   }
   useEffect(() => {
     if (isAuth) {
@@ -252,7 +251,7 @@ function PrimarySearchAppBar(props) {
             */}
             <div className={classes.leftNav}>
               <Avatar src='/Guiang.svg' />
-              <div className={classes.title} variant='h6' noWrap>
+              <div className={classes.title} variant='h6'>
                 Codeses
               </div>
               <div className={classes.search}>

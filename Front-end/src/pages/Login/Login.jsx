@@ -16,9 +16,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import {
   Facebook as FacebookIcon,
-  Image,
-  Instagram as InstagramIcon,
-  LockOutlined as LockOutlinedIcon,
 } from '@material-ui/icons';
 import { COLORS, SIZETYPE } from '../../constants';
 import { useTranslation } from 'react-i18next';

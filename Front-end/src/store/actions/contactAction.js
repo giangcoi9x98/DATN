@@ -13,7 +13,7 @@ export const getContacts = () => {
     await api.user.getAll().then((res) => {
       dispatch({
         type: 'GET_CONTACTS',
-        payload: res.data.data,
+        payload: res?.data?.data,
       });
     });
   };

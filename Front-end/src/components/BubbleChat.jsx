@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   makeStyles,
-  createMuiTheme,
 } from '@material-ui/core/styles';
 import {
   Box,
@@ -69,12 +68,12 @@ export default function RecipeReviewCard(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const [contact, setContact] = useState(props.contact);
+  const [contact] = useState(props.contact);
   const [message, setMessage] = useState(props.message) || [];
   const [content, setContent] = useState('');
   useEffect(() => {
     socket.getInstance().on('NEW_MESSAGE', async (data) => {
-      if (data.roomId == user.userData.id) {
+      if (data.roomId === user.userData.id) {
         setMessage([
           ...message,
           {
