@@ -52,9 +52,7 @@ export default function DropDownMenu(props) {
 
   useEffect(() => {
     socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
-      console.log('data :>> ', data);
       if (data.roomId === user.userData.id) {
-        console.log('object', typeof history);
         const newHistory = [
           ...history.filter((e) => e.contactData.id !== data.sender.id),
         ];
@@ -65,7 +63,6 @@ export default function DropDownMenu(props) {
           },
           update_at: formatDate(Date.now()),
         });
-        console.log('newHistor :>> ', newHistory);
         await setHistory(newHistory);
       }
     });
@@ -74,7 +71,6 @@ export default function DropDownMenu(props) {
   useEffect(() => {
     setIcon(props.icon);
     socket.getInstance().on('NEW_CHAT_HISTORY', async (data) => {
-      console.log('data :>> ', data);
       if (data.roomId === user.userData.id) {
         setCountHistory([
           ...countChatHistory.filter((item) => item !== data.sender.accountId),
@@ -134,7 +130,7 @@ export default function DropDownMenu(props) {
                   color: '#050505',
                 }}
               >
-                {e.contactData.fullname}
+                {e?.contactData?.fullname}
               </p>
               <p
                 style={{

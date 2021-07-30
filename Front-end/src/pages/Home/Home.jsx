@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Container,
@@ -16,6 +16,8 @@ import { useAuth } from '../../hooks/useAuth';
 import Contacts from '../../components/Contacts';
 import Suggested from '../../components/Suggested';
 import BubbleChat from '../../components/BubbleChat';
+import _ from 'lodash';
+
 const useStyle = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -65,7 +67,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function Home(props) {
+const Home = memo( (props) =>  {
   const { t, i18n } = useTranslation('common');
   const user = useSelector((state) => state.user);
   const posts = useSelector((state) => state.post);
@@ -109,7 +111,7 @@ function Home(props) {
     if (contacts.contactData) {
       return contacts.contactData.map((contact) => {
         let isShow = false;
-        contacts.isSelected.map((e) => {
+        contacts?.isSelected?.map((e) => {
           if (e == contact.contact.id) isShow = true;
         });
         return (
@@ -121,7 +123,7 @@ function Home(props) {
             }}
           >
             <BubbleChat
-              message={contact.contact.messages}
+              message={_.sortBy(contact.contact.messages, e => Date.parse(e?.detail?.create_at), ['asc'])}
               contact={contact.contact}
             ></BubbleChat>
           </Box>
@@ -171,6 +173,6 @@ function Home(props) {
       <Grid className={classes.mess}>{/* <BubbleChat></BubbleChat> */}</Grid>
     </Container>
   );
-}
+})
 
 export default withRouter(Home);

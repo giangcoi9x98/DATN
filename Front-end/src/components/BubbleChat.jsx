@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   makeStyles,
 } from '@material-ui/core/styles';
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'block',
   },
 }));
-export default function RecipeReviewCard(props) {
+const BubbleChat = memo((props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -87,7 +87,7 @@ export default function RecipeReviewCard(props) {
     });
   }, [message, user.userData.id, setMessage]);
   const handlerSend = async (msg, roomId = contact.id) => {
-    const res = await api.chat.send({
+    await api.chat.send({
       message: msg,
       roomId: roomId,
     });
@@ -103,7 +103,7 @@ export default function RecipeReviewCard(props) {
         }
       }
     ])
-    console.log(res);
+    setContent('')
   };
   const renderMessageItem = () => {
     if (message.length > 0) {
@@ -202,4 +202,6 @@ export default function RecipeReviewCard(props) {
       </Box>
     </Box>
   );
-}
+})
+
+export default BubbleChat;

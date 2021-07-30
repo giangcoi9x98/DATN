@@ -3,7 +3,6 @@ import config from '../configs';
 //import router from "./router";
 import jwt from 'jsonwebtoken';
 const API_BASE = config.API_BASE;
-console.log('base api', API_BASE);
 const token = localStorage.getItem('token');
 if (token) {
   axios.defaults.headers.common['Authorization'] = token;
@@ -23,7 +22,6 @@ const refreshAccessToken = () =>
       refresh_token: localStorage.getItem('refresh_token'),
     })
     .then((tokenRefreshResponse) => {
-      console.log('refresh', tokenRefreshResponse);
       localStorage.setItem('token', tokenRefreshResponse.data.data.token);
       localStorage.setItem(
         'refresh_token',

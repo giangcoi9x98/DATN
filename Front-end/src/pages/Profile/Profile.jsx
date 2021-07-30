@@ -212,7 +212,6 @@ function Profile(props) {
   const posts = useSelector((state) => state.post);
 
   const [showModal, setShowModal] = useState(false);
-  // console.log(image);
   const handleUploadImage = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -455,7 +454,6 @@ function Profile(props) {
         <Container component="main" maxWidth="md" className={classes.wrapNav}>
           <NavProfile
             setNavProfile={(e) => {
-              console.log("nac", e);
               setNavProfile(e);
             }}
             navProfile={navProfile}

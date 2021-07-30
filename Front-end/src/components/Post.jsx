@@ -24,6 +24,7 @@ import TelegramIcon from '@material-ui/icons/Telegram';
 import { withRouter } from 'react-router-dom';
 import api from '../api';
 import Comment from './Comment';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,7 +88,6 @@ function Post(props) {
   const redirectToDetailPost = (id) => {
     props.history.push(`/post/${id}`);
   };
-  console.log('post :>> ', post);
   const likePost = async (postId) => {
     const res = await api.post.likePost(postId);
     if (res.status) {
@@ -121,7 +121,7 @@ function Post(props) {
   useEffect(() => {
     post?.likes &&
       post.likes.map((e) => {
-        if (e.accountId == user.id) {
+        if (e?.accountId == user?.id) {
           setLiked(true);
         }
       });
@@ -129,14 +129,13 @@ function Post(props) {
   useEffect(() => {
     setTotalLike(post?.totalLike);
     setTotalComment(post?.totalComment);
-    setImages(post.files);
+    setImages(post?.files);
     setComments(post?.comments);
   }, [post]);
   //render element
   const renderComment = useCallback(() => {
     if (comments?.length) {
       return comments?.map((e) => {
-        //console.log(e);
         return <Comment key={e.id} comment={e}></Comment>;
       });
     }
@@ -147,17 +146,18 @@ function Post(props) {
       <CardHeader
         onClick={() => redirectToDetailPost(post?.id)}
         avatar={
-          <Avatar aria-label='recipe' className={classes.avatar}>
-            R
-          </Avatar>
+          <Avatar
+            className={classes.avatar}
+            src={post?.detailUserPost?.avatar}
+          />
         }
         action={
-          <IconButton aria-label='settings'>
+          <IconButton aria-label='settings' onClick={console.log('clicked')}>
             <MoreVertIcon />
           </IconButton>
         }
-        title='Shrimp and Chorizo Paella'
-        subheader='June 20, 2021'
+        title={post?.detailUserPost?.fullname}
+        subheader={moment(post?.creat_at).format('MMMM Do YYYY, h:mm:ss a')}
       />
 
       <Carousel
@@ -202,7 +202,7 @@ function Post(props) {
             {totalLike > 0 ? totalLike : ''}
             <IconButton
               style={{
-                color: liked ? 'red' :'',
+                color: liked ? 'red' : '',
               }}
               aria-label='add to favorites'
               onClick={() => likePost(post?.id)}

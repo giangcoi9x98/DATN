@@ -24,7 +24,6 @@ function App(props) {
       }
       fetchData();
     }
-    console.log(isAuth)
   }, [isAuth, dispatch]);
 
   return (

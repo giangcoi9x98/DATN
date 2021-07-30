@@ -60,9 +60,7 @@ function ModalPost(props) {
     }
     setImgUrl(newArr);
   };
-  console.log('imgUrl :>> ', imgUrl);
   const handlePost = async (content, file = []) => {
-    console.log('file :>> ', file.map(e => e.name));
     const resUpload = await Promise.all(
       file.map(async (e) => {
         const formData = new FormData();
@@ -70,7 +68,6 @@ function ModalPost(props) {
         return await api.media.upload(formData);
       })
     );
-    console.log('resUpload', resUpload);
     const resPost = await api.post.newPost({
       content: content,
       img: file.map(e => e.name),
@@ -114,7 +111,6 @@ function ModalPost(props) {
           height={230}
           handleCloseImg={async (name) => {
             const newArr = [...imgUrl.filter((e) => e.name !== name)];
-            console.log(newArr);
             await setImgUrl(newArr);
             if (!imgUrl.length) {
               document.getElementById('upload').value = '';

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import isArray from "lodash/fp/isArray";
 import isString from "lodash/fp/isString";
 import { makeStyles } from "@material-ui/core/styles";
@@ -58,7 +58,7 @@ const makeAcceptString = accept => {
   return "";
 };
 
-const FileInput = ({
+const FileInput = memo(({
   accept,
   multiple = false,
   id = "file-input",
@@ -97,6 +97,6 @@ const FileInput = ({
       </FormControl>
     </div>
   );
-};
+});
 
 export default FileInput;

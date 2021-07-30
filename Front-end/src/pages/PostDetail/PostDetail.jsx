@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import api from '../../api';
 import Post from '../../components/Post';
+import { useSelector } from 'react-redux';
 import { COLORS, SIZETYPE } from '../../constants';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -22,6 +23,7 @@ const useStyle = makeStyles((theme) => ({
 function DetailPost(props) {
   const [post, setPost] = useState({});
   const classes = useStyle();
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     async function fetchDataPostDetail(id) {
@@ -32,12 +34,11 @@ function DetailPost(props) {
     }
     fetchDataPostDetail(props.location.pathname.split('/')[2]);
   }, [props.location.pathname]);
-
   return (
     <Container component='main' maxWidth='lg' className={classes.container}>
       <Grid container>
         <Grid item xs={12} sm={9}>
-          <Post post={post}></Post>
+          <Post post={post}  user={user.userData}></Post>
         </Grid>
       </Grid>
     </Container>
