@@ -35,8 +35,18 @@ module.exports = {
 						[],
 						conn
 					);
+					console.log("hfghhel", data);
+
 					const result = await Promise.all(
 						data.map(async (element) => {
+							const detailUserPost = await this.mysql.queryOne(
+								`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+							ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+							from account as a INNER JOIN account_info as ai
+							ON a.id = ai.accountId WHERE ai.accountId = ?`,
+								[element.accountId],
+								conn
+							);
 							const comment = await this.mysql.queryMulti(
 								`SELECT c.id, accountId, postId, c.create_at, c.update_at, content, type, imageUrl 
 								FROM comment as c 
@@ -92,13 +102,12 @@ module.exports = {
 							element.totalComment = comment.length;
 							element.comments = comment;
 							element.files = file;
+							element.detailUserPost = detailUserPost;
 							return {
 								post: element,
 							};
 						})
 					);
-					// console.log("el", res);
-					console.log("data", result[0]);
 					await this.mysql.commitTransaction(conn);
 					return new ResponseData(true, "SUCCESS", result);
 				} catch (error) {
@@ -192,7 +201,14 @@ module.exports = {
 						[id],
 						conn
 					);
-
+					const detailUserPost = await this.mysql.queryOne(
+						`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+					ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+					from account as a INNER JOIN account_info as ai
+					ON a.id = ai.accountId WHERE ai.accountId = ?`,
+						[data.accountId],
+						conn
+					);
 					const comment = await this.mysql.queryMulti(
 						`SELECT c.id, accountId, postId, c.create_at, c.update_at, content, type, imageUrl 
 						FROM comment as c 
@@ -245,7 +261,7 @@ module.exports = {
 					data.totalComment = comment.length;
 					data.comments = comment;
 					data.files = file;
-
+					data.detailUserPost = detailUserPost;
 					await this.mysql.commitTransaction(conn);
 					return new ResponseData(true, "SUCCESS", data);
 				} catch (error) {
@@ -293,7 +309,7 @@ module.exports = {
 							{
 								sender: user,
 								postId,
-								newLike: isLike.isLike === 0 ? true : false
+								newLike: isLike.isLike === 0 ? true : false,
 							},
 						],
 					});
@@ -349,7 +365,7 @@ module.exports = {
 								sender: user,
 								postId,
 								content,
-								roomId:user.id
+								roomId: user.id,
 							},
 						],
 					});

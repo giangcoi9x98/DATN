@@ -174,18 +174,18 @@ const schema = {
 					"GET post/:id": "post.getPostById",
 					"PUT post:id": "post.updatePost",
 					"GET mypost": "post.getAllPostByUser",
-					"GET history":"post.getNotiPost",
+					"GET history": "post.getNotiPost",
 					"DELETE post:id": "post.deletePost",
-					//interactive 
+					//interactive
 					"POST like": "post.likePost",
 					"POST comment": "post.addComment",
 
 					//media
 					"PUT media/upload": "media.upload",
-					"GET images":"media.getAll",
+					"GET images": "media.getAll",
 					//chat
 					"POST chat": "chat.sendMessage",
-					"GET chat":"chat.getChatHistory",
+					"GET chat": "chat.getChatHistory",
 				},
 				onBeforeCall(ctx, route, req) {
 					// console.log("req_params")
@@ -274,7 +274,25 @@ const schema = {
 					message: d.message,
 					actual: d.actual,
 				}));
-
+				res.end(
+					JSON.stringify(
+						{
+							success: false,
+							data: resData,
+							msg: err.message,
+							type: err.type,
+						},
+						null,
+						2
+					)
+				);
+			} else if (err.code === 504) {
+				const resData = err.data.map((d) => ({
+					type: d.type,
+					field: d.field,
+					message: d.message,
+					actual: d.actual,
+				}));
 				res.end(
 					JSON.stringify(
 						{
