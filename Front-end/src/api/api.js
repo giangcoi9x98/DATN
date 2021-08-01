@@ -59,7 +59,7 @@ if (jwt.decode(token)) {
 // let time;
   setInterval(() => {
     return refreshAccessToken();
-  }, 500* 900);
+  }, 3600* 900);
 }
 
 //refresh token with response 401
