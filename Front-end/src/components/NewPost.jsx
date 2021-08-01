@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ModalPost from './ModalPost';
 import { useSelector } from 'react-redux';
 
 import { SIZETYPE, COLORS } from '../constants';
-import {  Avatar, Typography } from '@material-ui/core';
+import { Avatar, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import noti from './Notification';
 
@@ -16,7 +16,7 @@ const useStyle = makeStyles((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     zIndex: 10,
-    cursor:'pointer'
+    cursor: 'pointer'
   },
   text_hidden: {
     marginLeft: 5,
@@ -38,7 +38,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function NewPost(props) {
+const NewPost = memo((props) => {
   const classes = useStyle();
   const { t, i18n } = useTranslation('common');
   const user = useSelector((state) => state.user);
@@ -46,10 +46,10 @@ function NewPost(props) {
   const handleShowModal = () => {
     setIsShowModal(true);
   };
-  useEffect(() => {}, [user.userData]);
+  useEffect(() => { }, [user.userData]);
   return (
     <div style={{
-      cursor:'pointer'
+      cursor: 'pointer'
     }}>
       <div className={classes.title} onClick={() => handleShowModal()}>
         <div>
@@ -68,6 +68,6 @@ function NewPost(props) {
       ></ModalPost>
     </div>
   );
-}
+})
 
 export default NewPost;

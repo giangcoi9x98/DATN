@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CheckboxListSecondary(props) {
+const CheckboxListSecondary = memo((props) => {
   const classes = useStyles();
   const dispatch = useDispatch()
   const [contact] = useState(props.contact);
@@ -52,4 +52,6 @@ export default function CheckboxListSecondary(props) {
       </List>
     </div>
   );
-}
+})
+
+export default CheckboxListSecondary

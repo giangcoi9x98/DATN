@@ -1,18 +1,18 @@
 import { useSnackbar } from 'notistack';
-import React from 'react';
+import React, {memo} from 'react';
 
-const InnerNotificator = (props) => {
+const InnerNotificator = memo((props)=> {
   props.setUseSnackbarRef(useSnackbar());
   return null;
-};
+})
 let useSnackbarRef;
 const setUseSnackbarRef = (useSnackbarRefProp) => {
   useSnackbarRef = useSnackbarRefProp;
 };
-export const Notificator = () => {
-  return <InnerNotificator
-    setUseSnackbarRef={setUseSnackbarRef} />;
-};
+export const Notificator = memo(() => {
+    return <InnerNotificator
+      setUseSnackbarRef={setUseSnackbarRef} />;
+})
 const noti = {
   success(msg) {
     this.toast(msg, 'success');

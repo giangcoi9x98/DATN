@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function SimpleBottomNavigation({setNavProfile, navProfile}) {
+const SimpleBottomNavigation = memo(({setNavProfile, navProfile}) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const { t, i18n } = useTranslation('common');
@@ -47,4 +47,6 @@ export default function SimpleBottomNavigation({setNavProfile, navProfile}) {
       />
     </BottomNavigation>
   );
-}
+})
+
+export default SimpleBottomNavigation

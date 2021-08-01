@@ -1,12 +1,12 @@
-import React  from 'react';
+import React, {memo}  from 'react';
 import { withRouter } from 'react-router-dom';
 import { COLORS, SIZETYPE, FONT } from '../../constants';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Link, Typography } from '@material-ui/core';
-
 import Footer from '../../components/Footer';
 import NavBar from '../../components/NavBar';
+
 const useStyle = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -55,7 +55,8 @@ const useStyle = makeStyles((theme) => ({
     cursor: 'pointer',
   },
 }));
-function NotFound(props) {
+
+const NotFound = memo((props) => {
   const classes = useStyle();
   const handleBackToHome = () => {
     props.history.push('/');
@@ -84,6 +85,6 @@ function NotFound(props) {
       </Container>
     </div>
   );
-}
+})
 
 export default withRouter(NotFound);

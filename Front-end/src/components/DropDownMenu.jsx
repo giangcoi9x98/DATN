@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, memo } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -35,7 +35,7 @@ const StyledMenuItem = withStyles((theme) => ({
   root: {},
 }))(MenuItem);
 
-export default function DropDownMenu(props) {
+const DropDownMenu = memo((props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [icon, setIcon] = useState(props.icon);
   const user = useSelector((state) => state.user);
@@ -126,7 +126,7 @@ export default function DropDownMenu(props) {
                 style={{
                   margin: '0px',
                   padding: '0px',
-                  fontSize: '17px',
+                  fontSize: '16px',
                   color: '#050505',
                 }}
               >
@@ -184,4 +184,6 @@ export default function DropDownMenu(props) {
       </StyledMenu>
     </div>
   );
-}
+})
+
+export default DropDownMenu

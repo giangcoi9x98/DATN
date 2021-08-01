@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   Button,
   TextField,
@@ -21,6 +21,7 @@ import { COLORS, SIZETYPE } from '../../constants';
 import { useTranslation } from 'react-i18next';
 import api from '../../api';
 import { useSelector, useDispatch } from 'react-redux';
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     display: 'flex',
@@ -76,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SignIn(props) {
+const SignIn = memo((props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { t, i18n } = useTranslation('common');
@@ -197,5 +198,6 @@ function SignIn(props) {
       </Container>
     </div>
   );
-}
+})
+
 export default withRouter(React.memo(SignIn));

@@ -1,5 +1,5 @@
 import { Modal, Button } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import ImageReader from '../../../components/ImageReader';
@@ -12,7 +12,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function ModalPost(props) {
+const ModalPost = memo((props) => {
   const classes = useStyle();
   const { image, handleUploadImage } = props;
 
@@ -47,6 +47,6 @@ function ModalPost(props) {
       </Modal>
     </>
   );
-}
+})
 
 export default ModalPost;
