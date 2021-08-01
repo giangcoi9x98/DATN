@@ -24,14 +24,12 @@ const logMySqlQuery = (sql, params) => {
 const query = (sql, params, connection) => {
 	return new Promise((resolve, reject) => {
 		if (connection) {
-			console.log("Query using connection from transaction");
 			logMySqlQuery(sql, params);
 			connection.query(sql, params, (err, result) => {
 				if (err) reject(err);
 				else resolve(result);
 			});
 		} else {
-			console.log("paramsaa", params);
 			pool.query(sql, params, (err, result) => {
 				if (err) reject(err);
 				else resolve(result);
@@ -43,14 +41,12 @@ const query = (sql, params, connection) => {
 const queryOne = (sql, params, connection) => {
 	return new Promise((resolve, reject) => {
 		if (connection) {
-			console.log("Query using connection from transaction");
 			logMySqlQuery(sql, params);
 			connection.query(sql, params, (err, result) => {
 				if (err) reject(err);
 				else resolve(result[0]);
 			});
 		} else {
-			console.log("paramsaa", params);
 			pool.query(sql, params, (err, result) => {
 				if (err) reject(err);
 				else resolve(result[0]);
@@ -74,7 +70,6 @@ const getConnection = async () =>
 	});
 
 const beginTransaction = async () => {
-	console.log("Begin transaction");
 	const connection = await getConnection();
 	return new Promise((resolve, reject) => {
 		connection.beginTransaction((err) => {

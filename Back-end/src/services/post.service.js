@@ -64,7 +64,7 @@ module.exports = {
 											`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 										from account as a INNER JOIN account_info as ai
-										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+										ON a.id = ai.accountId WHERE ai.accountId = ?`,
 											[e.accountId],
 											conn
 										);
@@ -84,7 +84,7 @@ module.exports = {
 										`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 										from account as a INNER JOIN account_info as ai
-										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+										ON a.id = ai.accountId WHERE ai.accountId = ?`,
 										[e.accountId],
 										conn
 									);
@@ -224,7 +224,7 @@ module.exports = {
 								`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 								ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 								from account as a INNER JOIN account_info as ai
-								ON a.id = ai.accountId WHERE ai.accountId != ?`,
+								ON a.id = ai.accountId WHERE ai.accountId = ?`,
 								[e.accountId],
 								conn
 							);
@@ -243,7 +243,7 @@ module.exports = {
 								`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 								ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 								from account as a INNER JOIN account_info as ai
-								ON a.id = ai.accountId WHERE ai.accountId != ?`,
+								ON a.id = ai.accountId WHERE ai.accountId = ?`,
 								[e.accountId],
 								conn
 							);
@@ -286,20 +286,21 @@ module.exports = {
 				try {
 					const { postId } = ctx.params;
 					const { user } = ctx.meta;
+					console.log("object", user);
 					const isLike = await this.mysql.queryOne(
 						"SELECT count(id) as isLike FROM like_post WHERE postId = ? AND accountId = ?",
-						[postId, user.id],
+						[postId, user.userData.id],
 						conn
 					);
 					if (!isLike.isLike) {
 						await conn.query(
 							"INSERT INTO like_post(accountId, postId) VALUES(?, ?)",
-							[user.id, postId]
+							[user.userData.id, postId]
 						);
 					} else {
 						conn.query(
 							"UPDATE like_post SET is_delete = (is_delete + 1)% 2 WHERE accountId = ? and postId = ?",
-							[user.id, postId]
+							[user.userData.id, postId]
 						);
 					}
 					this.mysql.commitTransaction(conn);
@@ -366,6 +367,7 @@ module.exports = {
 								postId,
 								content,
 								roomId: user.id,
+								type: "comment",
 							},
 						],
 					});
@@ -410,7 +412,7 @@ module.exports = {
 											`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 										from account as a INNER JOIN account_info as ai
-										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+										ON a.id = ai.accountId WHERE ai.accountId = ?`,
 											[e.accountId],
 											conn
 										);
@@ -430,7 +432,7 @@ module.exports = {
 										`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 										from account as a INNER JOIN account_info as ai
-										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+										ON a.id = ai.accountId WHERE ai.accountId = ?`,
 										[e.accountId],
 										conn
 									);
@@ -496,7 +498,7 @@ module.exports = {
 											`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 										from account as a INNER JOIN account_info as ai
-										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+										ON a.id = ai.accountId WHERE ai.accountId = ?`,
 											[e.accountId],
 											conn
 										);
@@ -504,7 +506,6 @@ module.exports = {
 									return e;
 								})
 							);
-							console.log("comment", comment);
 							const like = await this.mysql.queryMulti(
 								"SELECT * FROM like_post WHERE postId = ? and is_delete = 0",
 								[element.id],
@@ -512,11 +513,12 @@ module.exports = {
 							);
 							await Promise.all(
 								like.map(async (e) => {
+									console.log("fsfdsfdsfdsfdsfdsf∂ß", e);
 									const userLike = await this.mysql.queryOne(
 										`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 										from account as a INNER JOIN account_info as ai
-										ON a.id = ai.accountId WHERE ai.accountId != ?`,
+										ON a.id = ai.accountId WHERE ai.accountId = ?`,
 										[e.accountId],
 										conn
 									);
@@ -540,8 +542,6 @@ module.exports = {
 						})
 					);
 					// console.log("el", res);
-
-					await this.mysql.commitTransaction(conn);
 					const history = result.filter((e) => {
 						if (
 							Number(e.post.totalComment) > 0 ||
@@ -550,6 +550,7 @@ module.exports = {
 							return e;
 						}
 					});
+					await this.mysql.commitTransaction(conn);
 					console.log("history", history);
 					return new ResponseData(true, "SUCCESS", history);
 				} catch (error) {
