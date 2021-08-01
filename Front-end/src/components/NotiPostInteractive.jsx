@@ -43,9 +43,11 @@ export default function NotiPostInteractive(props) {
     setAnchorEl(event.currentTarget);
   };
 
-
+  console.log('notiPost :>> ', notiPost);
   useEffect(() => {
     socket.getInstance().on('NEW_LIKE', async (data) => {
+      console.log('data :>> ', data);
+
       mypost.forEach((e) => {
         if (e.post?.id === data?.postId) {
           if (data.newLike) {

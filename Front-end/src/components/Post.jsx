@@ -9,12 +9,11 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import config from '../configs';
 import { useTranslation } from 'react-i18next';
 import SendIcon from '@material-ui/icons/Send';
-
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Box, Input, Tooltip } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
@@ -52,9 +51,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
   center: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+  
   },
 }));
 const LightTooltip = withStyles((theme) => ({
@@ -102,7 +99,7 @@ function Post(props) {
       }
     }
   };
-
+  console.log("user", liked, post.id, post);
   const addComment = async (postId, content, img = '') => {
     const res = await api.post.addComment(postId, content, img);
     if (res) {
@@ -120,9 +117,12 @@ function Post(props) {
   };
   useEffect(() => {
     post?.likes &&
-      post.likes.map((e) => {
-        if (e?.accountId == user?.id) {
+      post.likes.forEach((e) => {
+        if (e?.detailUserLike.accountId == user?.accountId) {
+          console.log('object :>> ', e?.detailUserLike);
           setLiked(true);
+        }else{
+          setLiked(false);
         }
       });
   }, [post, user]);
