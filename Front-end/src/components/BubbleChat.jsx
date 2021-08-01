@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useRef } from 'react';
 import {
   makeStyles,
 } from '@material-ui/core/styles';
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     width:'100%'
   },
   wrapMessage: {
-    overflow: 'scroll',
+    overflowY: 'scroll',
     maxHeight: 300,
     display: 'block',
   },
@@ -71,6 +71,15 @@ const BubbleChat = memo((props) => {
   const [contact] = useState(props.contact);
   const [message, setMessage] = useState(props.message) || [];
   const [content, setContent] = useState('');
+
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(scrollToBottom, [message]);
+
   useEffect(() => {
     socket.getInstance().on('NEW_MESSAGE', async (data) => {
       if (data.roomId === user.userData.id) {
@@ -105,6 +114,7 @@ const BubbleChat = memo((props) => {
     ])
     setContent('')
   };
+
   const renderMessageItem = () => {
     if (message.length > 0) {
       return (
@@ -116,7 +126,7 @@ const BubbleChat = memo((props) => {
                 button
                 className={classes.messageItem}
                 style={{
-                  justifyContent: value.receiverId == contact.id ? 'flex-end' : 'flex-start'
+                  justifyContent: value.receiverId === contact.id ? 'flex-end' : 'flex-start'
                 }}
               >
                 <Box style={{
@@ -128,7 +138,7 @@ const BubbleChat = memo((props) => {
                     <Avatar
                       alt={`Avatar n°${value + 1}`}
                       src={`${
-                        value.senderId == contact.id ? contact.avatar : value.avatar
+                        value.senderId === contact.id ? contact.avatar : value.avatar
                       }`}
                     />
                   </ListItemAvatar>
@@ -140,6 +150,7 @@ const BubbleChat = memo((props) => {
               </div>
             );
           })}
+            <div ref={messagesEndRef} />
         </div>
       );
     }
