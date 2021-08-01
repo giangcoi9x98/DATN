@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   Button,
   CssBaseline,
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SignUp(props) {
+const SignUp = memo((props) => {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = useState();
   const { t, i18n } = useTranslation('common');
@@ -68,7 +68,7 @@ function SignUp(props) {
   console.log(t('email'), lang);
   useEffect(() => {
     return i18n.changeLanguage(lang.lang);
-  }, [lang,i18n]);
+  }, [lang, i18n]);
   console.log(props);
   const handleSignup = async (email, password, fullname, birthday) => {
     const res = await api.user.signUp({
@@ -79,7 +79,7 @@ function SignUp(props) {
     });
     if (res.status) {
       //notify
-      
+
     }
   };
   return (
@@ -91,7 +91,7 @@ function SignUp(props) {
           height: 80,
           width: 80,
           backgroundRepeat: 'no-repeat',
-          marginRight:'10px'
+          marginRight: '10px'
         }}>
         </div>
         <Typography component='h1' variant='h5'>
@@ -184,5 +184,6 @@ function SignUp(props) {
       </div>
     </Container>
   );
-}
+})
+
 export default withRouter(SignUp);

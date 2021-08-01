@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { IconButton, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -22,7 +22,8 @@ const useStyle = makeStyles((theme) => ({
     width: '100%',
   },
 }));
-function ImageReader(props) {
+
+const ImageReader = memo((props) => {
   const { image, width, height, handleCloseImg } = props ;
   const classes = useStyle();
   const [url, setUrl] = useState('');
@@ -61,6 +62,6 @@ function ImageReader(props) {
       {renderImg()}
     </Paper>
   );
-}
+})
 
 export default ImageReader;

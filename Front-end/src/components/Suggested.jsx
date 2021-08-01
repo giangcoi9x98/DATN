@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Suggested() {
+const Suggested = memo(() => {
   const classes = useStyles();
 
   return (
@@ -49,4 +49,6 @@ export default function Suggested() {
       })}
     </List>
   );
-}
+})
+
+export default Suggested

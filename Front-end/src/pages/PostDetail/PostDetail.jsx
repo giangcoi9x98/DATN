@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { withRouter } from 'react-router-dom';
 import api from '../../api';
 import Post from '../../components/Post';
@@ -20,7 +20,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function DetailPost(props) {
+const DetailPost = memo((props) => {
   const [post, setPost] = useState({});
   const classes = useStyle();
   const user = useSelector((state) => state.user);
@@ -43,6 +43,6 @@ function DetailPost(props) {
       </Grid>
     </Container>
   );
-}
+})
 
 export default withRouter(DetailPost);
