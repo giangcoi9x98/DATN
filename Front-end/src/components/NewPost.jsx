@@ -16,7 +16,7 @@ const useStyle = makeStyles((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     zIndex: 10,
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   text_hidden: {
     marginLeft: 5,
@@ -48,9 +48,11 @@ const NewPost = memo((props) => {
   };
   useEffect(() => { }, [user.userData]);
   return (
-    <div style={{
-      cursor: 'pointer'
-    }}>
+    <div
+      style={{
+        cursor: 'pointer',
+      }}
+    >
       <div className={classes.title} onClick={() => handleShowModal()}>
         <div>
           <Avatar src='/img/faces/kendall.jpg' className={classes.large} />
@@ -58,7 +60,7 @@ const NewPost = memo((props) => {
         <div className={classes.bg_text}>
           <Typography className={classes.text_hidden}>
             {t('home.newPost')}
-            {`${user?.userData?.fullname} ?`}
+            {`${user?.userData?.fullname ? user?.userData?.fullname : ''}  ?`}
           </Typography>
         </div>
       </div>
