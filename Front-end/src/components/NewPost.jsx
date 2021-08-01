@@ -4,7 +4,7 @@ import ModalPost from './ModalPost';
 import { useSelector } from 'react-redux';
 
 import { SIZETYPE, COLORS } from '../constants';
-import {  Avatar, Typography } from '@material-ui/core';
+import { Avatar, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import noti from './Notification';
 
@@ -16,7 +16,7 @@ const useStyle = makeStyles((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     zIndex: 10,
-    cursor:'pointer'
+    cursor: 'pointer',
   },
   text_hidden: {
     marginLeft: 5,
@@ -48,9 +48,11 @@ function NewPost(props) {
   };
   useEffect(() => {}, [user.userData]);
   return (
-    <div style={{
-      cursor:'pointer'
-    }}>
+    <div
+      style={{
+        cursor: 'pointer',
+      }}
+    >
       <div className={classes.title} onClick={() => handleShowModal()}>
         <div>
           <Avatar src='/img/faces/kendall.jpg' className={classes.large} />
@@ -58,7 +60,7 @@ function NewPost(props) {
         <div className={classes.bg_text}>
           <Typography className={classes.text_hidden}>
             {t('home.newPost')}
-            {`${user?.userData?.fullname} ?`}
+            {`${user?.userData?.fullname ? user?.userData?.fullname : ''}  ?`}
           </Typography>
         </div>
       </div>
