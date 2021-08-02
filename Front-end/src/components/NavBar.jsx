@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -22,6 +22,7 @@ import DropDownMenu from './DropDownMenu';
 import NotiPostInteractive from './NotiPostInteractive';
 import { useAuth } from '../hooks/useAuth';
 import { getChatHistory } from '../store/actions/chatAction';
+
 const useStyles = makeStyles((theme) => ({
   grow: {
     width: '100%',
@@ -52,10 +53,10 @@ const useStyles = makeStyles((theme) => ({
   title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
-      marginLeft:'4px',
+      marginLeft: '4px',
       display: 'flex',
       justifyContent: 'center',
-      alignItems:'center'
+      alignItems: 'center'
     },
   },
   search: {
@@ -117,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function PrimarySearchAppBar(props) {
+const PrimarySearchAppBar = memo((props) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -322,5 +323,6 @@ function PrimarySearchAppBar(props) {
       {renderMenu}
     </div>
   );
-}
+})
+
 export default withRouter(PrimarySearchAppBar);

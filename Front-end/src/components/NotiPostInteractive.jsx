@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -33,7 +33,7 @@ const StyledMenuItem = withStyles((theme) => ({
   root: {},
 }))(MenuItem);
 
-export default function NotiPostInteractive(props) {
+const NotiPostInteractive = memo((props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const dispatch = useDispatch();
   const [countNotiPost, setCountNotiPost] = useState(0);
@@ -173,4 +173,6 @@ export default function NotiPostInteractive(props) {
       </StyledMenu>
     </div>
   );
-}
+})
+
+export default NotiPostInteractive

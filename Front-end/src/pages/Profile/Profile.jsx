@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import { withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
@@ -29,6 +29,7 @@ import ModalUpload from "./components/ModalUpload";
 import { getAllImages } from "../../store/actions/userAction";
 import "./profile.css";
 import config from "../../configs";
+
 const useStyle = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -178,12 +179,13 @@ const useStyle = makeStyles((theme) => ({
   //   width: 500,
   //   height: 450,
   // },
-  
+
 }));
 const options = ["1", "2", "3"];
 
 const ITEM_HEIGHT = 48;
-function Profile(props) {
+
+const Profile = memo((props) => {
   const userData = useSelector((state) => state.user);
   const myPosts = useSelector((state) => state.post.myPosts);
   const dispatch = useDispatch();
@@ -301,8 +303,8 @@ function Profile(props) {
           cols={2}
           spacing={8}
           style={{
-            display:'flex',
-            justifyContent:'center'
+            display: 'flex',
+            justifyContent: 'center'
           }}
         >
           {contacts.contactData.map((tile) => (
@@ -342,24 +344,24 @@ function Profile(props) {
                 >
                   <Typography>{tile.contact.fullname}</Typography>
                 </div>
-                <div  style={{
-                      display: "flex",
-                      width: "100%",
-                     
-                      flexDirection: "row",
-                      justifyContent: "flex-end",
-                    }} >
+                <div style={{
+                  display: "flex",
+                  width: "100%",
+
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }} >
                   <IconButton
-                   
+
                     aria-controls="simple-menu"
                     aria-haspopup="true"
                     onClick={handleClick}
                   >
-                    <MoreHorizIcon/>
+                    <MoreHorizIcon />
                   </IconButton>
                   <Menu
                     style={{
-                      boxShadow: "0px 0px 5px 0px #6c757d !important", 
+                      boxShadow: "0px 0px 5px 0px #6c757d !important",
                     }}
                     id="simple-menu"
                     anchorEl={anchorEl}
@@ -368,7 +370,7 @@ function Profile(props) {
                     onClose={handleClose}
                   >
                     <MenuItem style={{
-                       boxShadow: "0px 0px 5px 0px #6c757d !important", 
+                      boxShadow: "0px 0px 5px 0px #6c757d !important",
                     }} onClick={handleClose}>Profile</MenuItem>
                     <MenuItem onClick={handleClose}>My account</MenuItem>
                     <MenuItem onClick={handleClose}>Logout</MenuItem>
@@ -475,7 +477,7 @@ function Profile(props) {
         </Container>
         <Divider></Divider>
       </div>
-      {}
+      { }
       <Container component="main" maxWidth="md" className={classes.container}>
         <Grid item xs={12} sm={12}>
           {renderContent()}
@@ -483,6 +485,6 @@ function Profile(props) {
       </Container>
     </div>
   );
-}
+})
 
 export default withRouter(Profile);

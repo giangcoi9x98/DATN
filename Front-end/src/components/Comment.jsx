@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 
-function Comment(props) {
+const Comment = memo((props) => {
   const [comment, setComment] = useState(null)
-  
+
   useEffect(() => {
     setComment(props.comment)
   }, [props.comment])
@@ -91,6 +91,6 @@ function Comment(props) {
       </Typography>
     </div>
   );
-}
+})
 
 export default Comment

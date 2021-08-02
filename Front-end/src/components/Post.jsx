@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
   center: {},
+  },
 }));
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -60,7 +61,8 @@ const LightTooltip = withStyles((theme) => ({
     fontSize: 14,
   },
 }))(Tooltip);
-function Post(props) {
+
+const Post = memo((props) => {
   const classes = useStyles();
   const { t, i18n } = useTranslation('common');
   const [expanded, setExpanded] = React.useState(false);
@@ -250,6 +252,6 @@ function Post(props) {
       </Collapse>
     </Box>
   );
-}
+})
 
 export default withRouter(Post);

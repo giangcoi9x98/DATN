@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ModalPost from './ModalPost';
 import { useSelector } from 'react-redux';
@@ -38,7 +38,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function NewPost(props) {
+const NewPost = memo((props) => {
   const classes = useStyle();
   const { t, i18n } = useTranslation('common');
   const user = useSelector((state) => state.user);
@@ -46,7 +46,7 @@ function NewPost(props) {
   const handleShowModal = () => {
     setIsShowModal(true);
   };
-  useEffect(() => {}, [user.userData]);
+  useEffect(() => { }, [user.userData]);
   return (
     <div
       style={{
@@ -70,6 +70,6 @@ function NewPost(props) {
       ></ModalPost>
     </div>
   );
-}
+})
 
 export default NewPost;
