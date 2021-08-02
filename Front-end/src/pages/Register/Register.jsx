@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { COLORS, SIZETYPE } from '../../constants';
 import api from '../../api';
+import noti from '../../components/Notification';
 const useStyles = makeStyles((theme) => ({
   paper: {
     // marginTop: theme.spacing(8),
@@ -78,8 +79,9 @@ function SignUp(props) {
       birthday: birthday,
     });
     if (res.status) {
-      //notify
-      
+      noti.success('Signup is success!')
+    } else {
+      noti.error(res?.data?.data[0]?.message, 'error')
     }
   };
   return (

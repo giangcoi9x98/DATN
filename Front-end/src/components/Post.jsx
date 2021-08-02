@@ -14,7 +14,7 @@ import config from '../configs';
 import { useTranslation } from 'react-i18next';
 import SendIcon from '@material-ui/icons/Send';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { Box, Input, Tooltip } from '@material-ui/core';
+import { Box, Input, Tooltip, Text } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
@@ -50,9 +50,7 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: red[500],
   },
-  center: {
-  
-  },
+  center: {},
 }));
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -99,7 +97,7 @@ function Post(props) {
       }
     }
   };
-  console.log("user", liked, post.id, post);
+  console.log('user', liked, post.id, post);
   const addComment = async (postId, content, img = '') => {
     const res = await api.post.addComment(postId, content, img);
     if (res) {
@@ -121,7 +119,7 @@ function Post(props) {
         if (e?.detailUserLike.accountId == user?.accountId) {
           console.log('object :>> ', e?.detailUserLike);
           setLiked(true);
-        }else{
+        } else {
           setLiked(false);
         }
       });
@@ -144,7 +142,6 @@ function Post(props) {
   return (
     <Box boxShadow={3} className={classes.root}>
       <CardHeader
-        onClick={() => redirectToDetailPost(post?.id)}
         avatar={
           <Avatar
             className={classes.avatar}
@@ -157,7 +154,11 @@ function Post(props) {
           </IconButton>
         }
         title={post?.detailUserPost?.fullname}
-        subheader={moment(post?.creat_at).format('MMMM Do YYYY, h:mm:ss a')}
+        subheader={
+          <Box onClick={() => redirectToDetailPost(post?.id)}>
+            {moment(post?.creat_at).format('MMMM Do YYYY, h:mm:ss a')}
+          </Box>
+        }
       />
 
       <Carousel

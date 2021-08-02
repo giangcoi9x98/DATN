@@ -1,12 +1,6 @@
 import React, { useState, useEffect, memo, useRef } from 'react';
-import {
-  makeStyles,
-} from '@material-ui/core/styles';
-import {
-  Box,
-  ListItemAvatar,
-  ListItemText,
-} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { Box, ListItemAvatar, ListItemText } from '@material-ui/core';
 
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
@@ -29,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     display: 'flex',
     backgroundColor: 'white',
-    marginLeft:'10px'
+    marginLeft: '10px',
   },
   media: {
     height: 0,
@@ -56,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     cursor: 'pointer',
     padding: SIZETYPE.small,
-    width:'100%'
+    width: '100%',
   },
   wrapMessage: {
     overflowY: 'scroll',
@@ -72,11 +66,11 @@ const BubbleChat = memo((props) => {
   const [message, setMessage] = useState(props.message) || [];
   const [content, setContent] = useState('');
 
-  const messagesEndRef = useRef(null)
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(scrollToBottom, [message]);
 
@@ -86,7 +80,7 @@ const BubbleChat = memo((props) => {
         setMessage([
           ...message,
           {
-            avatar:data?.sender?.avatar,
+            avatar: data?.sender?.avatar,
             detail: {
               content: data.message,
             },
@@ -108,13 +102,12 @@ const BubbleChat = memo((props) => {
       ...message,
       {
         detail: {
-          content: msg
-        }
-      }
-    ])
-    setContent('')
+          content: msg,
+        },
+      },
+    ]);
   };
-
+  console.log('content :>> ', content);
   const renderMessageItem = () => {
     if (message.length > 0) {
       return (
@@ -126,31 +119,37 @@ const BubbleChat = memo((props) => {
                 button
                 className={classes.messageItem}
                 style={{
-                  justifyContent: value.receiverId === contact.id ? 'flex-end' : 'flex-start'
+                  justifyContent:
+                    value.receiverId === contact.id ? 'flex-end' : 'flex-start',
                 }}
               >
-                <Box style={{
-                  display: 'flex',
-                  flexDirection:'row'
-                 
-                }}>
+                <Box
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                  }}
+                >
                   <ListItemAvatar>
                     <Avatar
                       alt={`Avatar n°${value + 1}`}
                       src={`${
-                        value.senderId === contact.id ? contact.avatar : value.avatar
+                        value.senderId === contact.id
+                          ? contact.avatar
+                          : value.avatar
                       }`}
                     />
                   </ListItemAvatar>
                   <ListItemText
-                    id={value.detail? value.detail.id : 1}
-                    primary={`${value.detail? value.detail.content : value.avatar}`}
+                    id={value.detail ? value.detail.id : 1}
+                    primary={`${
+                      value.detail ? value.detail.content : value.avatar
+                    }`}
                   />
                 </Box>
               </div>
             );
           })}
-            <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} />
         </div>
       );
     }
@@ -191,7 +190,7 @@ const BubbleChat = memo((props) => {
           width: '100%',
           padding: '0px',
           margin: '0px',
-          maxWidth:345
+          maxWidth: 345,
         }}
         boxShadow={3}
       >
@@ -206,13 +205,17 @@ const BubbleChat = memo((props) => {
           variant='outlined'
           id='mui-theme-provider-outlined-input'
           onChange={(e) => setContent(e.target.value)}
+          value={content}
         />
-        <IconButton onClick={() => handlerSend(content)}>
+        <IconButton onClick={() => {
+          handlerSend(content)
+          setContent('')
+        }}>
           <SendIcon color='primary'></SendIcon>
         </IconButton>
       </Box>
     </Box>
   );
-})
+});
 
 export default BubbleChat;

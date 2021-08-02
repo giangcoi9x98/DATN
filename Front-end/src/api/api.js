@@ -72,9 +72,9 @@ axiosInstance.interceptors.response.use(
     // window.NProgress.start();
     const errorResponse = error.response;
     console.log(errorResponse.data.msg);
-    if (errorResponse.status === 422) {
-      return false;
-    }
+    // if (errorResponse.status === 422) {
+    //   return errorResponse;
+    // }
     // Reject promise if usual error
     //check if error status is Unauthentication. Then try to refresh token
     if (errorResponse.status === 401 && !error.response.config._retry && error.response.status !== 422) {
