@@ -44,7 +44,6 @@ module.exports = {
 					const { message, roomId } = ctx.params;
 					const { user } = ctx.meta;
 					const type = "text"; // TODO: is file with images
-					console.log("message", message);
 
 					let id = uuid();
 					const conn = await this.mysql.beginTransaction();
@@ -128,9 +127,9 @@ module.exports = {
 		},
 		getChatHistory: {
 			async handler(ctx) {
-				const { user } = ctx.meta;
 				const conn = await this.mysql.beginTransaction();
 				try {
+					const { user } = ctx.meta;
 					const chatHistory = await this.mysql.queryMulti(
 						"SELECT * FROM chat_history WHERE accountId = ? ORDER BY update_at DESC ",
 						[user.id],

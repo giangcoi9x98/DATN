@@ -24,7 +24,6 @@ module.exports = {
 		getProfile: {
 			async handler(ctx) {
 				try {
-					console.log("profileUser", ctx.meta.user);
 					const res = await this.mysql.query(
 						`
 					SELECT *

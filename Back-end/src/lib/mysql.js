@@ -24,7 +24,7 @@ const logMySqlQuery = (sql, params) => {
 const query = (sql, params, connection) => {
 	return new Promise((resolve, reject) => {
 		if (connection) {
-			logMySqlQuery(sql, params);
+			// logMySqlQuery(sql, params);
 			connection.query(sql, params, (err, result) => {
 				if (err) reject(err);
 				else resolve(result);
@@ -41,7 +41,7 @@ const query = (sql, params, connection) => {
 const queryOne = (sql, params, connection) => {
 	return new Promise((resolve, reject) => {
 		if (connection) {
-			logMySqlQuery(sql, params);
+			// logMySqlQuery(sql, params);
 			connection.query(sql, params, (err, result) => {
 				if (err) reject(err);
 				else resolve(result[0]);

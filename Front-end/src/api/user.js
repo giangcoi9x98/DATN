@@ -13,6 +13,7 @@ export const signUp = async ({
       birthday: birthday,
       email: email,
     });
+    console.log(res)
     return {
       status: true,
       data: res,
@@ -21,7 +22,7 @@ export const signUp = async ({
     return {
       status: false,
       data:error.response.data,
-      masage: 'sign up failed',
+      message: 'sign up failed',
     };
   }
 };

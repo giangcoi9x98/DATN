@@ -11,8 +11,6 @@ const mysql = require("../lib/mysql");
 const mssql = require("../lib/mssql");
 let index = 0;
 
-console.log(process.env);
-
 function randomString(
 	length,
 	chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

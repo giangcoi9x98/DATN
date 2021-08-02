@@ -35,7 +35,6 @@ module.exports = {
 						[],
 						conn
 					);
-					console.log("hfghhel", data);
 
 					const result = await Promise.all(
 						data.map(async (element) => {
@@ -72,7 +71,6 @@ module.exports = {
 									return e;
 								})
 							);
-							console.log("comment", comment);
 							const like = await this.mysql.queryMulti(
 								"SELECT * FROM like_post WHERE postId = ? and is_delete = 0",
 								[element.id],
@@ -150,7 +148,6 @@ module.exports = {
 					);
 
 					if (img.length) {
-						console.log("img", img);
 						await Promise.all(
 							img.map(async (e) => {
 								let fileId = uuid();
@@ -286,7 +283,6 @@ module.exports = {
 				try {
 					const { postId } = ctx.params;
 					const { user } = ctx.meta;
-					console.log("object", user);
 					const isLike = await this.mysql.queryOne(
 						"SELECT count(id) as isLike FROM like_post WHERE postId = ? AND accountId = ?",
 						[postId, user.userData.id],
@@ -420,7 +416,6 @@ module.exports = {
 									return e;
 								})
 							);
-							console.log("comment", comment);
 							const like = await this.mysql.queryMulti(
 								"SELECT * FROM like_post WHERE postId = ? and is_delete = 0",
 								[element.id],
@@ -513,7 +508,6 @@ module.exports = {
 							);
 							await Promise.all(
 								like.map(async (e) => {
-									console.log("fsfdsfdsfdsfdsfdsf∂ß", e);
 									const userLike = await this.mysql.queryOne(
 										`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 										ai.background, ai.birthday, ai.company, ai.gender,ai.phone
@@ -551,7 +545,6 @@ module.exports = {
 						}
 					});
 					await this.mysql.commitTransaction(conn);
-					console.log("history", history);
 					return new ResponseData(true, "SUCCESS", history);
 				} catch (error) {
 					this.logger.error("Error at getAllPost action ", error);

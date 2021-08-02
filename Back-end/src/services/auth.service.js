@@ -69,7 +69,6 @@ const schema = {
 			async handler(ctx) {
 				let { email, password, fullname, birthday } = ctx.params;
 				let repeatPassword = password;
-				console.log(ctx.params);
 				if (password == "") {
 					throw new MoleculerError(
 						"The 'password' field must not be empty.",
@@ -83,7 +82,6 @@ const schema = {
 						LANGs.PASSWORD_MISMATCH,
 						[]
 					);
-				console.log(saltRounds, repeatPassword);
 				const salt = bcrypt.genSaltSync(saltRounds);
 				const hash = bcrypt.hashSync(repeatPassword, salt);
 				const key = HS256_KEY || "secret";
@@ -116,7 +114,6 @@ const schema = {
 						[email],
 						conn
 					);
-					console.log("user", newUserData);
 					await this.mysql.query(
 						`INSERT INTO account_info (fullname,birthday,accountId)
 						VALUES (?, ?, ? )`,
@@ -546,7 +543,6 @@ const schema = {
 					"user agent parsed : ",
 					ctx.meta.parsedUserAgent
 				);
-				console.log("params", ctx.params);
 				const secretKey = Buffer.from(
 					AUTH_PRIVATE_KEY,
 					"base64"
@@ -576,7 +572,6 @@ const schema = {
 						ctx.params.password.trim(),
 						user.password
 					);
-					console.log("passwordMatch", passwordMatch);
 					if (passwordMatch) {
 						const findLoginHistory = await this.mysql.queryOne(
 							"SELECT count(id) as count FROM login_history WHERE account_id = ? AND user_agent = ?",
@@ -790,7 +785,6 @@ const schema = {
 			},
 			async handler(ctx) {
 				try {
-					console.log("token", ctx.params.token);
 					const publicKey = Buffer.from(
 						process.env.AUTH_PUBLIC_KEY ||
 							"LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlHZk1BMEdDU3FHU0liM0RRRUJBUVVBQTRHTkFEQ0JpUUtCZ1FEV2QzNHZWZ1RPNXUvOUFMaUpKRjF6UDlMNgpsVm1HU1dFZWN0ZWdsVHFZWDIySkx3aklrTmQySzBLVjUzTWVoY3J5dHlUR1FtdWYyZGQzMDl0Y2hBSGp0ZmV6Ck43Tkwzckcwek5ReDdBM3dJVi9IaDRlU0g4OWF1S2JJeFNxaWl2MFJ2a2ZYMmZ3N0ZDQzBlb0tsVWExM1NDb3oKZTJXNTJsaUZsU1M1RFRwT1d3SURBUUFCCi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=",
@@ -800,7 +794,6 @@ const schema = {
 						ctx.params.token,
 						publicKey
 					);
-					console.log("logout", tokenInfo);
 					this.logger.info("decoded token: ", tokenInfo);
 
 					await this.redis.del(
@@ -822,19 +815,16 @@ const schema = {
 			async handler(ctx) {
 				try {
 					let { refresh_token: refreshToken } = ctx.params;
-					console.log("refesh-token", refreshToken);
 					const secretKey = Buffer.from(
 						AUTH_PRIVATE_KEY,
 						"base64"
 					).toString("utf-8");
 					const key = HS256_KEY || "secret";
 					const decoded = tokenHelper.verify(refreshToken, key);
-					console.log("decode", decoded);
 					if (decoded) {
 						const redisToken = await this.redis.get(
 							`${refreshTokenPrefix}${decoded.loginId}`
 						);
-						console.log("redisToken", redisToken);
 						// if (redisToken !== refreshToken) {
 						// 	throw new MoleculerError(
 						// 		"Token expired",
@@ -843,7 +833,6 @@ const schema = {
 						// 		[]
 						// 	);
 						// }
-						console.log("decode", decoded);
 						const userData = await this.mysql
 							.query(
 								`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
@@ -854,7 +843,6 @@ const schema = {
 								[decoded.id]
 							)
 							.then((res) => res[0]);
-						console.log("userDataRefresh", userData);
 						const token = tokenHelper.signJWT(
 							{
 								...userData,
@@ -1212,7 +1200,6 @@ const schema = {
 			async handler(ctx) {
 				const { token, code } = ctx.params;
 				const { parsedUserAgent: userAgent, clientIp } = ctx.meta;
-				console.log("userAgent", userAgent);
 				const secretKey = Buffer.from(
 					AUTH_PRIVATE_KEY,
 					"base64"
@@ -1242,7 +1229,6 @@ const schema = {
 						);
 					}
 					let user = userInfo.rows[0];
-					console.log("user", user);
 					const verifyCode = authenticator.verifyToken(
 						user.two_factor_secret,
 						code
@@ -1393,7 +1379,6 @@ const schema = {
 				if (!userId) {
 					return this.throwUserError();
 				}
-				console.log("here is user", user);
 				const name = `disable_2fa:${userId}`;
 				await ctx.call("mail-code.generateCode", {
 					name,
