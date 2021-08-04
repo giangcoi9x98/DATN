@@ -6,7 +6,7 @@ var instance;
 const init = function () {
   instance = io(SOCKET_URL, {
     auth: {
-      token: localStorage.getItem('token')
+      token: localStorage.getItem('token'),
     },
     reconnection: true,
     // cors: {
@@ -16,20 +16,16 @@ const init = function () {
   });
   instance.on('error', (data) => console.log('err', data));
   instance.on('connect_error', (data) => console.log('err', data));
-  instance.on('connect', async(data) => {
-  console.log(data)
-  });
-  instance.on('thien', (data) => {
-    console.log("emit thien", data)
-  })
+  instance.on('connect', async (data) => {});
+  instance.on('thien', (data) => {});
   instance.on('disconnect', (data) => {
-    console.log('disconnect', data);
     instance.removeAllListeners();
   });
   console.log('init socket client', SOCKET_URL);
   return instance;
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   getInstance: function () {
     if (!instance) {

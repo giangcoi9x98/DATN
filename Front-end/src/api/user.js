@@ -8,7 +8,6 @@ export const signUp = async ({ fullname, password, birthday, email }) => {
       birthday: birthday,
       email: email,
     });
-    console.log(res);
     return {
       status: true,
       data: res,
@@ -152,7 +151,6 @@ export const getByEmail = async (email) => {
       status: true,
     };
   } catch (e) {
-    console.log(e);
     return {
       status: false,
     };

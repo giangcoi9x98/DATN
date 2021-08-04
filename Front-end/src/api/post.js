@@ -11,7 +11,6 @@ export const newPost = async ({ content, img = [] }) => {
       data: res.data,
     };
   } catch (err) {
-    console.log(err);
     return {
       status: false,
       mesage: ' post falied',
@@ -27,7 +26,6 @@ export const getAllPost = async () => {
       data: res.data,
     };
   } catch (err) {
-    console.log(err);
     return {
       status: false,
       mesage: ' get All Post fail',
@@ -43,7 +41,6 @@ export const getAllMyPost = async (email) => {
       data: res.data,
     };
   } catch (err) {
-    console.log(err);
     return {
       status: false,
       mesage: ' get All Post fail',
@@ -59,7 +56,6 @@ export const getNotiPost = async () => {
       data: res.data,
     };
   } catch (err) {
-    console.log(err);
     return {
       status: false,
       mesage: ' get All Post fail',
@@ -75,7 +71,6 @@ export const getById = async (id) => {
       data: res.data,
     };
   } catch (err) {
-    console.log(err);
     return {
       status: false,
       mesage: ' get Fail By ID',
@@ -93,7 +88,6 @@ export const likePost = async (postId) => {
       data: res,
     };
   } catch (error) {
-    console.log(error);
     return {
       status: false,
       mesage: ' Like error',
@@ -113,7 +107,6 @@ export const addComment = async (postId, content, img = '') => {
       data: res,
     };
   } catch (error) {
-    console.log(error);
     return {
       status: false,
       mesage: ' comment error',

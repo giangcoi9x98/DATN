@@ -107,7 +107,6 @@ const BubbleChat = memo((props) => {
       },
     ]);
   };
-  console.log('content :>> ', content);
   const renderMessageItem = () => {
     if (message.length > 0) {
       return (

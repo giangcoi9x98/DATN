@@ -8,7 +8,6 @@ export const send = async ({ message, roomId }) => {
     });
     return res.data;
   } catch (error) {
-    console.log('error', error);
     return false;
   }
 };
@@ -18,7 +17,6 @@ export const getChatHistory = async () => {
     const res = await axiosInstance.get('/chat');
     return res.data;
   } catch (error) {
-    console.log('Error getChatHistory', error);
     return false;
   }
 };

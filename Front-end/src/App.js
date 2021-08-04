@@ -5,8 +5,7 @@ import routes from '../src/pages/routes';
 import NotFound from './pages/NotFound/NotFound';
 import { useAuth } from './hooks/useAuth';
 import { useDispatch } from 'react-redux';
-import {fetchAllPost, fetchMyPosts, getAllNotiPost} from './store/actions/postAction'
-import { getContacts } from './store/actions/contactAction';
+import {fetchAllPost, getAllNotiPost} from './store/actions/postAction'
 import { getProfileAction } from './store/actions/userAction';
 
 function App(props) {
@@ -18,7 +17,6 @@ function App(props) {
       async function fetchData() {
         await dispatch(fetchAllPost());
         await dispatch(getAllNotiPost());
-        await dispatch(getContacts());
         await dispatch(getProfileAction());
       }
       fetchData();

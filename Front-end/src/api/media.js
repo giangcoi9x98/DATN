@@ -10,7 +10,6 @@ export const upload = async (formdata) => {
     
     return res.data;
   } catch (error) {
-    console.log("error", error)
     return false;
   }
 }
@@ -20,7 +19,6 @@ export const getAll = async (email) => {
     const res = await axiosInstance.get(`/images?email=${email}`)
     return res.data
   } catch (error) {
-    console.log(error)
     return false
   }
 }

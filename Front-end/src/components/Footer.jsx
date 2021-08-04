@@ -54,7 +54,6 @@ const Footer = memo((props) => {
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-  console.log('nofound', props.props.location.pathname);
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;

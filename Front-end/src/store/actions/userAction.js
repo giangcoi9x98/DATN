@@ -18,7 +18,6 @@ export const getProfileAction = () => {
 export const getAllImages = (email) => {
   return  async (dispatch) => {
     await api.media.getAll(email).then(res => {
-      console.log(res)
       dispatch({
         type: 'GET_IMAGES',
         payload:res?.data

@@ -66,7 +66,6 @@ const SettingModal = memo((props) => {
       newPassword,
       repeatPassword,
     });
-    console.log(res);
     if (res.status) {
       if (res.success === false) {
         noti.error(res?.data?.msg, 'error');

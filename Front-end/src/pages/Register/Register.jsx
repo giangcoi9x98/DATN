@@ -66,11 +66,9 @@ const SignUp = memo((props) => {
   const [password, setPassword] = useState('');
   const [fullname, setFullname] = useState('');
   const lang = useSelector((state) => state.lang);
-  console.log(t('email'), lang);
   useEffect(() => {
     return i18n.changeLanguage(lang.lang);
   }, [lang, i18n]);
-  console.log(props);
   const handleSignup = async (email, password, fullname, birthday) => {
     const res = await api.user.signUp({
       email: email,

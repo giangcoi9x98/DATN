@@ -6,8 +6,6 @@ import {
   Typography,
   Box,
   Container,
-  Checkbox,
-  FormControlLabel,
   CssBaseline,
   Link,
   Grid,
@@ -19,7 +17,7 @@ import { COLORS, SIZETYPE } from '../../constants';
 import { useTranslation } from 'react-i18next';
 import api from '../../api';
 import noti from '../../components/Notification';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -81,8 +79,6 @@ const SignIn = memo((props) => {
   const [password, setPassword] = useState('');
   const { t, i18n } = useTranslation('common');
   const lang = useSelector((state) => state.lang);
-  const dispatch = useDispatch();
-  console.log(t('login.title'));
 
   useEffect(() => {
     async function changeLang() {

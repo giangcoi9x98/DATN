@@ -71,7 +71,6 @@ axiosInstance.interceptors.response.use(
   async function (error) {
     // window.NProgress.start();
     const errorResponse = error.response;
-    console.log(errorResponse.data.msg);
     // if (errorResponse.status === 422) {
     //   return errorResponse;
     // }
@@ -84,7 +83,6 @@ axiosInstance.interceptors.response.use(
         // axios.defaults.headers.common['Authorization'] = authorization
         error.response.config.headers['Authorization'] = authorization;
         error.response.config.baseURL = API_BASE;
-        console.log('object', error.response.config);
         return axiosInstance(error.response.config);
       });
     }

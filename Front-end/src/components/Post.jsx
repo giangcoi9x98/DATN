@@ -78,7 +78,6 @@ const Post = memo((props) => {
     { url: '/img/bg2.jpg' },
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 574.png` },
   ];
-  console.log('post :>> ', post);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };

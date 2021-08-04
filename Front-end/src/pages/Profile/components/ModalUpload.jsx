@@ -19,12 +19,9 @@ const ModalPost = memo((props) => {
   const [show] = useState(props.showModal);
   const { t, i18n } = useTranslation('common');
   const handleClose = () => {
-    console.log('close');
     props.onClose();
   };
   const handleUpload = () => handleUploadImage(image);
-  // const handleShow = () => setShow(true);
-  console.log(props.image);
   return (
     <>
       <Modal show={show} onHide={handleClose}>

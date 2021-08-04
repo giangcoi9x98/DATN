@@ -7,7 +7,6 @@ export const SET_CHAT_HISTORY = 'SET_CHAT_HISTORY'
 export const newMessage = () => {
   return (dispatch) => {
     socket.getInstance().on('NEW_MESSAGE', (data) => {
-      console.log("onmesage")
       dispatch({
         type: 'SOCKET_NEW_MESSAGE',
         paload: data,
@@ -19,7 +18,6 @@ export const newMessage = () => {
 export const getChatHistory = () => {
   return  async(dispatch) => {
     await api.chat.getChatHistory().then(res => {
-      console.log(res.data)
       dispatch({
         type: 'GET_CHAT_HISTORY',
         payload: res.data
