@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
   center: {},
-  },
 }));
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -79,6 +78,7 @@ const Post = memo((props) => {
     { url: '/img/bg2.jpg' },
     { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 574.png` },
   ];
+  console.log('post :>> ', post);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -99,7 +99,6 @@ const Post = memo((props) => {
       }
     }
   };
-  console.log('user', liked, post.id, post);
   const addComment = async (postId, content, img = '') => {
     const res = await api.post.addComment(postId, content, img);
     if (res) {
@@ -118,8 +117,7 @@ const Post = memo((props) => {
   useEffect(() => {
     post?.likes &&
       post.likes.forEach((e) => {
-        if (e?.detailUserLike.accountId == user?.accountId) {
-          console.log('object :>> ', e?.detailUserLike);
+        if (e?.detailUserLike?.accountId == user?.accountId) {
           setLiked(true);
         } else {
           setLiked(false);

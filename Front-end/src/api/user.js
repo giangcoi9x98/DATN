@@ -1,11 +1,6 @@
 import axiosInstance from './api';
 
-export const signUp = async ({
-  fullname,
-  password,
-  birthday,
-  email,
-}) => {
+export const signUp = async ({ fullname, password, birthday, email }) => {
   try {
     const res = await axiosInstance.post('/user/register', {
       fullname: fullname,
@@ -13,7 +8,7 @@ export const signUp = async ({
       birthday: birthday,
       email: email,
     });
-    console.log(res)
+    console.log(res);
     return {
       status: true,
       data: res,
@@ -21,7 +16,7 @@ export const signUp = async ({
   } catch (error) {
     return {
       status: false,
-      data:error.response.data,
+      data: error.response.data,
       message: 'sign up failed',
     };
   }
@@ -52,18 +47,20 @@ export const deleteAcount = async (id) => {
     };
   }
 };
-export const updateAccount = async (
-  id,
-  { firstname, lastname, email, phone, address, password },
-) => {
+export const updateAccount = async ({
+  fullname,
+  company,
+  phone,
+  birthday,
+  gender,
+}) => {
   try {
-    const res = axiosInstance.put(`/account/${id}`, {
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
+    const res = await axiosInstance.put(`/user/profile`, {
+      fullname: fullname,
+      company: company,
       phone: phone,
-      address: address,
-      password: password,
+      birthday: birthday,
+      gender: gender,
     });
     return {
       status: true,
@@ -72,6 +69,29 @@ export const updateAccount = async (
   } catch (e) {
     return {
       status: false,
+      data: e.response.data,
+    };
+  }
+};
+export const changePassword = async ({
+  currentPassword,
+  newPassword,
+  repeatPassword,
+}) => {
+  try {
+    const res = await axiosInstance.put(`/user/changePassword`, {
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      repeatPassword: repeatPassword,
+    });
+    return {
+      status: true,
+      data: res.data,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      data: error.response.data,
     };
   }
 };
@@ -90,13 +110,13 @@ export const getProfile = async () => {
 };
 export const getByEmail = async (email) => {
   try {
-    const res = await axiosInstance.get(`/user/email/${email}` );
+    const res = await axiosInstance.get(`/user/email/${email}`);
     return {
       data: res.data,
       status: true,
     };
   } catch (e) {
-    console.log(e)
+    console.log(e);
     return {
       status: false,
     };

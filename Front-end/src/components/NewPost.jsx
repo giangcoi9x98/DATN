@@ -46,7 +46,7 @@ const NewPost = memo((props) => {
   const handleShowModal = () => {
     setIsShowModal(true);
   };
-  useEffect(() => { }, [user.userData]);
+  useEffect(() => {}, [user.userData]);
   return (
     <div
       style={{
@@ -55,7 +55,13 @@ const NewPost = memo((props) => {
     >
       <div className={classes.title} onClick={() => handleShowModal()}>
         <div>
-          <Avatar src='/img/faces/kendall.jpg' className={classes.large} />
+          <Avatar
+            src={
+              user?.userData?.avatar ??
+              'https://iupac.org/wp-content/uploads/2018/05/default-avatar.png'
+            }
+            className={classes.large}
+          />
         </div>
         <div className={classes.bg_text}>
           <Typography className={classes.text_hidden}>
@@ -70,6 +76,6 @@ const NewPost = memo((props) => {
       ></ModalPost>
     </div>
   );
-})
+});
 
 export default NewPost;

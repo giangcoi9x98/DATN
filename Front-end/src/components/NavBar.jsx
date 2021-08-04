@@ -22,6 +22,8 @@ import DropDownMenu from './DropDownMenu';
 import NotiPostInteractive from './NotiPostInteractive';
 import { useAuth } from '../hooks/useAuth';
 import { getChatHistory } from '../store/actions/chatAction';
+import { useState } from 'react';
+import SettingModal from '../components/SettingModal';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -56,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: '4px',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
     },
   },
   search: {
@@ -127,6 +129,7 @@ const PrimarySearchAppBar = memo((props) => {
   const { user } = useSelector((state) => state);
   const isAuth = useAuth();
   const dispatch = useDispatch();
+  const [openModalSetting, setOpenModalSetting] = useState(false);
   let email;
   if (user) {
     email = user?.userData?.email;
@@ -178,6 +181,10 @@ const PrimarySearchAppBar = memo((props) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
+      <SettingModal
+        showModal={openModalSetting}
+        onClose={() => setOpenModalSetting(false)}
+      />
       <MenuItem
         onClick={() => {
           props.history.push(`/profile/${email.slice(0, email.length - 10)}`);
@@ -185,7 +192,14 @@ const PrimarySearchAppBar = memo((props) => {
       >
         {t('navBar.profile')}
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>{t('navBar.setting')}</MenuItem>
+      <MenuItem
+        onClick={() => {
+          setOpenModalSetting(true);
+          handleMenuClose();
+        }}
+      >
+        {t('navBar.setting')}
+      </MenuItem>
       <MenuItem onClick={handleLogout}>{t('navBar.logout')}</MenuItem>
     </Menu>
   );
@@ -323,6 +337,6 @@ const PrimarySearchAppBar = memo((props) => {
       {renderMenu}
     </div>
   );
-})
+});
 
 export default withRouter(PrimarySearchAppBar);
