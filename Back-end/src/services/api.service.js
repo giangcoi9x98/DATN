@@ -1,20 +1,11 @@
 const APIGateway = require("moleculer-web");
 const cors = require("cors");
-const path = require("path");
 const http = require("http");
 const uaParser = require("ua-parser-js");
-const Redis = require("ioredis");
-const WebSocket = require("ws");
-const url = require("url");
-const requestIp = require("request-ip");
 const Fingerprint = require("express-fingerprint");
 const tokenHelper = require("../lib/token");
 const socketMixin = require("../mixins/socket.mixin");
 const multer = require("../lib/ multer");
-
-//const FingerprintJS = require('@fingerprintjs/fingerprintjs');
-
-// const SocketIOService = require('../mixins/socketio-gateway.mixin')
 
 /**
  * @type {import('moleculer').Service}
@@ -84,13 +75,8 @@ const schema = {
 						action: "id-verification.submit",
 					},
 				},
-
-				// Route level busboy config.
-				// More info: https://github.com/mscdex/busboy#busboy-methods
 				busboyConfig: {
 					limits: { files: 1 },
-					// Can be defined limit event handlers
-					// `onPartsLimit`, `onFilesLimit` or `onFieldsLimit`
 				},
 
 				mappingPolicy: "restrict",
@@ -165,6 +151,8 @@ const schema = {
 					"PUT user/update": "user.updateProfile",
 					"GET user/profile": "user.getProfile",
 					"PUT user/profile": "user.updateProfile",
+					"PUT user/avatar": "user.updateAvatar",
+					"PUT user/background": "user.updateBackground",
 					"PUT user/changePassword": "user.changePassword",
 					"POST user/logout": "auth.logout",
 					"GET user/email/:email": "user.getByEmail",
@@ -352,28 +340,8 @@ const schema = {
 		},
 	},
 	methods: {
-		// async socketAuthorize(socket, eventHandler) {
-		//     let accessToken = socket.handshake.query.token
-		//     return
-		// }
 	},
 	created() {
-		// const wss = new WebSocket.Server({ noServer: true });
-		// wss.on('connection', function connection(ws) {
-		//     console.log('socket connected')
-		// });
-		// // console.log(this)
-		// this.server.on('upgrade', function upgrade(request, socket, head) {
-		//     const pathname = url.parse(request.url).pathname;
-		//
-		//     if (pathname === '/ws') {
-		//         wss.handleUpgrade(request, socket, head, function done(ws) {
-		//             wss.emit('connection', ws, request);
-		//         });
-		//     } else {
-		//         socket.destroy();
-		//     }
-		// });
 	},
 };
 

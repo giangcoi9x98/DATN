@@ -381,12 +381,17 @@ module.exports = {
 			},
 		},
 		getAllPostByUser: {
+			params: {
+				email: "string",
+			},
 			async handler(ctx) {
 				const conn = await this.mysql.beginTransaction();
 				try {
+					const { email } = ctx.params;
 					const data = await this.mysql.queryMulti(
-						"SELECT * FROM post WHERE accountId = ? ORDER BY update_at DESC",
-						[ctx.meta.user.id],
+						`SELECT post.id, post.accountId, post.content, post.type, post.creat_at, post.update_at, post.is_delete FROM post INNER JOIN account on post.accountId = account.id
+						WHERE email = ? ORDER BY post.update_at DESC`,
+						[email],
 						conn
 					);
 					const result = await Promise.all(
@@ -555,7 +560,13 @@ module.exports = {
 						}
 					});
 					await this.mysql.commitTransaction(conn);
-					return new ResponseData(true, "SUCCESS", history, null,200);
+					return new ResponseData(
+						true,
+						"SUCCESS",
+						history,
+						null,
+						200
+					);
 				} catch (error) {
 					this.logger.error("Error at getAllPost action ", error);
 					await this.mysql.rollbackTransaction(conn);

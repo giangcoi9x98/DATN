@@ -164,6 +164,63 @@ module.exports = {
 				},
 			},
 		},
+		updateAvatar: {
+			params: {
+				avatar: {
+					type: "string",
+					require: true,
+				},
+			},
+			async handler(ctx) {
+				try {
+					const { avatar } = ctx.params;
+					const res = await this.mysql.query(
+						"UPDATE account_info SET avatar = ? WHERE accountId = ?",
+						[avatar, ctx.meta.user.id]
+					);
+					return new ResponseData(true, "SUCCESS", res);
+				} catch (error) {
+					this.logger.error("Error at getProfile action ", error);
+					throw error;
+				}
+			},
+			hooks: {
+				async before(ctx) {
+					this.originalSchema.hooks.before.isAuthenticate(ctx);
+				},
+			},
+		},
+		updateBackground: {
+			params: {
+				background: {
+					type: "string",
+					require: true,
+				},
+			},
+			async handler(ctx) {
+				try {
+					const { background } = ctx.params;
+					const res = await this.mysql.query(
+						`
+					UPDATE account_info
+					SET
+					background = ?
+					WHERE accountId = ?
+					`,
+						[background, ctx.meta.user.id]
+					);
+					return new ResponseData(true, "SUCCESS", res);
+				} catch (error) {
+					this.logger.error("Error at getProfile action ", error);
+					throw error;
+				}
+			},
+			hooks: {
+				async before(ctx) {
+					this.originalSchema.hooks.before.isAuthenticate(ctx);
+				},
+			},
+		},
 		getByEmail: {
 			params: {
 				email: {
@@ -198,6 +255,12 @@ module.exports = {
 			},
 		},
 		getAll: {
+			params: {
+				email: {
+					type: "email",
+					require: true,
+				},
+			},
 			async handler(ctx) {
 				const conn = await this.mysql.beginTransaction();
 				try {
@@ -206,8 +269,8 @@ module.exports = {
 						`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
 						ai.background, ai.birthday, ai.company, ai.gender,ai.phone
 						from account as a INNER JOIN account_info as ai
-						ON a.id = ai.accountId WHERE ai.accountId != ?`,
-						[user.id],
+						ON a.id = ai.accountId WHERE a.email != ?`,
+						[ctx.params.email],
 						conn
 					);
 
