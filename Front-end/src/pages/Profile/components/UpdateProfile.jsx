@@ -12,8 +12,8 @@ import {
 } from '@material-ui/core';
 import moment from 'moment';
 import api from '../../../api';
-import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
+import noti from '../../../components/Notification';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +32,7 @@ const UpdateProfile = memo((props) => {
   const [company, setCompany] = useState(profile?.userData?.company);
   const [gender, setGender] = useState(profile?.userData?.gender);
   const [birthday, setBirthday] = useState(profile?.userData?.birthday);
-  const { t, i18n } = useTranslation('common');
+  // const { t, i18n } = useTranslation('common');
 
   const handlerUpdateProfile = async () => {
     const res = await api.user.updateAccount({
@@ -42,7 +42,11 @@ const UpdateProfile = memo((props) => {
       birthday: birthday.toString(),
       gender,
     });
-    console.log('res :>> ', res);
+    if (res.status) {
+      noti.success('Update success', 'successs')
+    } else {
+      noti.error('Update failed', 'error')
+    }
   };
   return (
     <form className={classes.root} noValidate autoComplete='off'>

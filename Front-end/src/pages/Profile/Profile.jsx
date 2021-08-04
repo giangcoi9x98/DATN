@@ -18,7 +18,7 @@ import {
   Box,
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Posts from '../../components/Post';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import { makeStyles } from '@material-ui/core/styles';
@@ -27,9 +27,14 @@ import api from '../../api';
 import NavProfile from './components/NavProfile';
 import ModalUpload from './components/ModalUpload';
 import { getAllImages } from '../../store/actions/userAction';
+import { fetchMyPosts } from '../../store/actions/postAction';
+import { getContacts } from '../../store/actions/contactAction';
+
 import './profile.css';
 import config from '../../configs';
 import ModalUpdateProfile from './components/ModalUpdateProfile';
+import { Tooltip } from '@material-ui/core';
+import noti from '../../components/Notification';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -205,30 +210,62 @@ const Profile = memo((props) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const posts = useSelector((state) => state.post);
   const [showModalUpdateProfile, setShowModalUpdateProfile] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const handleUploadImage = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    await api.media.upload(formData);
-  };
-
+  const [typeUpdate, setTypeUpdate] = useState('');
+  const handleUploadImage = useCallback(
+    async (file) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      await api.media.upload(formData);
+      const fileName = file.name;
+      const url = `${config.BASE_URL}${user.email}/${fileName}`;
+      if (typeUpdate === 'avatar') {
+        const res = await api.user.updateAvatar({
+          avatar: url,
+        });
+        if (res) {
+          noti.success('Update success', 'success');
+        } else {
+          noti.error('Update failed', 'error');
+        }
+      }
+      if (typeUpdate === 'background') {
+        const res = await api.user.updateBackground({
+          background: url,
+        });
+        if (res) {
+          noti.success('Update success', 'success');
+        } else {
+          noti.error('Update failed', 'error');
+        }
+      }
+    },
+    [typeUpdate, user.email]
+  );
+  const [isOwner, setIsOwner] = useState(false);
   useEffect(() => {
     async function fetchDataUser() {
       let email = currentUser + '@gmail.com';
       const res = await api.user.getByEmail(email);
       if (res.status) {
         await setUser(res.data.data[0]);
+        await dispatch(getAllImages(email));
+        await dispatch(fetchMyPosts(email));
+        await dispatch(getContacts(email));
       }
-      await dispatch(getAllImages(email));
     }
     fetchDataUser();
   }, [currentUser, showModal, dispatch]);
+  useEffect(() => {
+    let email = currentUser + '@gmail.com';
+    if (email === userData?.userData?.email) {
+      setIsOwner(true);
+    }
+  }, [currentUser, userData]);
   const renderContent = useCallback(() => {
     if (navProfile === 0) {
       return myPosts?.map((post) => {
@@ -311,7 +348,7 @@ const Profile = memo((props) => {
             justifyContent: 'center',
           }}
         >
-          {contacts.contactData.map((tile) => (
+          {contacts?.contactData?.map((tile) => (
             <Grid item sx={12} sm={5} spacing={2}>
               <Box
                 boxShadow={3}
@@ -331,7 +368,7 @@ const Profile = memo((props) => {
                     boxShadow: '0px 0px 5px 0px #6c757d'
                   }}/> */}
                   <img
-                    src={userData?.userData?.avatar}
+                    src={tile?.contact?.avatar}
                     width={80}
                     height={80}
                     style={{
@@ -346,45 +383,33 @@ const Profile = memo((props) => {
                     display: 'flex',
                   }}
                 >
-                  <Typography>{tile.contact.fullname}</Typography>
+                  <Typography>{tile?.contact?.fullname}</Typography>
                 </div>
                 <div
                   style={{
                     display: 'flex',
                     width: '100%',
-
+                    alignItems: 'center',
                     flexDirection: 'row',
                     justifyContent: 'flex-end',
                   }}
                 >
                   <IconButton
+                    style={{
+                      height: '50px',
+                    }}
                     aria-controls='simple-menu'
                     aria-haspopup='true'
-                    onClick={handleClick}
+                    onClick={() =>
+                      (window.location = `${
+                        tile?.contact?.email?.split('@')[0]
+                      }`)
+                    }
                   >
-                    <MoreHorizIcon />
+                    <Tooltip title='View Profile' placement='top-end'>
+                      <AccountCircleIcon />
+                    </Tooltip>
                   </IconButton>
-                  <Menu
-                    style={{
-                      boxShadow: '0px 0px 5px 0px #6c757d !important',
-                    }}
-                    id='simple-menu'
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <MenuItem
-                      style={{
-                        boxShadow: '0px 0px 5px 0px #6c757d !important',
-                      }}
-                      onClick={handleClose}
-                    >
-                      Profile
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
-                  </Menu>
                 </div>
               </Box>
             </Grid>
@@ -425,7 +450,7 @@ const Profile = memo((props) => {
             maxWidth='lg'
             className={classes.containerCover}
             style={{
-              background: `url(${userData?.userData?.background ?? ''})`,
+              background: `url(${user?.background ?? ''})`,
             }}
           >
             <div className={classes.uploadAvatar}>
@@ -435,7 +460,7 @@ const Profile = memo((props) => {
                     className={classes.wrapUpdateAvatar}
                     style={{
                       backgroundImage: `url(${
-                        userData?.userData?.avatar ??
+                        user?.avatar ??
                         'https://iupac.org/wp-content/uploads/2018/05/default-avatar.png'
                       })`,
                     }}
@@ -446,10 +471,14 @@ const Profile = memo((props) => {
                         component='label'
                         className={classes.iconSize}
                         onChange={handleChangeFile}
+                        onClick={() => setTypeUpdate('avatar')}
                       >
                         <input type='file' hidden />
                         <PhotoCameraIcon
                           className={classes.photoIcon}
+                          style={{
+                            display: isOwner ? 'block' : 'none',
+                          }}
                         ></PhotoCameraIcon>
                       </IconButton>
                     </form>
@@ -457,20 +486,25 @@ const Profile = memo((props) => {
                 </div>
               </div>
               <div className={classes.div_updateCover}>
-                <Card className={classes.editCover}>
+                <Card
+                  className={classes.editCover}
+                  style={{
+                    display: isOwner ? 'flex' : 'none',
+                  }}
+                >
                   <IconButton
                     variant='contained'
                     component='label'
                     className={classes.iconSize}
+                    onChange={handleChangeFile}
                   >
                     <input type='file' hidden />
                     <PhotoCameraIcon
+                      onClick={() => setTypeUpdate('background')}
                       className={classes.photoIconCover}
                     ></PhotoCameraIcon>
                   </IconButton>{' '}
                   <div>
-                    {renderModal(showModal)}
-
                     <Typography className={classes.textEdit}>
                       {t('profile.edit_cover')}
                     </Typography>
@@ -480,6 +514,8 @@ const Profile = memo((props) => {
             </div>
           </Container>
         </div>
+        {renderModal(showModal)}
+
         <Typography className={classes.name}>
           {user.fullname ? user.fullname : ' '}
         </Typography>
@@ -498,6 +534,9 @@ const Profile = memo((props) => {
             className={classes.editCover}
             onClick={() => {
               setShowModalUpdateProfile(true);
+            }}
+            style={{
+              display: isOwner ? 'flex' : 'none',
             }}
           >
             <IconButton component='label' className={classes.editIcon}>

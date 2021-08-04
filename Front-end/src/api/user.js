@@ -21,9 +21,9 @@ export const signUp = async ({ fullname, password, birthday, email }) => {
     };
   }
 };
-export const getAll = async () => {
+export const getAll = async (email) => {
   try {
-    const res = await axiosInstance.get('/accounts');
+    const res = await axiosInstance.get(`/accounts?email=${email}`);
     return {
       status: true,
       data: res,
@@ -61,6 +61,42 @@ export const updateAccount = async ({
       phone: phone,
       birthday: birthday,
       gender: gender,
+    });
+    return {
+      status: true,
+      data: res.data,
+    };
+  } catch (e) {
+    return {
+      status: false,
+      data: e.response.data,
+    };
+  }
+};
+export const updateAvatar = async ({
+  avatar,
+}) => {
+  try {
+    const res = await axiosInstance.put(`/user/avatar`, {
+      avatar: avatar,
+    });
+    return {
+      status: true,
+      data: res.data,
+    };
+  } catch (e) {
+    return {
+      status: false,
+      data: e.response.data,
+    };
+  }
+};
+export const updateBackground = async ({
+  background
+}) => {
+  try {
+    const res = await axiosInstance.put(`/user/background`, {
+      background: background
     });
     return {
       status: true,

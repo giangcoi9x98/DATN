@@ -27,9 +27,9 @@ export const getAllNotiPost = () => {
   };
 };
 
-export const fetchMyPosts = () => {
+export const fetchMyPosts = (email) => {
   return async (dispatch) => {
-    await api.post.getAllMyPost().then((res) => {
+    await api.post.getAllMyPost(email).then((res) => {
       dispatch({
         type: 'GET_MY_POST',
         payload: res?.data?.data,

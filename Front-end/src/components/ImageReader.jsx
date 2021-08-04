@@ -28,9 +28,9 @@ const ImageReader = memo((props) => {
   const classes = useStyle();
   const [url, setUrl] = useState('');
   const reader = new FileReader();
-  const imageUrl = reader.readAsDataURL(image);
+  const imageUrl = reader?.readAsDataURL(image);
   reader.onloadend = function (e) {
-    setUrl(reader.result);
+    setUrl(reader?.result);
   };
   const renderImg = () => {
     if (image) {

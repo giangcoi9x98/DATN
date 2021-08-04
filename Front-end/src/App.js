@@ -20,7 +20,6 @@ function App(props) {
         await dispatch(getAllNotiPost());
         await dispatch(getContacts());
         await dispatch(getProfileAction());
-        await dispatch(fetchMyPosts())
       }
       fetchData();
     }

@@ -11,10 +11,10 @@ export const logIn = async ({ email, password }) => {
       data: res.data,
     };
   } catch (err) {
-    console.log(err)
     return {
       status: false,
       mesage: ' login falied',
+      data: err.response.data
     };
   }
 };

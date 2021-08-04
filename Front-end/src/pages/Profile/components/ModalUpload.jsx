@@ -40,13 +40,21 @@ const ModalPost = memo((props) => {
           <Button variant='secondary' onClick={handleClose}>
             {t('close')}
           </Button>
-          <Button variant='primary' onClick={handleUpload}>
-            {t('modalUpload.upload')}
+          <Button
+            variant='primary'
+            onClick={() => {
+              handleUpload();
+              setTimeout(() => {
+                handleClose();
+              },1000)
+            }}
+          >
+            Confirm
           </Button>
         </Modal.Footer>
       </Modal>
     </>
   );
-})
+});
 
 export default ModalPost;

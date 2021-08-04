@@ -35,9 +35,9 @@ export const getAllPost = async () => {
   }
 };
 
-export const getAllMyPost = async () => {
+export const getAllMyPost = async (email) => {
   try {
-    const res = await axiosInstance.get('/mypost');
+    const res = await axiosInstance.get(`/mypost?email=${email}`);
     return {
       status: true,
       data: res.data,
@@ -50,7 +50,6 @@ export const getAllMyPost = async () => {
     };
   }
 };
-
 
 export const getNotiPost = async () => {
   try {
@@ -102,12 +101,12 @@ export const likePost = async (postId) => {
   }
 };
 
-export const addComment = async (postId, content, img ="") => {
+export const addComment = async (postId, content, img = '') => {
   try {
     const res = await axiosInstance.post('/comment', {
       postId: postId,
       content: content,
-      img: img
+      img: img,
     });
     return {
       status: true,
@@ -121,4 +120,3 @@ export const addComment = async (postId, content, img ="") => {
     };
   }
 };
-

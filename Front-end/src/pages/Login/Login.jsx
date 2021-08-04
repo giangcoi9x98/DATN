@@ -14,12 +14,11 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import {
-  Facebook as FacebookIcon,
-} from '@material-ui/icons';
+import { Facebook as FacebookIcon } from '@material-ui/icons';
 import { COLORS, SIZETYPE } from '../../constants';
 import { useTranslation } from 'react-i18next';
 import api from '../../api';
+import noti from '../../components/Notification';
 import { useSelector, useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
@@ -97,11 +96,14 @@ const SignIn = memo((props) => {
       email,
       password,
     });
-    console.log(res);
+
     if (res.status) {
       localStorage.setItem('token', res.data.data.token);
       localStorage.setItem('refresh_token', res.data.data.refresh_token);
+      noti.success('Login success', 'success')
       window.location = '/';
+    } else {
+      noti.error(res?.data?.data[0].message, 'error');
     }
   };
   const classes = useStyles();
@@ -155,12 +157,17 @@ const SignIn = memo((props) => {
               label={t('password')}
               type='password'
               id='password'
+              onKeyDown={(e) => {
+                if ((e.code === 'Enter')) {
+                  loginHandler(email, password);
+                }
+              }}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value='remember' color='primary' />}
               label={t('login.remember_me')}
-            />
+            /> */}
             <Button
               fullWidth
               onClick={() => loginHandler(email, password)}
@@ -198,6 +205,6 @@ const SignIn = memo((props) => {
       </Container>
     </div>
   );
-})
+});
 
-export default withRouter(React.memo(SignIn));
+export default withRouter(SignIn);
