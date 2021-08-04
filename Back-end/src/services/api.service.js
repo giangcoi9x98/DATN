@@ -164,6 +164,8 @@ const schema = {
 					"POST users/refresh_token": "auth.refreshJwtToken",
 					"PUT user/update": "user.updateProfile",
 					"GET user/profile": "user.getProfile",
+					"PUT user/profile": "user.updateProfile",
+					"PUT user/changePassword": "user.changePassword",
 					"POST user/logout": "auth.logout",
 					"GET user/email/:email": "user.getByEmail",
 					"GET accounts": "user.getAll",
@@ -226,6 +228,7 @@ const schema = {
 							ctx.meta.user = user;
 						} catch (error) {
 							console.log("api error", error);
+							
 						}
 					}
 				},
@@ -286,7 +289,18 @@ const schema = {
 						2
 					)
 				);
-			
+			} else if (err.code === 504) {
+				console.log("errdâdadada", err);
+				res.end(
+					JSON.stringify(
+						{
+							success: false,
+							data: "",
+						},
+						null,
+						2
+					)
+				);
 			} else {
 				res.end(
 					JSON.stringify(

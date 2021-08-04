@@ -2,6 +2,8 @@
 const CommonMixin = require("../mixins/common.mixin");
 const ResponseData = require("../lib/response");
 const { MoleculerError } = require("moleculer").Errors;
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 module.exports = {
 	name: "user",
@@ -35,6 +37,121 @@ module.exports = {
 						[ctx.meta.user.id]
 					);
 					console.log("user", res, ctx.meta.user.id);
+					return new ResponseData(true, "SUCCESS", res);
+				} catch (error) {
+					this.logger.error("Error at getProfile action ", error);
+					throw error;
+				}
+			},
+			hooks: {
+				async before(ctx) {
+					this.originalSchema.hooks.before.isAuthenticate(ctx);
+				},
+			},
+		},
+		changePassword: {
+			params: {
+				currentPassword: {
+					type: "string",
+					min: 6,
+					max: 20,
+					require: true,
+				},
+				newPassword: {
+					type: "string",
+					min: 6,
+					max: 20,
+					require: true,
+				},
+				repeatPassword: {
+					type: "string",
+					min: 6,
+					max: 20,
+					require: true,
+				},
+			},
+			async handler(ctx) {
+				try {
+					const { currentPassword, newPassword, repeatPassword } =
+						ctx.params;
+					const user = await this.mysql.queryOne(
+						"SELECT * FROM account where id = ? ",
+						[ctx.meta.user.id]
+					);
+					const passwordMatch = bcrypt.compareSync(
+						currentPassword.trim(),
+						user.password
+					);
+					if (passwordMatch) {
+						if (newPassword !== repeatPassword) {
+							throw new MoleculerError("Password not match", 400);
+						}
+						const salt = bcrypt.genSaltSync(saltRounds);
+						const hash = bcrypt.hashSync(repeatPassword, salt);
+						const res = await this.mysql.query(
+							`
+						UPDATE account
+						SET password = ?
+						WHERE id = ?
+						`,
+							[hash, user.id]
+						);
+						return new ResponseData(true, "SUCCESS", res);
+					} else {
+						return new ResponseData(
+							false,
+							"INVALID PASSWORD",
+							[],
+							null,
+							400
+						);
+					}
+				} catch (error) {
+					this.logger.error("Error at getProfile action ", error);
+					throw error;
+				}
+			},
+			hooks: {
+				async before(ctx) {
+					this.originalSchema.hooks.before.isAuthenticate(ctx);
+				},
+			},
+		},
+		updateProfile: {
+			params: {
+				fullname: {
+					type: "string",
+					require: true,
+				},
+				company: "string|optinal",
+				phone: "string|optinal",
+				birthday: "string|optinal",
+				gender: "string|optinal",
+			},
+			async handler(ctx) {
+				try {
+					const { fullname, company, phone, birthday, gender } =
+						ctx.params;
+					const res = await this.mysql.query(
+						`
+					UPDATE account_info
+					SET
+					fullname = ?,
+					company	= ?,
+					phone = ?,
+					birthday = ?,
+					gender = ?
+					WHERE accountId = ? 
+					`,
+						[
+							fullname,
+							company,
+							phone,
+							birthday,
+							gender,
+							ctx.meta.user.id,
+						]
+					);
 					return new ResponseData(true, "SUCCESS", res);
 				} catch (error) {
 					this.logger.error("Error at getProfile action ", error);

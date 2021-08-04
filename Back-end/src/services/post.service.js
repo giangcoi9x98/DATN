@@ -391,6 +391,14 @@ module.exports = {
 					);
 					const result = await Promise.all(
 						data.map(async (element) => {
+							const detailUserPost = await this.mysql.queryOne(
+								`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+							ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+							from account as a INNER JOIN account_info as ai
+							ON a.id = ai.accountId WHERE ai.accountId = ?`,
+								[element.accountId],
+								conn
+							);
 							const comment = await this.mysql.queryMulti(
 								`SELECT c.id, accountId, postId, c.create_at, c.update_at, content, type, imageUrl 
 								FROM comment as c 
@@ -445,6 +453,8 @@ module.exports = {
 							element.totalComment = comment.length;
 							element.comments = comment;
 							element.files = file;
+							element.detailUserPost = detailUserPost;
+
 							return {
 								post: element,
 							};
@@ -545,7 +555,7 @@ module.exports = {
 						}
 					});
 					await this.mysql.commitTransaction(conn);
-					return new ResponseData(true, "SUCCESS", history);
+					return new ResponseData(true, "SUCCESS", history, null,200);
 				} catch (error) {
 					this.logger.error("Error at getAllPost action ", error);
 					await this.mysql.rollbackTransaction(conn);
