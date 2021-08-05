@@ -157,6 +157,7 @@ const schema = {
 					"POST user/logout": "auth.logout",
 					"GET user/email/:email": "user.getByEmail",
 					"GET accounts": "user.getAll",
+					"GET contacts": "user.getAllConatct",
 
 					//Post apis
 					"POST post": "post.newPost",
