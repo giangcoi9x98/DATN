@@ -1,12 +1,12 @@
 import React, { memo, useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-
+import moment from 'moment';
 const Comment = memo((props) => {
-  const [comment, setComment] = useState(null)
+  const [comment, setComment] = useState(null);
 
   useEffect(() => {
-    setComment(props.comment)
-  }, [props.comment])
+    setComment(props.comment);
+  }, [props.comment]);
   return (
     <div>
       <Typography paragraph>
@@ -19,7 +19,7 @@ const Comment = memo((props) => {
                 width: '40px',
                 height: '40px',
               }}
-              src='img\profile-bg.jpg'
+              src={comment?.detailUserComment?.avatar}
               alt=''
             />
           </div>
@@ -31,7 +31,23 @@ const Comment = memo((props) => {
               borderRadius: '15px',
             }}
           >
-            <p style={{ padding: '0px', margin: '0px' }}> Giang Tran </p>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <p style={{ padding: '0px', margin: '0px' }}>
+                {comment?.detailUserComment?.fullname}{' '}
+              </p>
+              <Typography
+                style={{
+                  marginRight: '12px',
+                }}
+              >
+                {moment(comment?.create_at).format('MM-DD-YYYY, h:mm:ss a')}
+              </Typography>
+            </div>
             <p
               style={{
                 fontSize: '13px',
@@ -41,7 +57,7 @@ const Comment = memo((props) => {
               }}
             >
               {' '}
-              This impressive paella is a perfect party dish and a fun meal to{' '}
+              {comment?.content}
             </p>
             <span style={{ fontSize: '13px' }}> Thich </span>
             <span style={{ fontSize: '13px', paddingLeft: '10px' }}>
@@ -91,6 +107,6 @@ const Comment = memo((props) => {
       </Typography>
     </div>
   );
-})
+});
 
-export default Comment
+export default Comment;

@@ -33,6 +33,19 @@ export const getAll = async (email) => {
     };
   }
 };
+export const getAllConatct = async () => {
+  try {
+    const res = await axiosInstance.get(`/contacts`);
+    return {
+      status: true,
+      data: res,
+    };
+  } catch (e) {
+    return {
+      status: false,
+    };
+  }
+};
 export const deleteAcount = async (id) => {
   try {
     const res = await axiosInstance.delete(`/account/${id}`, {});

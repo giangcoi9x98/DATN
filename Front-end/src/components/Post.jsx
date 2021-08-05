@@ -24,7 +24,6 @@ import { withRouter } from 'react-router-dom';
 import api from '../api';
 import Comment from './Comment';
 import moment from 'moment';
-
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '600px',
@@ -73,11 +72,6 @@ const Post = memo((props) => {
   const [totalComment, setTotalComment] = useState(null);
   const [colorLike, setColorLike] = useState('rgba(0, 0, 0, 0.54)');
   const [comments, setComments] = useState([]);
-  const items = [
-    { url: `/img/bg.jpg` },
-    { url: '/img/bg2.jpg' },
-    { url: `${config.BASE_URL}/giangcoi9x98@gmail.com/Rectangle 574.png` },
-  ];
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -105,7 +99,7 @@ const Post = memo((props) => {
         {
           content: content,
           update_at: Date.now(),
-          detailUserComment: user.userData,
+          detailUserComment: user,
         },
         ...comments,
       ]);
@@ -165,7 +159,6 @@ const Post = memo((props) => {
         NextIcon={<ArrowForwardIosIcon style={{ color: 'white' }} />}
         PrevIcon={<ArrowBackIosIcon style={{ color: 'white' }} />}
         navButtonsProps={{
-          // Change the colors and radius of the actual buttons. THIS STYLES BOTH BUTTONS
           style: {
             backgroundColor: '#9c8b8b',
           },
@@ -181,13 +174,15 @@ const Post = memo((props) => {
           },
         }}
       >
-        {items.map((e) => (
+        {post?.files?.map((e) => (
           <CardMedia
+            style={{
+              backgroundSize: 'none',
+            }}
             key={e.url}
             className={classes.media}
-            title='Paella dish'
-            src={e.url}
-            image={`${e.url}`}
+            src={config.BASE_URL + e.path}
+            image={`${config.BASE_URL + e.path}`}
           />
         ))}
       </Carousel>
@@ -234,7 +229,7 @@ const Post = memo((props) => {
               onChange={(e) => setContent(e.target.value)}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
-                  console.log('comment');
+                  addComment(post.id, content);
                 }
               }}
             />
@@ -249,6 +244,6 @@ const Post = memo((props) => {
       </Collapse>
     </Box>
   );
-})
+});
 
 export default withRouter(Post);

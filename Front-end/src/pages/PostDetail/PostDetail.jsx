@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import api from '../../api';
 import Post from '../../components/Post';
 import { useSelector } from 'react-redux';
-import { COLORS, SIZETYPE } from '../../constants';
+import { COLORS } from '../../constants';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,

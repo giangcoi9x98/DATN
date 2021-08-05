@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import socket from '../socket';
 import Badge from '@material-ui/core/Badge';
 import { setHistoryPostInteractive } from '../store/actions/postAction';
+import {useHistory } from 'react-router-dom';
+
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5',
@@ -39,6 +41,7 @@ const NotiPostInteractive = memo((props) => {
   const [countNotiPost, setCountNotiPost] = useState(0);
   const notiPost = useSelector((state) => state.post?.postNoti);
   const mypost = useSelector((state) => state.post?.myPosts);
+  const history = useHistory();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -77,8 +80,8 @@ const NotiPostInteractive = memo((props) => {
     if (notiPost?.length) {
       return notiPost.map((e) => {
         return (
-          <StyledMenuItem style={{ height: '72px', width: '400px' }} key={e.id}>
-            <ListItemIcon style={{ width: '50px', height: '50px' }}>
+          <StyledMenuItem style={{ height: '72px', width: '400px' }} key={e.id} onClick ={() => history.push(`/post/${e?.post?.id}`)}>
+            <ListItemIcon style={{ width: '50px', height: '50px' }} > 
               <div
                 style={{
                   width: '10px',
@@ -119,7 +122,7 @@ const NotiPostInteractive = memo((props) => {
                   color: '#050505',
                 }}
               >
-                {e?.post?.totalComment}
+                {e?.post?.totalComment} comment {e?.post?.totalLike > 0 ? `and ${e?.post?.totalLike} like `: '' } in post 
               </p>
               <p
                 style={{

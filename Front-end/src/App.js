@@ -7,6 +7,7 @@ import { useAuth } from './hooks/useAuth';
 import { useDispatch } from 'react-redux';
 import {fetchAllPost, getAllNotiPost} from './store/actions/postAction'
 import { getProfileAction } from './store/actions/userAction';
+import { getContacts } from './store/actions/contactAction';
 
 function App(props) {
   const isAuth = useAuth();
@@ -18,6 +19,7 @@ function App(props) {
         await dispatch(fetchAllPost());
         await dispatch(getAllNotiPost());
         await dispatch(getProfileAction());
+        await dispatch(getContacts());
       }
       fetchData();
     }
