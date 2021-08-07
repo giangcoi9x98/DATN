@@ -76,19 +76,19 @@ const BubbleChat = memo((props) => {
 
   useEffect(() => {
     socket.getInstance().on('NEW_MESSAGE', async (data) => {
-      if (data.roomId === user.userData.id) {
+      if (data.roomId === user?.userData?.id) {
         setMessage([
           ...message,
           {
             avatar: data?.sender?.avatar,
             detail: {
-              content: data.message,
+              content: data?.message,
             },
           },
         ]);
       }
     });
-  }, [message, user.userData.id, setMessage]);
+  }, [message, user?.userData?.id, setMessage]);
   const handlerSend = async (msg, roomId = contact.id) => {
     await api.chat.send({
       message: msg,

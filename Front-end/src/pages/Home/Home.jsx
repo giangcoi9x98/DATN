@@ -1,11 +1,6 @@
 import React, { memo, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Container,
-  Divider,
-  Grid,
-  Box
-} from '@material-ui/core';
+import { Container, Divider, Grid, Box } from '@material-ui/core';
 import { COLORS } from '../../constants';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
@@ -67,7 +62,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const Home = memo( (props) =>  {
+const Home = memo((props) => {
   const { t, i18n } = useTranslation('common');
   const user = useSelector((state) => state.user);
   const posts = useSelector((state) => state.post);
@@ -87,29 +82,29 @@ const Home = memo( (props) =>  {
       return posts.postData.map((post) => {
         //if(user.id === post)
         return (
-          <Post
-            post={post.post}
-            key={post.post.id}
-            user={user.userData}
-          ></Post>
+          <Post post={post.post} key={post.post.id} user={user.userData}></Post>
         );
       });
     } else {
       return <div></div>;
     }
-  },[posts.postData, user]);
+  }, [posts.postData, user]);
+
+  contacts?.allContact?.sort((a, b) => {
+    return b?.contact?.messages?.length - a?.contact?.messages?.length;
+  });
   const renderContacts = useCallback(() => {
-    if (contacts.contactData) {
-      return contacts.contactData.map((contact) => {
+    if (contacts.allContact) {
+      return contacts.allContact.map((contact) => {
         return <Contacts contact={contact} key={contact.contact.id}></Contacts>;
       });
     } else {
       return <div></div>;
     }
-  }, [contacts.contactData]);
+  }, [contacts.allContact]);
   const renderChat = () => {
-    if (contacts.contactData) {
-      return contacts.contactData.map((contact) => {
+    if (contacts.allContact) {
+      return contacts.allContact.map((contact) => {
         let isShow = false;
         contacts?.isSelected?.map((e) => {
           if (e == contact.contact.id) isShow = true;
@@ -123,7 +118,11 @@ const Home = memo( (props) =>  {
             }}
           >
             <BubbleChat
-              message={_.sortBy(contact.contact.messages, e => Date.parse(e?.detail?.create_at), ['asc'])}
+              message={_.sortBy(
+                contact.contact.messages,
+                (e) => Date.parse(e?.detail?.create_at),
+                ['asc']
+              )}
               contact={contact.contact}
             ></BubbleChat>
           </Box>
@@ -173,6 +172,6 @@ const Home = memo( (props) =>  {
       <Grid className={classes.mess}>{/* <BubbleChat></BubbleChat> */}</Grid>
     </Container>
   );
-})
+});
 
 export default withRouter(Home);

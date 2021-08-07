@@ -99,7 +99,12 @@ const SignIn = memo((props) => {
       noti.success('Login success', 'success')
       window.location = '/';
     } else {
-      noti.error(res?.data?.data[0].message, 'error');
+      console.log('res :>> ', res);
+      try {
+        noti.error(res?.data?.msg, 'error');
+      } catch (error) {
+        console.log('error :>> ', error);
+     }
     }
   };
   const classes = useStyles();

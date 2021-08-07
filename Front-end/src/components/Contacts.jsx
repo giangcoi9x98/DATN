@@ -4,10 +4,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import { Avatar } from '@material-ui/core';
+import { Avatar, Tooltip } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-import {getContactsSelected} from '../store/actions/contactAction'
-
+import { getContactsSelected } from '../store/actions/contactAction';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -25,8 +26,9 @@ const useStyles = makeStyles((theme) => ({
 
 const CheckboxListSecondary = memo((props) => {
   const classes = useStyles();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [contact] = useState(props.contact);
+  const history = useHistory();
   // const handleToggle = (value) => () => {
   //   const currentIndex = checked.indexOf(value);
   //   const newChecked = [...checked];
@@ -41,17 +43,31 @@ const CheckboxListSecondary = memo((props) => {
   // };
 
   return (
-    <div onClick ={() => dispatch(getContactsSelected(contact.contact.id))}>
+    <div>
       <List dense className={classes.root}>
         <ListItem button>
-          <ListItemAvatar>
-            <Avatar alt={`Avatar `} src={contact?.contact?.avatar} />
-          </ListItemAvatar>
-          <ListItemText primary={contact.contact.fullname} />
+          <div
+            onClick={() => dispatch(getContactsSelected(contact.contact.id))}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '80%',
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar alt={`Avatar `} src={contact?.contact?.avatar} />
+            </ListItemAvatar>
+            <ListItemText primary={contact.contact.fullname} />
+          </div>
+          <Tooltip title='View Profile' placement='top'>
+            <AccountCircleIcon onClick={() => {
+              history.push(`/profile/${contact?.contact?.email.split('@')[0]}`)
+            }} />
+          </Tooltip>
         </ListItem>
       </List>
     </div>
   );
-})
+});
 
-export default CheckboxListSecondary
+export default CheckboxListSecondary;

@@ -1,6 +1,7 @@
 import api from '../../api';
 
 export const GET_CONTACTS = 'GET_CONTACTS';
+export const GET_ALL_CONTACTS = 'GET_ALL_CONTACTS';
 export const GET_CONTACT_SELECTED = 'GET_CONTACT_SELECTED';
 export const DELETE_CONTACT_SELECTED = 'DELETE_CONTACT_SELECTED';
 
@@ -20,7 +21,7 @@ export const getContacts = (email = '') => {
     } else {
       await api.user.getAllConatct().then((res) => {
         dispatch({
-          type: 'GET_CONTACTS',
+          type: 'GET_ALL_CONTACTS',
           payload: res?.data?.data,
         });
       });

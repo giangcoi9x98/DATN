@@ -24,7 +24,7 @@ import { useAuth } from '../hooks/useAuth';
 import { getChatHistory } from '../store/actions/chatAction';
 import { useState } from 'react';
 import SettingModal from '../components/SettingModal';
-
+import ResultSearch from '../components/ResultSearch';
 const useStyles = makeStyles((theme) => ({
   grow: {
     width: '100%',
@@ -129,7 +129,9 @@ const PrimarySearchAppBar = memo((props) => {
   const { user } = useSelector((state) => state);
   const isAuth = useAuth();
   const dispatch = useDispatch();
+  const [keyword, setKeyword] = useState('');
   const [openModalSetting, setOpenModalSetting] = useState(false);
+  const [rsSearch, setRsSearch] = useState([]);
   let email;
   if (user) {
     email = user?.userData?.email;
@@ -143,6 +145,20 @@ const PrimarySearchAppBar = memo((props) => {
     }
     return i18n.changeLanguage(lang.lang);
   }, [lang, i18n, dispatch, isAuth]);
+  const contacts = useSelector((state) => state.contact.allContact);
+  const posts = useSelector((state) => state.post.postData);
+  useEffect(() => {
+    const arrSearchContact = contacts?.filter((e) =>
+      e?.contact?.fullname.includes(keyword)
+    );
+    const arrSearch = posts?.filter((e) =>
+      e?.post?.content.includes(keyword)
+    );
+    arrSearchContact.forEach((e) => {
+      arrSearch.push(e);
+    });
+    setRsSearch(arrSearch);
+  }, [contacts, posts, keyword]);
   const handleLogout = async () => {
     const res = await api.auth.logOut();
     if (res.status) {
@@ -156,7 +172,6 @@ const PrimarySearchAppBar = memo((props) => {
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -264,11 +279,17 @@ const PrimarySearchAppBar = memo((props) => {
             {/* 
            logo codese
             */}
-            <div className={classes.leftNav}>
+            <div
+              className={classes.leftNav}
+              style={{
+                position: 'relative',
+              }}
+            >
               <Avatar src='/Guiang.svg' />
               <div className={classes.title} variant='h6'>
                 Codeses
               </div>
+              <ResultSearch rsSearch={rsSearch} keyword={keyword} />
               <div className={classes.search}>
                 <div className={classes.searchIcon}>
                   <SearchIcon />
@@ -280,6 +301,7 @@ const PrimarySearchAppBar = memo((props) => {
                     input: classes.inputInput,
                   }}
                   inputProps={{ 'aria-label': 'search' }}
+                  onChange={(e) => setKeyword(e.target.value)}
                 />
               </div>
               <div />

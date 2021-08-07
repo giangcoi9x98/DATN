@@ -85,9 +85,7 @@ export const updateAccount = async ({
     };
   }
 };
-export const updateAvatar = async ({
-  avatar,
-}) => {
+export const updateAvatar = async ({ avatar }) => {
   try {
     const res = await axiosInstance.put(`/user/avatar`, {
       avatar: avatar,
@@ -103,12 +101,10 @@ export const updateAvatar = async ({
     };
   }
 };
-export const updateBackground = async ({
-  background
-}) => {
+export const updateBackground = async ({ background }) => {
   try {
     const res = await axiosInstance.put(`/user/background`, {
-      background: background
+      background: background,
     });
     return {
       status: true,
@@ -146,6 +142,22 @@ export const changePassword = async ({
 export const getProfile = async () => {
   try {
     const res = await axiosInstance.get('/user/profile');
+    return {
+      data: res.data,
+      status: true,
+    };
+  } catch (e) {
+    return {
+      status: false,
+    };
+  }
+};
+export const follow = async (followId) => {
+  try {
+    console.log(`followId`, followId)
+    const res = await axiosInstance.post(`/user/follow`, {
+      followId,
+    });
     return {
       data: res.data,
       status: true,

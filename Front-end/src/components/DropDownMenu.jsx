@@ -4,12 +4,14 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import MailIcon from '@material-ui/icons/Mail';
-import IconButton from '@material-ui/core/IconButton';
+import {IconButton, Tooltip} from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useSelector } from 'react-redux';
 import socket from '../socket';
 import Badge from '@material-ui/core/Badge';
 import { formatDate } from '../utils/formatDate';
+import { useDispatch } from 'react-redux';
+import { getContactsSelected } from '../store/actions/contactAction';
 
 const StyledMenu = withStyles({
   paper: {
@@ -45,6 +47,7 @@ const DropDownMenu = memo((props) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setHistory(chatHistory?.history);
@@ -88,7 +91,16 @@ const DropDownMenu = memo((props) => {
     if (history?.length) {
       return history.map((e) => {
         return (
-          <StyledMenuItem style={{ height: '72px', width: '400px' }} key={e.id}>
+          <StyledMenuItem
+            style={{ height: '72px', width: '400px' }}
+            key={e.id}
+            onClick={() => {
+              const id =
+                user.userData.id === e.senderId ? e.receiverId : e.senderId;
+              dispatch(getContactsSelected(id));
+              handleClose();
+            }}
+          >
             <ListItemIcon style={{ width: '50px', height: '50px' }}>
               <div
                 style={{
@@ -149,12 +161,19 @@ const DropDownMenu = memo((props) => {
     } else {
       return <div></div>;
     }
-  }, [history]);
+  }, [dispatch, history, user?.userData?.id]);
   const renderIcon = () => {
     if (icon === 'mess') {
       return (
-        <Badge badgeContent={countChatHistory.length}>
-          <MailIcon style={{ color: 'white' }} />
+        <Badge
+          badgeContent={countChatHistory.length}
+          style={{
+            color: 'white',
+          }}
+        >
+          <Tooltip title ={countChatHistory.length > 0 ? `You have a new message` : ''} placement ="top" arrow>
+            <MailIcon style={{ color: 'white' }} />
+          </Tooltip>
         </Badge>
       );
     }
@@ -184,6 +203,6 @@ const DropDownMenu = memo((props) => {
       </StyledMenu>
     </div>
   );
-})
+});
 
-export default DropDownMenu
+export default DropDownMenu;

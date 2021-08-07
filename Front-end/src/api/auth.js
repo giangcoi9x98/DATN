@@ -8,13 +8,13 @@ export const logIn = async ({ email, password }) => {
     });
     return {
       status: true,
-      data: res.data,
+      data: res?.data,
     };
   } catch (err) {
     return {
       status: false,
       mesage: ' login falied',
-      data: err.response.data
+      data: err?.response?.data
     };
   }
 };
@@ -25,7 +25,7 @@ export const logOut = async () => {
     });
     return {
       status: true,
-      data:(await res).data
+      data: res?.data
     }
   } catch (e) {
     return {

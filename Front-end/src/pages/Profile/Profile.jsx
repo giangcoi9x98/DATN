@@ -35,6 +35,7 @@ import config from '../../configs';
 import ModalUpdateProfile from './components/ModalUpdateProfile';
 import { Tooltip } from '@material-ui/core';
 import noti from '../../components/Notification';
+import { useHistory } from 'react-router-dom';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -205,6 +206,17 @@ const Profile = memo((props) => {
     setImage(e.target.files[0]);
     setShowModal(true);
   };
+  const history = useHistory();
+  const [isFollow, setIsFollow] = useState('');
+  useEffect(() => {
+    if (user?.follows?.length) {
+      user.follows.forEach((e) => {
+        if (e.accountId === userData.userData.id) {
+          setIsFollow(true);
+        }
+      });
+    }
+  }, [user, userData?.userData?.id]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -266,6 +278,12 @@ const Profile = memo((props) => {
       setIsOwner(true);
     }
   }, [currentUser, userData]);
+  const actionFollow = async () => {
+    const res = await api.user.follow(user.id);
+    if (res) {
+      noti.success(res?.data?.data, 'success');
+    }
+  };
   const renderContent = useCallback(() => {
     if (navProfile === 0) {
       return myPosts?.map((post) => {
@@ -530,6 +548,38 @@ const Profile = memo((props) => {
             showModal={showModalUpdateProfile}
             onClose={() => setShowModalUpdateProfile(false)}
           />
+          <Box
+            style={{
+              display: isOwner ? 'none' : 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '4px',
+              height: '36px',
+              marginTop: '12px',
+            }}
+          >
+            <Tooltip
+              title='Follow'
+              placement='top'
+              style={{
+                cursor: 'pointer',
+              }}
+            >
+              <img
+                src='https://static.xx.fbcdn.net/rsrc.php/v3/yF/r/qEUhBn_j7A2.png'
+                w='24px'
+                height='24px'
+                onClick={actionFollow}
+              />
+            </Tooltip>
+            <Typography
+              style={{
+                marginLeft: '12px',
+              }}
+            >
+              {isFollow ? 'Followed' : 'Follow'}
+            </Typography>
+          </Box>
           <div
             className={classes.editCover}
             onClick={() => {
