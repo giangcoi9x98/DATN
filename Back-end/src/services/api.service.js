@@ -158,7 +158,7 @@ const schema = {
 					"GET user/email/:email": "user.getByEmail",
 					"GET accounts": "user.getAll",
 					"GET contacts": "user.getAllConatct",
-
+					"POST user/follow":"user.follow",
 					//Post apis
 					"POST post": "post.newPost",
 					"GET post": "post.getAllPost",

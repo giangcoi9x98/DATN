@@ -105,59 +105,59 @@ services:
     networks:
       - internal
 
-  api:
-    build:
-      context: .
-    image: back-end
-    # env_file: docker-compose.env
-    environment:
-      # SERVICES: api # Runner will start only the 'api' service in this container
-      PORT: 3000    # Port of API gateway
-      TRANSPORTER: nats://nats:4222
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      # INFLUX_HOST: influxdb
-      # INFLUX_PORT: 8086
-      # INFLUX_DB: crash_db
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
-      MYSQL_DB: network_social
-      # POSTGRES_URI: postgresql://postgres:secret_password@postgresql:5432/db
-      RABBITMQ_URI: amqp://rabbitmq:rabbitmq@rabbitmq:5672/
-    # restart: on-failure  
-    depends_on:
-      - nats
-      # - postgres
-      - redis
-      - mysql
-      # - influxdb
-      # - rabbitmq
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api-gw.rule=PathPrefix(`/`)"
-      - "traefik.http.services.api-gw.loadbalancer.server.port=3000"
-    networks:
-      - internal
-    volumes:
-      - ./:/app
-      - /app/node_modules
+  # api:
+  #   build:
+  #     context: .
+  #   image: back-end
+  #   # env_file: docker-compose.env
+  #   environment:
+  #     # SERVICES: api # Runner will start only the 'api' service in this container
+  #     PORT: 3000    # Port of API gateway
+  #     TRANSPORTER: nats://nats:4222
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #     # INFLUX_HOST: influxdb
+  #     # INFLUX_PORT: 8086
+  #     # INFLUX_DB: crash_db
+  #     MYSQL_HOST: mysql
+  #     MYSQL_PORT: 3306
+  #     MYSQL_USER: root
+  #     MYSQL_PASSWORD: password
+  #     MYSQL_DB: network_social
+  #     # POSTGRES_URI: postgresql://postgres:secret_password@postgresql:5432/db
+  #     # RABBITMQ_URI: amqp://rabbitmq:rabbitmq@rabbitmq:5672/
+  #   # restart: on-failure  
+  #   depends_on:
+  #     - nats
+  #     # - postgres
+  #     - redis
+  #     - mysql
+  #     # - influxdb
+  #     # - rabbitmq
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.api-gw.rule=PathPrefix(`/`)"
+  #     - "traefik.http.services.api-gw.loadbalancer.server.port=3000"
+  #   networks:
+  #     - internal
+  #   volumes:
+  #     - ./:/app
+  #     - /app/node_modules
 
-  traefik:
-    image: traefik:v2.1
-    command:
-      - "--api.insecure=true" # Don't do that in production!
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-    ports:
-      - 3000:80
-      - 3001:8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - internal
-      - default
+  # traefik:
+  #   image: traefik:v2.1
+  #   command:
+  #     - "--api.insecure=true" # Don't do that in production!
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #   ports:
+  #     - 3000:80
+  #     - 3001:8080
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   networks:
+  #     - internal
+  #     - default
 
 networks:
   internal:

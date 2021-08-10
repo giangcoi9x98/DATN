@@ -23,6 +23,45 @@ module.exports = {
 		},
 	},
 	actions: {
+		follow: {
+			params: {
+				followId: {
+					type: "number",
+					require: true,
+				},
+			},
+			async handler(ctx) {
+				try {
+					const { followId } = ctx.params;
+					const { user } = ctx.meta;
+					console.log("followId", followId);
+					const isFollow = await this.mysql.query(
+						"SELECT COUNT(id) as isFollow FROM follow WHERE accountId = ? and followId = ?",
+						[user.id, followId]
+					);
+					if (isFollow[0].isFollow < 1) {
+						const res = await this.mysql.query(
+							"INSERT INTO follow(accountId, followId) VALUES (?, ?)",
+							[user.id, followId]
+						);
+						return new ResponseData(true, "SUCCESS", "Followed");
+					}
+					return new ResponseData(
+						true,
+						"SUCCESS",
+						"This person is followed by you"
+					);
+				} catch (error) {
+					this.logger.error("Error at getProfile action ", error);
+					throw error;
+				}
+			},
+			hooks: {
+				async before(ctx) {
+					this.originalSchema.hooks.before.isAuthenticate(ctx);
+				},
+			},
+		},
 		getProfile: {
 			async handler(ctx) {
 				try {
@@ -229,9 +268,14 @@ module.exports = {
 				},
 			},
 			async handler(ctx) {
-				console.log("emailgetbyemail", ctx.params);
 				try {
 					let { email } = ctx.params;
+					const follows = await this.mysql.queryMulti(
+						`SELECT accountId FROM follow
+						INNER JOIN account ON account.id= follow.followId
+						 WHERE account.email = ?`,
+						[email]
+					);
 					const res = await this.mysql.query(
 						`
 					SELECT *
@@ -242,6 +286,7 @@ module.exports = {
 					`,
 						[ctx.params.email]
 					);
+					res[0].follows = follows;
 					return new ResponseData(true, "SUCCESS", res);
 				} catch (error) {
 					this.logger.error("Error at GetbyEmail action ", error);
@@ -329,12 +374,30 @@ module.exports = {
 				const conn = await this.mysql.beginTransaction();
 				try {
 					let { user } = ctx.meta;
+					const followers = await this.mysql.queryMulti(
+						"select followId from follow WHERE accountId = ? ",
+						[user.id]
+					);
+					const listFollow = followers
+						.map((elem) => {
+							return elem.followId;
+						})
+						.join(",");
 					const data = await this.mysql.queryMulti(
-						`select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
-						ai.background, ai.birthday, ai.company, ai.gender,ai.phone
-						from account as a INNER JOIN account_info as ai
-						ON a.id = ai.accountId WHERE ai.accountId != ?`,
-						[user.id],
+						`(select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+							ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+							from account as a INNER JOIN account_info as ai
+							ON a.id = ai.accountId WHERE ai.accountId  in (${listFollow})
+							and ai.accountId != ?
+						)
+						UNION
+							(select email, a.id, status, ai.fullname, ai.address, ai.avatar, ai.accountId,
+							ai.background, ai.birthday, ai.company, ai.gender,ai.phone
+							from account as a INNER JOIN account_info as ai
+							ON a.id = ai.accountId WHERE ai.accountId  not in (${listFollow})
+							and ai.accountId != ?
+						)`,
+						[user.id, user.id],
 						conn
 					);
 

@@ -30,8 +30,21 @@ module.exports = {
 				const conn = await this.mysql.beginTransaction();
 
 				try {
+					const followers = await this.mysql.queryMulti(
+						"select followId from follow WHERE accountId = ? ",
+						[ctx.meta.user.id]
+					);
+					const a = followers
+						.map((elem) => {
+							return elem.followId;
+						})
+						.join(",");
+					const listFollow = a + `,${ctx.meta.user.id}`;
 					const data = await this.mysql.queryMulti(
-						"SELECT * FROM post ORDER BY update_at DESC",
+						`(SELECT * FROM post WHERE accountId in (${listFollow}) ORDER BY create_at DESC limit 100
+						)UNION (
+						SELECT * FROM post WHERE accountId not in (${listFollow}) ORDER BY  create_at DESC
+						) ORDER BY create_at DESC`,
 						[],
 						conn
 					);
