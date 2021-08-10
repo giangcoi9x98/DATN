@@ -149,7 +149,7 @@ const Post = memo((props) => {
         title={post?.detailUserPost?.fullname}
         subheader={
           <Box onClick={() => redirectToDetailPost(post?.id)}>
-            {moment(post?.creat_at).format('MMMM Do YYYY, h:mm:ss a')}
+            {moment(post?.create_at).format('MMMM Do YYYY, h:mm:ss a')}
           </Box>
         }
       />

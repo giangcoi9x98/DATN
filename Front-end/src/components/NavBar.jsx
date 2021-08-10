@@ -154,8 +154,8 @@ const PrimarySearchAppBar = memo((props) => {
     const arrSearch = posts?.filter((e) =>
       e?.post?.content.includes(keyword)
     );
-    arrSearchContact.forEach((e) => {
-      arrSearch.push(e);
+    arrSearchContact?.forEach((e) => {
+      arrSearch?.push(e);
     });
     setRsSearch(arrSearch);
   }, [contacts, posts, keyword]);

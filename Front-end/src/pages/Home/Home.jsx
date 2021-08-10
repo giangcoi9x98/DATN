@@ -89,7 +89,7 @@ const Home = memo((props) => {
       return <div></div>;
     }
   }, [posts.postData, user]);
-
+  console.log('posts :>> ', posts);
   contacts?.allContact?.sort((a, b) => {
     return b?.contact?.messages?.length - a?.contact?.messages?.length;
   });
